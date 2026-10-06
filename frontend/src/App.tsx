@@ -23,7 +23,8 @@ export function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Architecture & Marketing Overview */}
+          {/* Public Landing Page at root / */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/landing" element={<LandingPage />} />
 
           {/* Public Authentication routes */}
@@ -32,7 +33,8 @@ export function App() {
 
           {/* Protected Enterprise Security Console routes */}
           <Route element={<AppLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/console" element={<Navigate to="/dashboard" replace />} />
             <Route path="/actions" element={<ActionStreamPage />} />
             <Route path="/approvals" element={<ApprovalsPage />} />
             <Route path="/threats" element={<ThreatsPage />} />

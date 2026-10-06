@@ -52,7 +52,7 @@ export const RegisterPage: React.FC = () => {
     setSubmitting(true);
     try {
       await register({ email, password, name, organizationName });
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(
         err.response?.data?.error ||

@@ -15,6 +15,7 @@ import { Badge } from '../common/Badge';
 
 const routeTitleMap: Record<string, string> = {
   '/': 'Command Center',
+  '/dashboard': 'Command Center',
   '/actions': 'Action Stream',
   '/approvals': 'Approval Queue',
   '/threats': 'Threat Incidents',
