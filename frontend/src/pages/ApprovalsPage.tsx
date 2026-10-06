@@ -11,6 +11,7 @@ import {
   MessageSquare,
   FileText,
   User,
+  ShieldCheck,
 } from 'lucide-react';
 import { approvalsApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -37,8 +38,8 @@ export const ApprovalsPage: React.FC = () => {
   const fetchApprovals = useCallback(async () => {
     try {
       const res = await approvalsApi.list();
-      const items = res.data.data || res.data.approvals || res.data || [];
-      setApprovals(items);
+      const items = res.data?.data || res.data?.approvals || res.data || [];
+      setApprovals(Array.isArray(items) ? items : []);
     } catch (err) {
       console.error('Failed to load approvals:', err);
     } finally {
@@ -110,23 +111,25 @@ export const ApprovalsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <CheckSquare className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              Human-In-The-Loop Governance
+            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+              HUMAN-IN-THE-LOOP ORCHESTRATION
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">DUAL-CUSTODY AUTHORIZATION</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
             Security Approval Queue
           </h1>
-          <p className="text-xs text-zinc-400">
-            High-risk or sensitive autonomous agent requests awaiting security authorization.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Escalated autonomous agent actions requiring explicit administrator or SOC sign-off before proxy dispatch.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="secondary"
             size="sm"
@@ -140,32 +143,32 @@ export const ApprovalsPage: React.FC = () => {
       </div>
 
       {/* Tabs & Count */}
-      <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+      <div className="flex items-center justify-between border-b border-graphite-800 pb-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('PENDING')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
+            className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === 'PENDING'
-                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-copper-500/15 text-copper-300 border border-copper-500/40 shadow-sm'
+                : 'text-graphite-400 hover:text-stone-200 border border-transparent'
             }`}
           >
-            <span>Awaiting Decision</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">
+            <span>Awaiting Authorization</span>
+            <span className="px-1.5 py-0.2 rounded bg-copper-500/20 text-copper-300 text-[10px] font-bold">
               {pendingApprovals.length}
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab('ALL')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
+            className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === 'ALL'
-                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-graphite-800 text-stone-100 border border-graphite-700'
+                : 'text-graphite-400 hover:text-stone-200 border border-transparent'
             }`}
           >
-            <span>Audit History</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-zinc-800 text-zinc-400 text-[10px]">
+            <span>Audit Trail History</span>
+            <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-graphite-400 text-[10px]">
               {approvals.length}
             </span>
           </button>
@@ -174,30 +177,30 @@ export const ApprovalsPage: React.FC = () => {
 
       {/* Content */}
       {loading ? (
-        <LoadingSpinner label="Fetching approval queue..." size="lg" fullHeight />
+        <LoadingSpinner label="Fetching approval queue state..." size="lg" fullHeight />
       ) : displayedApprovals.length === 0 ? (
         <EmptyState
-          icon={<CheckCircle2 className="w-8 h-8 text-emerald-400" />}
+          icon={<ShieldCheck className="w-7 h-7 text-status-green" />}
           title={
             activeTab === 'PENDING'
               ? 'Zero Pending Approvals'
-              : 'No Approval History'
+              : 'No Approval Records'
           }
           description={
             activeTab === 'PENDING'
-              ? 'All high-risk autonomous agent requests have been evaluated and authorized.'
-              : 'No actions requiring approval have been triggered yet.'
+              ? 'All escalated autonomous operations have been reviewed and resolved.'
+              : 'No requests requiring elevation have been dispatched through the gateway.'
           }
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {displayedApprovals.map((approval) => (
             <Card
               key={approval.id}
-              className={`border-zinc-800/90 transition-all ${
+              className={`transition-all ${
                 approval.status === 'PENDING'
-                  ? 'border-l-4 border-l-amber-500 bg-zinc-900/90'
-                  : 'bg-zinc-950/40 opacity-80'
+                  ? 'border-l-4 border-l-copper-500 bg-graphite-900'
+                  : 'bg-graphite-950/60 opacity-80'
               }`}
             >
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -207,27 +210,27 @@ export const ApprovalsPage: React.FC = () => {
                     <Badge variant={getStatusBadgeVariant(approval.status)} size="sm" dot>
                       {approval.status}
                     </Badge>
-                    <span className="text-xs font-mono text-zinc-300 font-bold">
+                    <span className="text-xs font-mono text-stone-200 font-semibold">
                       {approval.agent_name || 'Autonomous Agent'}
                     </span>
-                    <span className="text-zinc-600">·</span>
-                    <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-[10px] font-mono text-amber-400 border border-zinc-700">
+                    <span className="text-graphite-600">·</span>
+                    <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-[10px] font-mono text-copper-300 border border-graphite-700">
                       {approval.action_type || 'ACCESS'}
                     </span>
-                    <span className="text-xs font-mono text-zinc-200 truncate max-w-xs">
+                    <span className="text-xs font-mono text-stone-300 truncate max-w-sm">
                       {approval.resource}
                     </span>
                   </div>
 
-                  <p className="text-xs text-zinc-300 font-sans">
+                  <p className="text-xs text-graphite-300 font-sans leading-relaxed">
                     {approval.reason ||
                       approval.explanation ||
                       'Action triggered an enterprise human approval policy rule.'}
                   </p>
 
-                  <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono text-zinc-500 pt-1">
+                  <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono text-graphite-400 pt-1">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                      <Clock className="w-3.5 h-3.5 text-graphite-500" />
                       <span>
                         Requested:{' '}
                         {approval.created_at
@@ -237,13 +240,13 @@ export const ApprovalsPage: React.FC = () => {
                     </div>
 
                     {approval.decided_at && (
-                      <div className="flex items-center gap-1.5 text-zinc-400">
+                      <div className="flex items-center gap-1.5 text-graphite-300">
                         <span>
                           Decided:{' '}
                           {new Date(approval.decided_at).toLocaleString()}
                         </span>
                         {approval.decision_reason && (
-                          <span className="italic">
+                          <span className="italic text-graphite-400">
                             ("{approval.decision_reason}")
                           </span>
                         )}
@@ -253,8 +256,8 @@ export const ApprovalsPage: React.FC = () => {
                 </div>
 
                 {/* Right risk meter & action buttons */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-zinc-800">
-                  <div className="pr-4 border-r-0 sm:border-r border-zinc-800">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-graphite-800">
+                  <div className="pr-4 border-r-0 sm:border-r border-graphite-800">
                     <RiskScoreMeter score={approval.risk_score || 70} size="md" />
                   </div>
 
@@ -278,8 +281,8 @@ export const ApprovalsPage: React.FC = () => {
                       </Button>
                     </div>
                   ) : (
-                    <div className="text-xs font-mono text-zinc-500 px-3 py-1 rounded bg-zinc-900 border border-zinc-800">
-                      Closed Decision
+                    <div className="text-xs font-mono text-graphite-400 px-3 py-1 rounded bg-graphite-850 border border-graphite-750">
+                      Closed Record
                     </div>
                   )}
                 </div>
@@ -330,38 +333,38 @@ export const ApprovalsPage: React.FC = () => {
         >
           <div className="space-y-4">
             {decisionError && (
-              <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+              <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
                 {decisionError}
               </div>
             )}
 
-            <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 text-xs font-mono space-y-1">
+            <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 text-xs font-mono space-y-1.5">
               <div>
-                <span className="text-zinc-500">Action:</span>{' '}
-                <span className="text-amber-400">{selectedApproval.action_type}</span>
+                <span className="text-graphite-500">Operation:</span>{' '}
+                <span className="text-copper-400">{selectedApproval.action_type}</span>
               </div>
               <div>
-                <span className="text-zinc-500">Target:</span>{' '}
-                <span className="text-zinc-200">{selectedApproval.resource}</span>
+                <span className="text-graphite-500">Target Resource:</span>{' '}
+                <span className="text-stone-200">{selectedApproval.resource}</span>
               </div>
               <div>
-                <span className="text-zinc-500">Risk Assessment:</span>{' '}
-                <span className="text-rose-400 font-bold">
-                  {selectedApproval.risk_score}/100
+                <span className="text-graphite-500">Evaluated Risk Score:</span>{' '}
+                <span className="text-status-red font-bold">
+                  {selectedApproval.risk_score || 70}/100
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-                Audit Reason / Justification
+              <label className="block text-xs font-mono text-graphite-300 mb-1.5">
+                Audit Reason / Justification Note
               </label>
               <textarea
                 value={decisionReason}
                 onChange={(e) => setDecisionReason(e.target.value)}
                 rows={3}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
-                placeholder="Enter justification for this authorization decision for audit compliance..."
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
+                placeholder="Enter justification note for SOC 2 / ISO 27001 compliance audit trail..."
               />
             </div>
           </div>

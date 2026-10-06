@@ -3,8 +3,8 @@ import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Activity,
-  ShieldAlert,
   CheckSquare,
+  ShieldAlert,
   Bot,
   ScrollText,
   KeyRound,
@@ -15,6 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
+  Compass,
+  Radio,
 } from 'lucide-react';
 import { approvalsApi } from '../../services/api';
 
@@ -34,7 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const fetchPendingCount = async () => {
       try {
         const res = await approvalsApi.list();
-        const pending = (res.data.approvals || res.data || []).filter(
+        const pending = (res.data?.approvals || res.data || []).filter(
           (a: any) => a.status === 'PENDING'
         );
         setPendingApprovalsCount(pending.length);
@@ -59,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           label: 'Approval Queue',
           icon: CheckSquare,
           badge: pendingApprovalsCount > 0 ? pendingApprovalsCount : undefined,
-          badgeColor: 'bg-amber-500 text-zinc-950 font-bold',
+          badgeColor: 'bg-copper-500/20 text-copper-300 border border-copper-500/40',
         },
         { to: '/threats', label: 'Threat Incidents', icon: ShieldAlert },
       ],
@@ -85,22 +87,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`fixed top-0 left-0 bottom-0 z-40 bg-zinc-950/95 border-r border-zinc-800/80 flex flex-col transition-all duration-300 backdrop-blur-md ${
+      className={`fixed top-0 left-0 bottom-0 z-40 bg-graphite-950/95 border-r border-graphite-800 flex flex-col transition-all duration-300 backdrop-blur-xl ${
         collapsed ? 'w-18' : 'w-64'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-zinc-800/80 shrink-0">
-        <NavLink to="/" className="flex items-center gap-3 overflow-hidden">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-900/30 shrink-0 border border-amber-400/30">
-            <ShieldCheck className="w-5 h-5 text-zinc-950" />
+      <div className="h-16 px-4 flex items-center justify-between border-b border-graphite-800 shrink-0">
+        <NavLink to="/" className="flex items-center gap-3 overflow-hidden group">
+          <div className="w-8 h-8 rounded-lg bg-graphite-850 border border-graphite-700 group-hover:border-copper-500/50 flex items-center justify-center transition-all shadow-inner shrink-0">
+            <ShieldCheck className="w-4.5 h-4.5 text-copper-400 group-hover:scale-105 transition-transform" />
           </div>
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="font-extrabold tracking-wider text-base text-zinc-100 font-mono">
+            <div className="flex flex-col min-w-0">
+              <span className="font-semibold tracking-wider text-sm text-stone-50 font-sans truncate">
                 RAKSHYA
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-amber-400/90 font-mono">
+              <span className="text-[10px] uppercase tracking-widest text-copper-400/80 font-mono">
                 AI Defense Layer
               </span>
             </div>
@@ -110,10 +112,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80 transition-colors hidden md:flex"
+            className="p-1.5 rounded-md text-graphite-400 hover:text-stone-50 hover:bg-graphite-800 border border-transparent hover:border-graphite-700 transition-all hidden md:flex items-center justify-center"
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
           </button>
         )}
       </div>
@@ -123,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {navItems.map((group, groupIdx) => (
           <div key={groupIdx} className="space-y-1">
             {!collapsed && (
-              <div className="px-3 text-[10px] font-mono font-semibold tracking-wider text-zinc-500 uppercase">
+              <div className="px-3 text-[10px] font-mono font-medium tracking-wider text-graphite-400 uppercase">
                 {group.category}
               </div>
             )}
@@ -136,24 +138,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     to={item.to}
                     end={item.to === '/'}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all group relative ${
+                      `flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium transition-all group relative ${
                         isActive
-                          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30 shadow-sm'
-                          : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/80'
+                          ? 'bg-graphite-800/80 text-stone-50 border border-graphite-650 shadow-sm'
+                          : 'text-graphite-300 hover:text-stone-100 hover:bg-graphite-900/80 border border-transparent'
                       }`
                     }
                   >
-                    <Icon className="w-4 h-4 shrink-0 transition-transform group-hover:scale-105" />
+                    <Icon className="w-4 h-4 shrink-0 text-graphite-400 group-hover:text-stone-200 transition-colors" />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                     {!collapsed && item.badge !== undefined && (
                       <span
-                        className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full font-mono ${item.badgeColor}`}
+                        className={`ml-auto text-[10px] px-1.5 py-0.2 rounded font-mono ${item.badgeColor}`}
                       >
                         {item.badge}
                       </span>
                     )}
                     {collapsed && item.badge !== undefined && (
-                      <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-400" />
+                      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-copper-400 indicator-breathing" />
                     )}
                   </NavLink>
                 );
@@ -163,19 +165,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ))}
       </div>
 
-      {/* Footer System Status */}
-      <div className="p-3 border-t border-zinc-800/80 shrink-0 bg-zinc-950/60">
+      {/* Quick Launch & Status */}
+      <div className="p-3 border-t border-graphite-800 shrink-0 bg-graphite-950/80 space-y-2">
         {!collapsed ? (
-          <div className="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-zinc-900/60 border border-zinc-800">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[11px] font-mono text-zinc-300">GATEWAY ACTIVE</span>
+          <>
+            <NavLink
+              to="/landing"
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] font-mono text-graphite-400 hover:text-stone-200 hover:bg-graphite-900 border border-transparent hover:border-graphite-800 transition-colors"
+            >
+              <Compass className="w-3.5 h-3.5 text-copper-400" />
+              <span>Public Architecture Portal</span>
+            </NavLink>
+            <div className="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-md bg-graphite-900/60 border border-graphite-800">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-status-green indicator-breathing" />
+                <span className="text-[11px] font-mono text-graphite-200">GATEWAY ACTIVE</span>
+              </div>
+              <span className="text-[10px] font-mono text-graphite-400">v1.4.0</span>
             </div>
-            <span className="text-[10px] font-mono text-zinc-400">v1.4</span>
-          </div>
+          </>
         ) : (
           <div className="flex justify-center py-1" title="Gateway Active: Enforcing">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-status-green indicator-breathing" />
           </div>
         )}
       </div>

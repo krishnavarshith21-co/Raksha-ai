@@ -16,6 +16,7 @@ import {
   Trash2,
   Edit,
   ExternalLink,
+  Cpu,
 } from 'lucide-react';
 import { agentsApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -49,7 +50,8 @@ export const AgentsPage: React.FC = () => {
   const fetchAgents = useCallback(async () => {
     try {
       const res = await agentsApi.list();
-      setAgents(res.data.data || res.data.agents || []);
+      const list = res.data?.data || res.data?.agents || res.data || [];
+      setAgents(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error('Failed to load agents:', err);
     } finally {
@@ -81,8 +83,10 @@ export const AgentsPage: React.FC = () => {
         metadata: { framework: 'autonomous-agent-v1' },
       });
 
-      const newAgent = res.data.data;
-      setAgents([newAgent, ...agents]);
+      const newAgent = res.data?.data || res.data;
+      if (newAgent) {
+        setAgents([newAgent, ...agents]);
+      }
       setIsRegisterOpen(false);
       setName('');
       setDescription('');
@@ -112,7 +116,7 @@ export const AgentsPage: React.FC = () => {
     setLoadingDetails(true);
     try {
       const res = await agentsApi.get(agent.id);
-      setAgentDetails(res.data.data);
+      setAgentDetails(res.data?.data || agent);
     } catch {
       setAgentDetails(agent);
     } finally {
@@ -133,23 +137,25 @@ export const AgentsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Bot className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              Autonomous Agent Governance
+            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+              AUTONOMOUS INVENTORY & GOVERNANCE
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">ACTIVE REGISTRY</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
             Registered AI Agents
           </h1>
-          <p className="text-xs text-zinc-400">
-            Lifecycle monitoring, risk profiles, and perimeter enforcement for deployed autonomous agents.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Lifecycle monitoring, risk tier baselines, and tool execution boundaries for all deployed autonomous agents.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="secondary"
             size="sm"
@@ -163,7 +169,7 @@ export const AgentsPage: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => setIsRegisterOpen(true)}
-            icon={<Plus className="w-4 h-4 text-zinc-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Register Agent
           </Button>
@@ -171,16 +177,16 @@ export const AgentsPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <Card className="p-4 bg-zinc-900/90 border-zinc-800">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="p-3.5 rounded-lg bg-graphite-900 border border-graphite-800 shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           <div className="lg:col-span-3 relative">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-graphite-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search agent by name, framework, or role..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 placeholder:text-zinc-600 focus:border-amber-500 focus:outline-none"
+              className="w-full pl-9 pr-3 py-1.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
@@ -188,7 +194,7 @@ export const AgentsPage: React.FC = () => {
             <select
               value={envFilter}
               onChange={(e) => setEnvFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 focus:border-amber-500 focus:outline-none"
+              className="w-full py-1.5 px-2.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="">All Environments</option>
               <option value="PRODUCTION">PRODUCTION</option>
@@ -197,41 +203,41 @@ export const AgentsPage: React.FC = () => {
             </select>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Agents Grid */}
       {loading ? (
         <LoadingSpinner label="Querying agent registry..." size="lg" fullHeight />
       ) : filteredAgents.length === 0 ? (
         <EmptyState
-          icon={<Bot className="w-8 h-8 text-zinc-500" />}
+          icon={<Bot className="w-7 h-7 text-copper-400" />}
           title="No Agents Registered"
           description="Register your first autonomous agent to begin monitoring tool executions."
           actionLabel="Register Agent"
           onAction={() => setIsRegisterOpen(true)}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredAgents.map((agent) => (
             <Card
               key={agent.id}
-              className={`border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between ${
-                agent.status === 'SUSPENDED' ? 'opacity-60 bg-zinc-950/60' : 'bg-zinc-900/90'
+              className={`hover:border-graphite-700 transition-all flex flex-col justify-between ${
+                agent.status === 'SUSPENDED' ? 'opacity-60 bg-graphite-950/70' : 'bg-graphite-900'
               }`}
             >
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 {/* Agent Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center text-amber-400 shadow-inner">
-                      <Bot className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded-lg bg-graphite-850 border border-graphite-750 flex items-center justify-center text-copper-400 shadow-inner">
+                      <Bot className="w-4.5 h-4.5" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-zinc-100 text-sm tracking-tight">
+                      <h3 className="font-semibold text-stone-100 text-sm tracking-tight truncate max-w-[160px]">
                         {agent.name}
                       </h3>
-                      <span className="text-[10px] font-mono text-zinc-500">
-                        ID: {agent.id.slice(0, 8)}...
+                      <span className="text-[10px] font-mono text-graphite-400">
+                        ID: {agent.id?.slice(0, 8)}...
                       </span>
                     </div>
                   </div>
@@ -241,13 +247,13 @@ export const AgentsPage: React.FC = () => {
                   </Badge>
                 </div>
 
-                <p className="text-xs text-zinc-400 line-clamp-2">
-                  {agent.description || 'Autonomous agent connected to enterprise tools.'}
+                <p className="text-xs text-graphite-300 line-clamp-2 leading-relaxed font-sans">
+                  {agent.description || 'Autonomous agent connected to enterprise tools and external APIs.'}
                 </p>
 
                 {/* Badges / Metadata */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-zinc-950 border border-zinc-800 text-[10px] font-mono text-zinc-300">
+                  <span className="px-2 py-0.5 rounded bg-graphite-950 border border-graphite-800 text-[10px] font-mono text-graphite-300">
                     {agent.environment}
                   </span>
                   <Badge variant={getSeverityBadgeVariant(agent.risk_level)} size="sm">
@@ -256,22 +262,22 @@ export const AgentsPage: React.FC = () => {
                 </div>
 
                 {/* Telemetry Stats */}
-                <div className="grid grid-cols-3 gap-2 py-2 px-3 bg-zinc-950/80 rounded-lg border border-zinc-800 text-center font-mono">
+                <div className="grid grid-cols-3 gap-2 py-2 px-3 bg-graphite-950 rounded-md border border-graphite-800 text-center font-mono">
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">ACTIONS</span>
-                    <span className="text-xs font-bold text-zinc-200">
+                    <span className="text-[10px] text-graphite-500 block">ACTIONS</span>
+                    <span className="text-xs font-semibold text-stone-200">
                       {agent.total_actions || 0}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">THREATS</span>
-                    <span className="text-xs font-bold text-rose-400">
+                    <span className="text-[10px] text-graphite-500 block">THREATS</span>
+                    <span className="text-xs font-semibold text-status-red">
                       {agent.total_threats || 0}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">TOOLS</span>
-                    <span className="text-xs font-bold text-amber-400">
+                    <span className="text-[10px] text-graphite-500 block">TOOLS</span>
+                    <span className="text-xs font-semibold text-copper-400">
                       {agent.total_permissions || 0}
                     </span>
                   </div>
@@ -279,7 +285,7 @@ export const AgentsPage: React.FC = () => {
               </div>
 
               {/* Card Footer Actions */}
-              <div className="mt-5 pt-3 border-t border-zinc-800 flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-graphite-800 flex items-center justify-between">
                 <Button
                   variant="outline"
                   size="sm"
@@ -295,9 +301,9 @@ export const AgentsPage: React.FC = () => {
                   onClick={() => handleToggleStatus(agent)}
                   icon={
                     agent.status === 'ACTIVE' ? (
-                      <PauseCircle className="w-3.5 h-3.5 text-zinc-400" />
+                      <PauseCircle className="w-3.5 h-3.5 text-graphite-400" />
                     ) : (
-                      <PlayCircle className="w-3.5 h-3.5 text-emerald-400" />
+                      <PlayCircle className="w-3.5 h-3.5 text-status-green" />
                     )
                   }
                 >
@@ -316,16 +322,16 @@ export const AgentsPage: React.FC = () => {
         title="Register Autonomous Agent"
         subtitle="Provision an agent ID in Rakshya for perimeter inline telemetry."
       >
-        <form onSubmit={handleCreateAgent} className="space-y-4">
+        <form onSubmit={handleCreateAgent} className="space-y-3.5">
           {createError && (
-            <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+            <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
               {createError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-              Agent Name
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
+              Agent Identifier Name
             </label>
             <input
               type="text"
@@ -333,32 +339,32 @@ export const AgentsPage: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Finance-Analyst-Agent"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
               Description & Purpose
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Autonomous assistant tasked with querying SQL warehouses and posting reports..."
+              placeholder="Autonomous assistant tasked with querying SQL warehouses and generating summaries..."
               rows={3}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-                Environment
+              <label className="block text-xs font-mono text-graphite-300 mb-1.5">
+                Runtime Environment
               </label>
               <select
                 value={environment}
                 onChange={(e) => setEnvironment(e.target.value as any)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2.5 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
               >
                 <option value="PRODUCTION">PRODUCTION</option>
                 <option value="STAGING">STAGING</option>
@@ -367,13 +373,13 @@ export const AgentsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+              <label className="block text-xs font-mono text-graphite-300 mb-1.5">
                 Baseline Risk Tier
               </label>
               <select
                 value={riskLevel}
                 onChange={(e) => setRiskLevel(e.target.value as any)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2.5 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
               >
                 <option value="LOW">LOW</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -392,7 +398,7 @@ export const AgentsPage: React.FC = () => {
               variant="primary"
               size="sm"
               loading={submittingCreate}
-              icon={<Plus className="w-4 h-4 text-zinc-950" />}
+              icon={<Plus className="w-4 h-4 text-graphite-950" />}
             >
               Register Agent
             </Button>
@@ -415,16 +421,16 @@ export const AgentsPage: React.FC = () => {
           {loadingDetails ? (
             <LoadingSpinner label="Loading agent permissions and actions..." />
           ) : (
-            <div className="space-y-5">
+            <div className="space-y-4">
               {/* Description */}
-              <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 text-xs text-zinc-300">
+              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 text-xs text-graphite-300 font-mono">
                 {selectedAgent.description || 'No description provided.'}
               </div>
 
               {/* Permissions list */}
               <div>
-                <h4 className="text-xs font-mono font-semibold text-zinc-300 mb-2 flex items-center gap-2">
-                  <KeyRound className="w-4 h-4 text-amber-500" />
+                <h4 className="text-xs font-mono font-medium text-stone-200 mb-2 flex items-center gap-2">
+                  <KeyRound className="w-3.5 h-3.5 text-copper-400" />
                   <span>Authorized Enterprise Tools & Permissions</span>
                 </h4>
                 {agentDetails?.permissions?.length > 0 ? (
@@ -432,9 +438,9 @@ export const AgentsPage: React.FC = () => {
                     {agentDetails.permissions.map((p: any) => (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between p-2.5 rounded bg-zinc-950 border border-zinc-800 text-xs font-mono"
+                        className="flex items-center justify-between p-2.5 rounded bg-graphite-950 border border-graphite-800 text-xs font-mono"
                       >
-                        <span className="text-zinc-200">{p.tool_name}</span>
+                        <span className="text-stone-200">{p.tool_name}</span>
                         <Badge variant="allow" size="sm">
                           {p.level}
                         </Badge>
@@ -442,7 +448,7 @@ export const AgentsPage: React.FC = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-3 rounded bg-zinc-950/60 border border-zinc-800 text-xs text-zinc-500 text-center font-mono">
+                  <div className="p-3 rounded bg-graphite-950/60 border border-graphite-800 text-xs text-graphite-500 text-center font-mono">
                     No tools explicitly granted to this agent yet.
                   </div>
                 )}
@@ -450,8 +456,8 @@ export const AgentsPage: React.FC = () => {
 
               {/* Recent Actions */}
               <div>
-                <h4 className="text-xs font-mono font-semibold text-zinc-300 mb-2 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-sky-400" />
+                <h4 className="text-xs font-mono font-medium text-stone-200 mb-2 flex items-center gap-2">
+                  <Activity className="w-3.5 h-3.5 text-sky-400" />
                   <span>Recent Evaluated Actions</span>
                 </h4>
                 {agentDetails?.recentActions?.length > 0 ? (
@@ -459,11 +465,11 @@ export const AgentsPage: React.FC = () => {
                     {agentDetails.recentActions.slice(0, 5).map((act: any) => (
                       <div
                         key={act.id}
-                        className="flex items-center justify-between p-2.5 rounded bg-zinc-950 border border-zinc-800 text-xs font-mono"
+                        className="flex items-center justify-between p-2.5 rounded bg-graphite-950 border border-graphite-800 text-xs font-mono"
                       >
                         <div className="flex items-center gap-2">
-                          <span className="text-zinc-400">{act.action_type}</span>
-                          <span className="text-zinc-200 truncate max-w-xs">
+                          <span className="text-graphite-400">{act.action_type}</span>
+                          <span className="text-stone-200 truncate max-w-xs">
                             {act.resource}
                           </span>
                         </div>
@@ -477,7 +483,7 @@ export const AgentsPage: React.FC = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-3 rounded bg-zinc-950/60 border border-zinc-800 text-xs text-zinc-500 text-center font-mono">
+                  <div className="p-3 rounded bg-graphite-950/60 border border-graphite-800 text-xs text-graphite-500 text-center font-mono">
                     No action history recorded yet.
                   </div>
                 )}

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
 import { AppLayout } from './components/layout/AppLayout';
 
+import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -22,6 +23,9 @@ export function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Public Architecture & Marketing Overview */}
+          <Route path="/landing" element={<LandingPage />} />
+
           {/* Public Authentication routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

@@ -58,9 +58,13 @@ export const PermissionsPage: React.FC = () => {
         agentsApi.list().catch(() => ({ data: { data: [] } })),
       ]);
 
-      setPermissions(permRes.data.data || []);
-      setTools(toolRes.data.data || []);
-      setAgents(agentRes.data.data || agentRes.data.agents || []);
+      const permList = permRes.data?.data || permRes.data || [];
+      const toolList = toolRes.data?.data || toolRes.data || [];
+      const agentList = agentRes.data?.data || agentRes.data?.agents || agentRes.data || [];
+
+      setPermissions(Array.isArray(permList) ? permList : []);
+      setTools(Array.isArray(toolList) ? toolList : []);
+      setAgents(Array.isArray(agentList) ? agentList : []);
     } catch (err) {
       console.error('Failed to load access matrix:', err);
     } finally {
@@ -128,7 +132,10 @@ export const PermissionsPage: React.FC = () => {
         risk_level: toolRisk,
       });
 
-      setTools([...tools, res.data.data]);
+      const newTool = res.data?.data || res.data;
+      if (newTool) {
+        setTools([...tools, newTool]);
+      }
       setIsRegisterToolOpen(false);
       setToolName('');
       setToolDesc('');
@@ -145,23 +152,25 @@ export const PermissionsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <KeyRound className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              RBAC & Access Control
+            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+              RBAC & CAPABILITY SCOPES
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">ZERO-TRUST MATRIX</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
-            Tool Permissions & Resources
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
+            Tool Permissions & Access Control
           </h1>
-          <p className="text-xs text-zinc-400">
-            Least-privilege authorization matrix governing agent connectivity to tools and data stores.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Least-privilege authorization matrix governing autonomous agent connectivity to enterprise data stores, APIs, and tools.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="secondary"
             size="sm"
@@ -175,7 +184,7 @@ export const PermissionsPage: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => setIsRegisterToolOpen(true)}
-            icon={<Wrench className="w-4 h-4" />}
+            icon={<Wrench className="w-3.5 h-3.5" />}
           >
             Register Tool
           </Button>
@@ -183,7 +192,7 @@ export const PermissionsPage: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => setIsGrantOpen(true)}
-            icon={<Plus className="w-4 h-4 text-zinc-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Grant Permission
           </Button>
@@ -191,31 +200,31 @@ export const PermissionsPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-3 border-b border-zinc-800 pb-3">
+      <div className="flex items-center gap-2 border-b border-graphite-800 pb-3">
         <button
           onClick={() => setActiveTab('PERMISSIONS')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
+          className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
             activeTab === 'PERMISSIONS'
-              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-copper-500/15 text-copper-300 border border-copper-500/40 shadow-sm'
+              : 'text-graphite-400 hover:text-stone-200 border border-transparent'
           }`}
         >
           <span>Agent Access Matrix</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-zinc-800 text-zinc-300 text-[10px]">
+          <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-graphite-300 text-[10px]">
             {permissions.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('TOOLS')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
+          className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
             activeTab === 'TOOLS'
-              ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-graphite-800 text-stone-100 border border-graphite-700'
+              : 'text-graphite-400 hover:text-stone-200 border border-transparent'
           }`}
         >
           <span>Enterprise Tool Catalog</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-zinc-800 text-zinc-300 text-[10px]">
+          <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-graphite-300 text-[10px]">
             {tools.length}
           </span>
         </button>
@@ -228,46 +237,46 @@ export const PermissionsPage: React.FC = () => {
         /* Permissions Matrix Table */
         permissions.length === 0 ? (
           <EmptyState
-            icon={<KeyRound className="w-8 h-8 text-zinc-500" />}
+            icon={<KeyRound className="w-7 h-7 text-copper-400" />}
             title="No Tool Permissions Granted"
             description="Authorize autonomous agents to access specific enterprise tools using least privilege."
             actionLabel="Grant Permission"
             onAction={() => setIsGrantOpen(true)}
           />
         ) : (
-          <Card className="p-0 overflow-hidden border-zinc-800">
+          <Card className="p-0 overflow-hidden border-graphite-800">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-zinc-950/70 border-b border-zinc-800 text-zinc-400 font-mono">
+                <thead className="bg-graphite-950 border-b border-graphite-800 text-graphite-400 font-mono text-[11px]">
                   <tr>
-                    <th className="py-3 px-4 font-medium">Autonomous Agent</th>
-                    <th className="py-3 px-4 font-medium">Enterprise Tool</th>
-                    <th className="py-3 px-4 font-medium">Tool Category</th>
-                    <th className="py-3 px-4 font-medium">Granted Privilege</th>
-                    <th className="py-3 px-4 font-medium text-right">Revoke Access</th>
+                    <th className="py-3 px-4 font-medium">AUTONOMOUS AGENT</th>
+                    <th className="py-3 px-4 font-medium">ENTERPRISE TOOL</th>
+                    <th className="py-3 px-4 font-medium">CATEGORY</th>
+                    <th className="py-3 px-4 font-medium">GRANTED PRIVILEGE</th>
+                    <th className="py-3 px-4 font-medium text-right">REVOKE</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800/60 font-mono">
+                <tbody className="divide-y divide-graphite-800/60 font-mono">
                   {permissions.map((perm) => (
-                    <tr key={perm.id} className="hover:bg-zinc-850/40 transition-colors">
-                      <td className="py-3.5 px-4 font-sans font-medium text-zinc-200">
+                    <tr key={perm.id} className="hover:bg-graphite-850/50 transition-colors">
+                      <td className="py-3 px-4 font-sans font-medium text-stone-200">
                         <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-status-green" />
                           <span>{perm.agent_name || 'Agent'}</span>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 text-zinc-200 font-medium">
+                      <td className="py-3 px-4 text-stone-200 font-medium">
                         {perm.tool_name || 'Tool'}
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <span className="px-2 py-0.5 rounded bg-zinc-950 border border-zinc-800 text-zinc-400 text-[10px]">
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-0.5 rounded bg-graphite-950 border border-graphite-800 text-graphite-400 text-[10px]">
                           {perm.tool_category || 'GENERAL'}
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <Badge
                           variant={
                             perm.level === 'DENY'
@@ -282,13 +291,13 @@ export const PermissionsPage: React.FC = () => {
                         </Badge>
                       </td>
 
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3 px-4 text-right">
                         <button
                           onClick={() => handleRevokePermission(perm.id)}
-                          className="p-1 rounded text-zinc-500 hover:text-rose-400 hover:bg-zinc-800 transition-colors"
+                          className="p-1 rounded text-graphite-500 hover:text-status-red hover:bg-graphite-800 transition-colors"
                           title="Revoke Permission"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>
@@ -302,14 +311,14 @@ export const PermissionsPage: React.FC = () => {
         /* Tools Catalog */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tools.map((tool) => (
-            <Card key={tool.id} className="border-zinc-800 bg-zinc-900/90">
+            <Card key={tool.id} className="border-graphite-800 bg-graphite-900">
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h3 className="font-semibold text-zinc-100 text-sm tracking-tight">
+                    <h3 className="font-semibold text-stone-100 text-sm tracking-tight truncate max-w-[160px]">
                       {tool.name}
                     </h3>
-                    <span className="text-[10px] font-mono text-zinc-500">
+                    <span className="text-[10px] font-mono text-graphite-400">
                       Category: {tool.category}
                     </span>
                   </div>
@@ -319,20 +328,20 @@ export const PermissionsPage: React.FC = () => {
                   </Badge>
                 </div>
 
-                <p className="text-xs text-zinc-400 line-clamp-2">
+                <p className="text-xs text-graphite-300 line-clamp-2 leading-relaxed font-sans">
                   {tool.description || 'Enterprise tool accessible to agents.'}
                 </p>
 
-                <div className="pt-2 border-t border-zinc-800 flex items-center justify-between text-[11px] font-mono text-zinc-500">
+                <div className="pt-2 border-t border-graphite-800 flex items-center justify-between text-[11px] font-mono text-graphite-400">
                   <div className="flex items-center gap-1.5 truncate max-w-[200px]">
                     {tool.is_external ? (
-                      <Globe className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                      <Globe className="w-3.5 h-3.5 text-copper-400 shrink-0" />
                     ) : (
                       <Database className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                     )}
                     <span className="truncate">{tool.endpoint || 'Internal API'}</span>
                   </div>
-                  <span className="text-[10px]">
+                  <span className="text-[10px] text-graphite-500">
                     {tool.is_external ? 'EXTERNAL' : 'INTERNAL'}
                   </span>
                 </div>
@@ -349,22 +358,22 @@ export const PermissionsPage: React.FC = () => {
         title="Authorize Agent Tool Access"
         subtitle="Enforce least-privilege RBAC for autonomous agent execution."
       >
-        <form onSubmit={handleGrantPermission} className="space-y-4">
+        <form onSubmit={handleGrantPermission} className="space-y-3.5">
           {grantError && (
-            <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+            <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
               {grantError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
               Select Autonomous Agent
             </label>
             <select
               required
               value={selectedAgentId}
               onChange={(e) => setSelectedAgentId(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="">Choose an agent...</option>
               {agents.map((ag) => (
@@ -376,14 +385,14 @@ export const PermissionsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
               Select Enterprise Tool
             </label>
             <select
               required
               value={selectedToolId}
               onChange={(e) => setSelectedToolId(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="">Choose a tool...</option>
               {tools.map((t) => (
@@ -395,18 +404,18 @@ export const PermissionsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-              Permission Level
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
+              Permission Level Scope
             </label>
             <select
               value={permissionLevel}
               onChange={(e) => setPermissionLevel(e.target.value as any)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="READ">READ (Read-only queries & lookups)</option>
               <option value="WRITE">WRITE (Mutations, inserts & updates)</option>
               <option value="EXECUTE">EXECUTE (Workflow triggers, script execution)</option>
-              <option value="DENY">DENY (Explicit block)</option>
+              <option value="DENY">DENY (Explicit zero-trust block)</option>
             </select>
           </div>
 
@@ -419,7 +428,7 @@ export const PermissionsPage: React.FC = () => {
               variant="primary"
               size="sm"
               loading={submittingGrant}
-              icon={<KeyRound className="w-4 h-4 text-zinc-950" />}
+              icon={<KeyRound className="w-4 h-4 text-graphite-950" />}
             >
               Grant Permission
             </Button>
@@ -432,17 +441,17 @@ export const PermissionsPage: React.FC = () => {
         isOpen={isRegisterToolOpen}
         onClose={() => setIsRegisterToolOpen(false)}
         title="Register Enterprise Tool"
-        subtitle="Add a new data source, API, or external service to the defense perimeter."
+        subtitle="Add a new data store, API, or external service to the defense perimeter."
       >
-        <form onSubmit={handleRegisterTool} className="space-y-4">
+        <form onSubmit={handleRegisterTool} className="space-y-3.5">
           {toolError && (
-            <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+            <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
               {toolError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Tool Name
             </label>
             <input
@@ -451,12 +460,12 @@ export const PermissionsPage: React.FC = () => {
               value={toolName}
               onChange={(e) => setToolName(e.target.value)}
               placeholder="e.g. Production PostgreSQL DB, Stripe API"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Description
             </label>
             <textarea
@@ -464,19 +473,19 @@ export const PermissionsPage: React.FC = () => {
               onChange={(e) => setToolDesc(e.target.value)}
               placeholder="Enterprise service used for..."
               rows={2}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1">
+              <label className="block text-xs font-mono text-graphite-300 mb-1">
                 Category
               </label>
               <select
                 value={toolCategory}
                 onChange={(e) => setToolCategory(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2 focus:border-copper-500/80 focus:outline-none font-mono"
               >
                 <option value="DATABASE">DATABASE</option>
                 <option value="API">API</option>
@@ -488,13 +497,13 @@ export const PermissionsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1">
+              <label className="block text-xs font-mono text-graphite-300 mb-1">
                 Risk Tier
               </label>
               <select
                 value={toolRisk}
                 onChange={(e) => setToolRisk(e.target.value as any)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2 focus:border-copper-500/80 focus:outline-none font-mono"
               >
                 <option value="LOW">LOW</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -505,7 +514,7 @@ export const PermissionsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Service Endpoint / Host
             </label>
             <input
@@ -513,16 +522,16 @@ export const PermissionsPage: React.FC = () => {
               value={toolEndpoint}
               onChange={(e) => setToolEndpoint(e.target.value)}
               placeholder="https://api.stripe.com/v1 or db.internal.net"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
-          <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-200 pt-1">
+          <label className="flex items-center gap-2 cursor-pointer text-xs text-stone-200 pt-1">
             <input
               type="checkbox"
               checked={toolIsExternal}
               onChange={(e) => setToolIsExternal(e.target.checked)}
-              className="rounded bg-zinc-900 border-zinc-700 text-amber-500 focus:ring-0"
+              className="rounded bg-graphite-900 border-graphite-750 text-copper-500 focus:ring-0"
             />
             <span>This tool resides outside the internal private network (External SaaS / API)</span>
           </label>
@@ -536,7 +545,7 @@ export const PermissionsPage: React.FC = () => {
               variant="primary"
               size="sm"
               loading={submittingTool}
-              icon={<Plus className="w-4 h-4 text-zinc-950" />}
+              icon={<Plus className="w-4 h-4 text-graphite-950" />}
             >
               Register Tool
             </Button>

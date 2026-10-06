@@ -45,25 +45,25 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-graphite-950/80 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidthClass} bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]`}
+        className={`relative w-full ${maxWidthClass} bg-graphite-900 border border-graphite-750 rounded-xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]`}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between gap-4 shrink-0 bg-zinc-900/90">
+        <div className="px-6 py-4 border-b border-graphite-800 flex items-center justify-between gap-4 shrink-0 bg-graphite-900">
           <div>
-            <h3 className="text-base font-semibold text-zinc-100">{title}</h3>
-            {subtitle && <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>}
+            <h3 className="text-sm font-semibold text-stone-100">{title}</h3>
+            {subtitle && <p className="text-xs text-graphite-400 mt-0.5">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+            className="p-1 rounded-md text-graphite-400 hover:text-stone-100 hover:bg-graphite-800 border border-transparent hover:border-graphite-700 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -72,7 +72,7 @@ export const Modal: React.FC<ModalProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="px-6 py-4 border-t border-zinc-800 bg-zinc-950/60 flex items-center justify-end gap-3 shrink-0">
+          <div className="px-6 py-3.5 border-t border-graphite-800 bg-graphite-950/40 flex items-center justify-end gap-3 shrink-0">
             {footer}
           </div>
         )}

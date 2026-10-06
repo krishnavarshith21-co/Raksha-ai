@@ -44,7 +44,8 @@ export const PoliciesPage: React.FC = () => {
   const fetchPolicies = useCallback(async () => {
     try {
       const res = await policiesApi.list();
-      setPolicies(res.data.data || res.data.policies || []);
+      const list = res.data?.data || res.data?.policies || res.data || [];
+      setPolicies(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error('Failed to load policies:', err);
     } finally {
@@ -117,7 +118,10 @@ export const PoliciesPage: React.FC = () => {
         conditions,
       });
 
-      setPolicies([res.data.data, ...policies]);
+      const newPolicy = res.data?.data || res.data;
+      if (newPolicy) {
+        setPolicies([newPolicy, ...policies]);
+      }
       setIsCreateOpen(false);
       // Reset form
       setName('');
@@ -161,23 +165,25 @@ export const PoliciesPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <ScrollText className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              Policy Enforcement Engine
+            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+              POLICY ENFORCEMENT ENGINE
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">DECLARATIVE GUARDRAILS</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
             Security Governance Policies
           </h1>
-          <p className="text-xs text-zinc-400">
-            Define declarative perimeter rules, data boundaries, and human approval triggers.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Define declarative perimeter rules, data access boundaries, and dual-custody approval criteria for all autonomous agents.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="secondary"
             size="sm"
@@ -191,7 +197,7 @@ export const PoliciesPage: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => setIsCreateOpen(true)}
-            icon={<Plus className="w-4 h-4 text-zinc-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Create Policy
           </Button>
@@ -199,25 +205,25 @@ export const PoliciesPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <Card className="p-4 bg-zinc-900/90 border-zinc-800">
+      <div className="p-3.5 rounded-lg bg-graphite-900 border border-graphite-800 shadow-sm">
         <div className="relative">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-graphite-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search policies by rule name, resource target, or description..."
+            placeholder="Search policies by rule name, resource target, or classification..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 placeholder:text-zinc-600 focus:border-amber-500 focus:outline-none"
+            className="w-full pl-9 pr-3 py-1.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500/80 focus:outline-none font-mono"
           />
         </div>
-      </Card>
+      </div>
 
       {/* Policies List */}
       {loading ? (
         <LoadingSpinner label="Loading policy rules..." size="lg" fullHeight />
       ) : filteredPolicies.length === 0 ? (
         <EmptyState
-          icon={<ScrollText className="w-8 h-8 text-zinc-500" />}
+          icon={<ScrollText className="w-7 h-7 text-copper-400" />}
           title="No Policies Configured"
           description="Create your first perimeter security policy to enforce autonomous agent boundaries."
           actionLabel="Create Policy"
@@ -230,8 +236,8 @@ export const PoliciesPage: React.FC = () => {
             return (
               <Card
                 key={policy.id}
-                className={`border-zinc-800/90 transition-all ${
-                  policy.is_active ? 'bg-zinc-900/90' : 'bg-zinc-950/40 opacity-60'
+                className={`transition-all ${
+                  policy.is_active ? 'bg-graphite-900' : 'bg-graphite-950/70 opacity-60'
                 }`}
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -240,16 +246,16 @@ export const PoliciesPage: React.FC = () => {
                       <Badge variant={getSeverityBadgeVariant(policy.severity)} size="sm">
                         {policy.severity}
                       </Badge>
-                      <h3 className="font-semibold text-zinc-100 text-sm font-sans">
+                      <h3 className="font-semibold text-stone-100 text-sm font-sans">
                         {policy.name}
                       </h3>
-                      <span className="text-zinc-600">·</span>
-                      <span className="text-[10px] font-mono text-zinc-400 px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700">
+                      <span className="text-graphite-600">·</span>
+                      <span className="text-[10px] font-mono text-graphite-300 px-1.5 py-0.2 rounded bg-graphite-800 border border-graphite-700">
                         {policy.rule || 'RULE'}
                       </span>
                     </div>
 
-                    <p className="text-xs text-zinc-400 font-sans">
+                    <p className="text-xs text-graphite-300 font-sans leading-relaxed">
                       {policy.description || 'Enterprise security policy rule.'}
                     </p>
 
@@ -270,7 +276,7 @@ export const PoliciesPage: React.FC = () => {
                       {cond.action_types?.map((at: string) => (
                         <span
                           key={at}
-                          className="px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-300 text-[10px] font-mono"
+                          className="px-2 py-0.5 rounded bg-graphite-800 border border-graphite-700 text-stone-300 text-[10px] font-mono"
                         >
                           Restricts: {at}
                         </span>
@@ -286,7 +292,7 @@ export const PoliciesPage: React.FC = () => {
                       {cond.resources?.map((res: string) => (
                         <span
                           key={res}
-                          className="px-2 py-0.5 rounded bg-zinc-950 border border-zinc-800 text-zinc-400 text-[10px] font-mono"
+                          className="px-2 py-0.5 rounded bg-graphite-950 border border-graphite-800 text-graphite-400 text-[10px] font-mono"
                         >
                           Path: {res}
                         </span>
@@ -295,26 +301,26 @@ export const PoliciesPage: React.FC = () => {
                   </div>
 
                   {/* Right Actions */}
-                  <div className="flex items-center gap-3 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-zinc-800">
+                  <div className="flex items-center gap-3 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-graphite-800">
                     <button
                       onClick={() => handleTogglePolicy(policy)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer border ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer border ${
                         policy.is_active
-                          ? 'bg-emerald-950/60 border-emerald-800 text-emerald-300'
-                          : 'bg-zinc-900 border-zinc-800 text-zinc-500'
+                          ? 'bg-emerald-950/40 border-emerald-700/50 text-emerald-300'
+                          : 'bg-graphite-900 border-graphite-800 text-graphite-500'
                       }`}
                     >
                       {policy.is_active ? (
                         <ToggleRight className="w-4 h-4 text-emerald-400" />
                       ) : (
-                        <ToggleLeft className="w-4 h-4 text-zinc-500" />
+                        <ToggleLeft className="w-4 h-4 text-graphite-500" />
                       )}
-                      <span>{policy.is_active ? 'ACTIVE' : 'DISABLED'}</span>
+                      <span>{policy.is_active ? 'ENFORCING' : 'DISABLED'}</span>
                     </button>
 
                     <button
                       onClick={() => handleDeletePolicy(policy.id)}
-                      className="p-1.5 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-zinc-800 transition-colors"
+                      className="p-1.5 rounded-md text-graphite-500 hover:text-status-red hover:bg-graphite-800 transition-colors"
                       title="Delete Policy"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -333,17 +339,17 @@ export const PoliciesPage: React.FC = () => {
         onClose={() => setIsCreateOpen(false)}
         maxWidth="xl"
         title="Create Security Policy"
-        subtitle="Configure declarative enforcement rules to restrict agent actions."
+        subtitle="Configure declarative enforcement rules to restrict autonomous agent operations."
       >
-        <form onSubmit={handleCreatePolicy} className="space-y-4">
+        <form onSubmit={handleCreatePolicy} className="space-y-3.5">
           {createError && (
-            <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+            <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
               {createError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Policy Rule Name
             </label>
             <input
@@ -352,32 +358,32 @@ export const PoliciesPage: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Block PII Export Outside Enterprise Perimeter"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
-              Description & Rationale
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
+              Description & Operational Context
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Explain the security intention and operational context..."
+              placeholder="Explain the security intention and operational context for audit reporting..."
               rows={2}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1">
+              <label className="block text-xs font-mono text-graphite-300 mb-1">
                 Violation Severity
               </label>
               <select
                 value={severity}
                 onChange={(e) => setSeverity(e.target.value as any)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2 focus:border-copper-500/80 focus:outline-none font-mono"
               >
                 <option value="LOW">LOW</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -387,37 +393,37 @@ export const PoliciesPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1">
-                Rule Identifier
+              <label className="block text-xs font-mono text-graphite-300 mb-1">
+                Rule Code Identifier
               </label>
               <input
                 type="text"
                 value={rule}
                 onChange={(e) => setRule(e.target.value)}
                 placeholder="RULE_CODE_ID"
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2 focus:border-copper-500/80 focus:outline-none font-mono"
               />
             </div>
           </div>
 
           {/* Action Flags */}
-          <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-2">
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-200">
+          <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-2">
+            <label className="flex items-center gap-2 cursor-pointer text-xs text-stone-200">
               <input
                 type="checkbox"
                 checked={requireApproval}
                 onChange={(e) => setRequireApproval(e.target.checked)}
-                className="rounded bg-zinc-900 border-zinc-700 text-amber-500 focus:ring-0"
+                className="rounded bg-graphite-900 border-graphite-700 text-copper-500 focus:ring-0"
               />
               <span>Trigger Human Approval Queue (Decision: REQUIRE_APPROVAL)</span>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-200">
+            <label className="flex items-center gap-2 cursor-pointer text-xs text-stone-200">
               <input
                 type="checkbox"
                 checked={blockExternal}
                 onChange={(e) => setBlockExternal(e.target.checked)}
-                className="rounded bg-zinc-900 border-zinc-700 text-amber-500 focus:ring-0"
+                className="rounded bg-graphite-900 border-graphite-700 text-copper-500 focus:ring-0"
               />
               <span>Block Outbound External Network Destinations</span>
             </label>
@@ -425,7 +431,7 @@ export const PoliciesPage: React.FC = () => {
 
           {/* Action Types */}
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
               Restricted Action Types (Click to toggle)
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -438,8 +444,8 @@ export const PoliciesPage: React.FC = () => {
                     onClick={() => toggleActionType(act)}
                     className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 font-bold'
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-copper-500/20 border-copper-500/60 text-copper-300 font-bold'
+                        : 'bg-graphite-950 border-graphite-800 text-graphite-400 hover:text-stone-200'
                     }`}
                   >
                     {act}
@@ -451,7 +457,7 @@ export const PoliciesPage: React.FC = () => {
 
           {/* Data Classifications */}
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
               Restricted Data Classifications
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -465,7 +471,7 @@ export const PoliciesPage: React.FC = () => {
                     className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-colors cursor-pointer ${
                       isSelected
                         ? 'bg-sky-500/20 border-sky-500/60 text-sky-300 font-bold'
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                        : 'bg-graphite-950 border-graphite-800 text-graphite-400 hover:text-stone-200'
                     }`}
                   >
                     {cls}
@@ -477,7 +483,7 @@ export const PoliciesPage: React.FC = () => {
 
           {/* Resource keywords */}
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Restricted Resource Substrings (comma separated)
             </label>
             <input
@@ -485,7 +491,7 @@ export const PoliciesPage: React.FC = () => {
               value={resourceKeywords}
               onChange={(e) => setResourceKeywords(e.target.value)}
               placeholder="e.g. production_db, customer_secrets, /admin"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
@@ -498,7 +504,7 @@ export const PoliciesPage: React.FC = () => {
               variant="primary"
               size="sm"
               loading={submittingCreate}
-              icon={<Plus className="w-4 h-4 text-zinc-950" />}
+              icon={<Plus className="w-4 h-4 text-graphite-950" />}
             >
               Enforce Policy
             </Button>

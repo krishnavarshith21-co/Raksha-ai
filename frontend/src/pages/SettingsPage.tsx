@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   HardDrive,
   Cpu,
+  Layers,
 } from 'lucide-react';
 import { authApi } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
@@ -40,7 +41,8 @@ export const SettingsPage: React.FC = () => {
   const fetchUsers = useCallback(async () => {
     try {
       const res = await authApi.getUsers();
-      setUsers(res.data.data || []);
+      const list = res.data?.data || res.data?.users || res.data || [];
+      setUsers(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error('Failed to load team members:', err);
     } finally {
@@ -71,7 +73,10 @@ export const SettingsPage: React.FC = () => {
         role,
       });
 
-      setUsers([res.data.data, ...users]);
+      const newUser = res.data?.data || res.data;
+      if (newUser) {
+        setUsers([newUser, ...users]);
+      }
       setIsInviteOpen(false);
       setName('');
       setEmail('');
@@ -87,23 +92,25 @@ export const SettingsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Settings className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              Cluster Administration
+            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+              CLUSTER ADMINISTRATION & ORG PERIMETER
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">ENTERPRISE TENANT</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
             Organization & Gateway Settings
           </h1>
-          <p className="text-xs text-zinc-400">
-            Manage organization team access, perimeter configuration, and defense cluster health.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Manage organization security team access, perimeter authentication policies, and defense gateway cluster health.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="secondary"
             size="sm"
@@ -117,7 +124,7 @@ export const SettingsPage: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => setIsInviteOpen(true)}
-            icon={<Plus className="w-4 h-4 text-zinc-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Invite Member
           </Button>
@@ -126,43 +133,43 @@ export const SettingsPage: React.FC = () => {
 
       {/* Cluster Overview Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-zinc-800 bg-zinc-900/90">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-2">
-            <ShieldCheck className="w-4 h-4 text-amber-500" />
+        <Card className="border-graphite-800 bg-graphite-900">
+          <div className="flex items-center gap-2 text-xs font-mono text-copper-400 mb-2">
+            <ShieldCheck className="w-4 h-4 text-copper-400" />
             <span>ORGANIZATION PERIMETER</span>
           </div>
-          <div className="text-base font-bold text-zinc-100">
-            {user?.organizationName || 'Rakshya Security HQ'}
+          <div className="text-base font-semibold text-stone-100">
+            {user?.organizationName || 'Enterprise SecOps HQ'}
           </div>
-          <div className="text-xs font-mono text-zinc-500 mt-1">
-            Cluster Org ID: {user?.organizationId?.slice(0, 12)}...
+          <div className="text-xs font-mono text-graphite-400 mt-1">
+            Cluster Org ID: {user?.organizationId ? user.organizationId.slice(0, 12) + '...' : 'org_enterprise_primary'}
           </div>
         </Card>
 
-        <Card className="border-zinc-800 bg-zinc-900/90">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-2">
-            <Server className="w-4 h-4 text-emerald-400" />
+        <Card className="border-graphite-800 bg-graphite-900">
+          <div className="flex items-center gap-2 text-xs font-mono text-status-green mb-2">
+            <Server className="w-4 h-4 text-status-green" />
             <span>GATEWAY HEALTH</span>
           </div>
-          <div className="flex items-center gap-2 text-base font-bold text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="flex items-center gap-2 text-base font-semibold text-status-green">
+            <span className="w-2 h-2 rounded-full bg-status-green indicator-breathing" />
             <span>100% OPERATIONAL</span>
           </div>
-          <div className="text-xs font-mono text-zinc-500 mt-1">
+          <div className="text-xs font-mono text-graphite-400 mt-1">
             Zero-Trust Policy Interceptor Active
           </div>
         </Card>
 
-        <Card className="border-zinc-800 bg-zinc-900/90">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-2">
+        <Card className="border-graphite-800 bg-graphite-900">
+          <div className="flex items-center gap-2 text-xs font-mono text-sky-400 mb-2">
             <Cpu className="w-4 h-4 text-sky-400" />
             <span>ENFORCEMENT DEPLOYMENT</span>
           </div>
-          <div className="text-base font-bold text-zinc-100 font-mono">
+          <div className="text-base font-semibold text-stone-100 font-mono">
             Enterprise Tier
           </div>
-          <div className="text-xs font-mono text-zinc-500 mt-1">
-            Latency SLA: &lt; 50ms inline
+          <div className="text-xs font-mono text-graphite-400 mt-1">
+            Latency SLA: &lt; 1.2ms inline proxy
           </div>
         </Card>
       </div>
@@ -171,11 +178,11 @@ export const SettingsPage: React.FC = () => {
       <Card
         title={
           <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-amber-500" />
+            <Users className="w-4 h-4 text-copper-400" />
             <span>Authorized Security Team</span>
           </div>
         }
-        subtitle="Manage user accounts and role-based permissions for Rakshya console"
+        subtitle="Manage user accounts and role-based permissions for the Rakshya defense console"
         action={
           <Button
             variant="outline"
@@ -192,21 +199,21 @@ export const SettingsPage: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-zinc-800 text-zinc-400 font-mono">
+              <thead className="border-b border-graphite-800 text-graphite-400 font-mono text-[11px]">
                 <tr>
-                  <th className="pb-3 font-medium">Team Member</th>
-                  <th className="pb-3 font-medium">Role</th>
-                  <th className="pb-3 font-medium">Status</th>
-                  <th className="pb-3 font-medium">Joined Date</th>
-                  <th className="pb-3 font-medium text-right">Last Login</th>
+                  <th className="pb-3 font-medium">TEAM MEMBER</th>
+                  <th className="pb-3 font-medium">ROLE</th>
+                  <th className="pb-3 font-medium">STATUS</th>
+                  <th className="pb-3 font-medium">JOINED DATE</th>
+                  <th className="pb-3 font-medium text-right">LAST LOGIN</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/60 font-mono">
+              <tbody className="divide-y divide-graphite-800/60 font-mono">
                 {users.map((member) => (
-                  <tr key={member.id} className="hover:bg-zinc-800/30 transition-colors">
-                    <td className="py-3 font-sans font-medium text-zinc-200">
+                  <tr key={member.id} className="hover:bg-graphite-850/50 transition-colors">
+                    <td className="py-3 font-sans font-medium text-stone-200">
                       <div>{member.name}</div>
-                      <div className="text-[11px] font-mono text-zinc-500">{member.email}</div>
+                      <div className="text-[11px] font-mono text-graphite-400">{member.email}</div>
                     </td>
 
                     <td className="py-3">
@@ -230,11 +237,11 @@ export const SettingsPage: React.FC = () => {
                       </Badge>
                     </td>
 
-                    <td className="py-3 text-zinc-500 text-[11px]">
+                    <td className="py-3 text-graphite-400 text-[11px]">
                       {member.created_at ? new Date(member.created_at).toLocaleDateString() : 'Initial'}
                     </td>
 
-                    <td className="py-3 text-right text-zinc-400 text-[11px]">
+                    <td className="py-3 text-right text-graphite-400 text-[11px]">
                       {member.last_login ? new Date(member.last_login).toLocaleString() : 'Never'}
                     </td>
                   </tr>
@@ -249,35 +256,35 @@ export const SettingsPage: React.FC = () => {
       <Card
         title={
           <div className="flex items-center gap-2">
-            <HardDrive className="w-4 h-4 text-zinc-400" />
+            <HardDrive className="w-4 h-4 text-graphite-400" />
             <span>Defense Engine Specifications</span>
           </div>
         }
-        subtitle="Security pipeline components running within this deployment"
+        subtitle="Security pipeline components running within this deployment cluster"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
-          <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
-            <span className="text-zinc-500 block text-[10px]">DATABASE ENGINE</span>
-            <span className="font-semibold text-emerald-400">PostgreSQL / PGlite Dual-Pool</span>
-            <p className="text-[10px] text-zinc-500 font-sans">Embedded transactional ledger</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs font-mono">
+          <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-1">
+            <span className="text-graphite-500 block text-[10px]">DATABASE ENGINE</span>
+            <span className="font-semibold text-status-green">PostgreSQL / PGlite Dual-Pool</span>
+            <p className="text-[10px] text-graphite-400 font-sans">Embedded transactional ledger</p>
           </div>
 
-          <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
-            <span className="text-zinc-500 block text-[10px]">BEHAVIORAL AI ENGINE</span>
-            <span className="font-semibold text-amber-400">Gemini 2.5 Defense Rationale</span>
-            <p className="text-[10px] text-zinc-500 font-sans">Dual-pass prompt injection classifier</p>
+          <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-1">
+            <span className="text-graphite-500 block text-[10px]">BEHAVIORAL AI ENGINE</span>
+            <span className="font-semibold text-copper-400">Gemini 2.5 Defense Rationale</span>
+            <p className="text-[10px] text-graphite-400 font-sans">Dual-pass prompt injection classifier</p>
           </div>
 
-          <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
-            <span className="text-zinc-500 block text-[10px]">PII & DLP DETECTOR</span>
+          <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-1">
+            <span className="text-graphite-500 block text-[10px]">PII & DLP DETECTOR</span>
             <span className="font-semibold text-sky-400">Deterministic Pattern Matrix</span>
-            <p className="text-[10px] text-zinc-500 font-sans">SSN, Cards, API keys, JWT scanner</p>
+            <p className="text-[10px] text-graphite-400 font-sans">SSN, Cards, API keys, JWT scanner</p>
           </div>
 
-          <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
-            <span className="text-zinc-500 block text-[10px]">ENFORCEMENT SLA</span>
-            <span className="font-semibold text-zinc-200">Fail-Safe Default Closed</span>
-            <p className="text-[10px] text-zinc-500 font-sans">Enforces human review on anomaly</p>
+          <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-1">
+            <span className="text-graphite-500 block text-[10px]">ENFORCEMENT SLA</span>
+            <span className="font-semibold text-stone-200">Fail-Safe Default Closed</span>
+            <p className="text-[10px] text-graphite-400 font-sans">Enforces human review on anomaly</p>
           </div>
         </div>
       </Card>
@@ -287,17 +294,17 @@ export const SettingsPage: React.FC = () => {
         isOpen={isInviteOpen}
         onClose={() => setIsInviteOpen(false)}
         title="Invite Security Team Member"
-        subtitle="Grant role-based console access to your organization."
+        subtitle="Grant role-based console access to your enterprise organization."
       >
-        <form onSubmit={handleInviteUser} className="space-y-4">
+        <form onSubmit={handleInviteUser} className="space-y-3.5">
           {inviteError && (
-            <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+            <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
               {inviteError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Full Name
             </label>
             <input
@@ -306,13 +313,13 @@ export const SettingsPage: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Maya Chen"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
-              Work Email
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
+              Work Email Address
             </label>
             <input
               type="email"
@@ -320,12 +327,12 @@ export const SettingsPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g. maya@cybercorp.com"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Initial Temporary Password
             </label>
             <input
@@ -333,21 +340,21 @@ export const SettingsPage: React.FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-zinc-300 mb-1">
+            <label className="block text-xs font-mono text-graphite-300 mb-1">
               Organizational Role
             </label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value as any)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2.5 focus:border-amber-500 focus:outline-none"
+              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="SECURITY_ANALYST">Security Analyst (Investigate & Decide Approvals)</option>
-              <option value="ADMIN">Admin / CSO (Full Cluster Management & API Keys)</option>
+              <option value="ADMIN">Admin / CISO (Full Cluster Management & API Keys)</option>
               <option value="MEMBER">Member (Read-only Stream Telemetry)</option>
             </select>
           </div>
@@ -361,7 +368,7 @@ export const SettingsPage: React.FC = () => {
               variant="primary"
               size="sm"
               loading={submittingInvite}
-              icon={<Plus className="w-4 h-4 text-zinc-950" />}
+              icon={<Plus className="w-4 h-4 text-graphite-950" />}
             >
               Provision Account
             </Button>

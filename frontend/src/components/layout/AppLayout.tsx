@@ -11,8 +11,8 @@ export const AppLayout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <LoadingSpinner label="Authenticating session..." size="lg" />
+      <div className="min-h-screen bg-graphite-950 flex items-center justify-center">
+        <LoadingSpinner label="Authenticating session credentials..." size="lg" />
       </div>
     );
   }
@@ -22,7 +22,7 @@ export const AppLayout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+    <div className="min-h-screen bg-graphite-950 text-stone-100 flex selection:bg-copper-500/30 selection:text-copper-200">
       {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}

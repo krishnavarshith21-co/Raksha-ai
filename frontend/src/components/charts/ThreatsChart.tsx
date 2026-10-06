@@ -18,10 +18,10 @@ export const ThreatsChart: React.FC<ThreatsChartProps> = ({ data, height = 260 }
   if (!data || data.length === 0) {
     return (
       <div
-        className="flex items-center justify-center text-xs font-mono text-zinc-500"
+        className="flex items-center justify-center text-xs font-mono text-graphite-400"
         style={{ height }}
       >
-        No incident trend data available
+        No incident trend telemetry recorded
       </div>
     );
   }
@@ -40,55 +40,57 @@ export const ThreatsChart: React.FC<ThreatsChartProps> = ({ data, height = 260 }
         >
           <defs>
             <linearGradient id="threatGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
-              <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#c77b3f" stopOpacity={0.35} />
+              <stop offset="95%" stopColor="#c77b3f" stopOpacity={0.0} />
             </linearGradient>
             <linearGradient id="blockedGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#ef4444" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#ef4444" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#c73e3e" stopOpacity={0.4} />
+              <stop offset="95%" stopColor="#c73e3e" stopOpacity={0.0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#1f1f23" vertical={false} />
           <XAxis
             dataKey="formattedDate"
-            stroke="#71717a"
+            stroke="#53535c"
             fontSize={11}
             tickLine={false}
-            axisLine={{ stroke: '#27272a' }}
+            axisLine={{ stroke: '#242428' }}
+            tick={{ fill: '#72727e' }}
           />
           <YAxis
-            stroke="#71717a"
+            stroke="#53535c"
             fontSize={11}
             tickLine={false}
-            axisLine={{ stroke: '#27272a' }}
+            axisLine={{ stroke: '#242428' }}
             allowDecimals={false}
+            tick={{ fill: '#72727e' }}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#18181b',
-              border: '1px solid #3f3f46',
-              borderRadius: '8px',
+              backgroundColor: '#111113',
+              border: '1px solid #2e2e33',
+              borderRadius: '6px',
               fontSize: '12px',
-              color: '#f4f4f5',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)',
+              color: '#f5f3ef',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6)',
             }}
-            labelStyle={{ color: '#a1a1aa', fontWeight: 600, marginBottom: '4px' }}
+            labelStyle={{ color: '#9e9eab', fontWeight: 600, marginBottom: '4px' }}
           />
           <Area
             type="monotone"
             dataKey="count"
             name="Threats Detected"
-            stroke="#f59e0b"
-            strokeWidth={2}
+            stroke="#c77b3f"
+            strokeWidth={1.5}
             fillOpacity={1}
             fill="url(#threatGradient)"
           />
           <Area
             type="monotone"
             dataKey="blocked"
-            name="Blocked Actions"
-            stroke="#ef4444"
-            strokeWidth={2}
+            name="Blocked Incursions"
+            stroke="#c73e3e"
+            strokeWidth={1.5}
             fillOpacity={1}
             fill="url(#blockedGradient)"
           />

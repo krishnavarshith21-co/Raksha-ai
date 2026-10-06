@@ -14,23 +14,23 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 }) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
-    md: 'w-8 h-8',
-    lg: 'w-12 h-12',
+    md: 'w-7 h-7',
+    lg: 'w-10 h-10',
   }[size];
 
   return (
     <div
-      className={`flex flex-col items-center justify-center p-8 text-zinc-400 gap-3 ${
+      className={`flex flex-col items-center justify-center p-8 text-graphite-400 gap-3 ${
         fullHeight ? 'min-h-[50vh]' : ''
       }`}
     >
       <div className="relative">
-        <Loader2 className={`${sizeClasses} animate-spin text-amber-500`} />
+        <Loader2 className={`${sizeClasses} animate-spin text-copper-400`} />
         {size === 'lg' && (
-          <Shield className="w-5 h-5 text-amber-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          <Shield className="w-4 h-4 text-copper-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         )}
       </div>
-      {label && <span className="text-xs font-mono text-zinc-400 tracking-wide">{label}</span>}
+      {label && <span className="text-xs font-mono text-graphite-400 tracking-wide">{label}</span>}
     </div>
   );
 };

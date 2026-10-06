@@ -21,13 +21,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center p-12 text-center border border-dashed border-zinc-800 rounded-2xl bg-zinc-950/40 ${className}`}
+      className={`flex flex-col items-center justify-center p-12 text-center border border-dashed border-graphite-800 rounded-xl bg-graphite-900/30 ${className}`}
     >
-      <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mb-4 shadow-inner">
-        {icon || <ShieldAlert className="w-6 h-6 text-zinc-500" />}
+      <div className="w-11 h-11 rounded-lg bg-graphite-850 border border-graphite-750 flex items-center justify-center text-graphite-400 mb-4 shadow-inner">
+        {icon || <ShieldAlert className="w-5 h-5 text-copper-400/80" />}
       </div>
-      <h4 className="text-sm font-semibold text-zinc-200 mb-1">{title}</h4>
-      <p className="text-xs text-zinc-400 max-w-sm mb-6">{description}</p>
+      <h4 className="text-sm font-medium text-stone-200 mb-1">{title}</h4>
+      <p className="text-xs text-graphite-400 max-w-sm mb-5 leading-relaxed">{description}</p>
       {actionLabel && onAction && (
         <Button variant="primary" size="sm" onClick={onAction}>
           {actionLabel}

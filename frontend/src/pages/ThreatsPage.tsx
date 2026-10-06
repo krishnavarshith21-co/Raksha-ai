@@ -12,6 +12,7 @@ import {
   FileCode,
   ArrowRight,
   UserCheck,
+  Flame,
 } from 'lucide-react';
 import { threatsApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -49,8 +50,9 @@ export const ThreatsPage: React.FC = () => {
 
       const res = await threatsApi.list(params);
       const data = res.data;
-      setThreats(data.data || data.threats || []);
-      setTotal(data.total || (data.data || []).length);
+      const list = data?.data || data?.threats || data || [];
+      setThreats(Array.isArray(list) ? list : []);
+      setTotal(data?.total || (Array.isArray(list) ? list.length : 0));
     } catch (err) {
       console.error('Failed to load threats:', err);
     } finally {
@@ -71,8 +73,8 @@ export const ThreatsPage: React.FC = () => {
   const handleOpenInvestigate = async (threat: any) => {
     try {
       const res = await threatsApi.get(threat.id);
-      setSelectedThreat(res.data.data || threat);
-      setInvestigatingThreat(res.data.data || threat);
+      setSelectedThreat(res.data?.data || threat);
+      setInvestigatingThreat(res.data?.data || threat);
       setUpdateStatus(threat.status === 'OPEN' ? 'INVESTIGATING' : threat.status);
       setUpdateNotes('');
     } catch {
@@ -91,7 +93,7 @@ export const ThreatsPage: React.FC = () => {
         notes: updateNotes || `Status updated to ${updateStatus} by analyst`,
       });
 
-      const updated = res.data.data || {
+      const updated = res.data?.data || {
         ...selectedThreat,
         status: updateStatus,
       };
@@ -120,23 +122,25 @@ export const ThreatsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <ShieldAlert className="w-4 h-4 text-rose-500 animate-pulse" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              Threat Intelligence & SecOps
+            <span className="w-2 h-2 rounded-full bg-status-red indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-red-400 font-semibold">
+              MITRE ATT&CK & OWASP LLM INCIDENT CENTER
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">SOC TIER 2 FORENSICS</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
             Security Incident Center
           </h1>
-          <p className="text-xs text-zinc-400">
-            Investigate prompt injections, unauthorized tool actions, and data exfiltration signals.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Investigate prompt injections, unauthorized tool actions, and data exfiltration patterns detected across autonomous runtimes.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="secondary"
             size="sm"
@@ -150,16 +154,16 @@ export const ThreatsPage: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <Card className="p-4 bg-zinc-900/90 border-zinc-800">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="p-3.5 rounded-lg bg-graphite-900 border border-graphite-800 shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
           <div className="lg:col-span-2 relative">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-graphite-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search threat description or agent..."
+              placeholder="Search threat description or agent name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 placeholder:text-zinc-600 focus:border-amber-500 focus:outline-none"
+              className="w-full pl-9 pr-3 py-1.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500/80 focus:outline-none font-mono"
             />
           </div>
 
@@ -167,7 +171,7 @@ export const ThreatsPage: React.FC = () => {
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 focus:border-amber-500 focus:outline-none"
+              className="w-full py-1.5 px-2.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="">All Severities</option>
               <option value="CRITICAL">Critical</option>
@@ -181,7 +185,7 @@ export const ThreatsPage: React.FC = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 focus:border-amber-500 focus:outline-none"
+              className="w-full py-1.5 px-2.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 focus:border-copper-500/80 focus:outline-none font-mono"
             >
               <option value="">All Statuses</option>
               <option value="OPEN">OPEN</option>
@@ -195,39 +199,39 @@ export const ThreatsPage: React.FC = () => {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 focus:border-amber-500 focus:outline-none"
+              className="w-full py-1.5 px-2.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 focus:border-copper-500/80 focus:outline-none font-mono"
             >
-              <option value="">All Threat Types</option>
-              <option value="PROMPT_INJECTION">Prompt Injection</option>
-              <option value="DATA_EXFILTRATION">Data Exfiltration</option>
-              <option value="UNAUTHORIZED_ACCESS">Unauthorized Access</option>
+              <option value="">All Threat Categories</option>
+              <option value="PROMPT_INJECTION">Prompt Injection (OWASP LLM01)</option>
+              <option value="DATA_EXFILTRATION">Data Exfiltration (OWASP LLM06)</option>
+              <option value="UNAUTHORIZED_ACCESS">Unauthorized Tool Execution</option>
               <option value="SENSITIVE_DATA_EXPOSURE">Sensitive Data Exposure</option>
-              <option value="MALICIOUS_TOOL_USAGE">Malicious Tool Usage</option>
+              <option value="MALICIOUS_TOOL_USAGE">Malicious Parameter Tampering</option>
             </select>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Incidents List */}
       {loading ? (
-        <LoadingSpinner label="Compiling incident data..." size="lg" fullHeight />
+        <LoadingSpinner label="Compiling threat telemetry records..." size="lg" fullHeight />
       ) : filteredThreats.length === 0 ? (
         <EmptyState
-          icon={<Shield className="w-8 h-8 text-emerald-400" />}
+          icon={<Shield className="w-7 h-7 text-status-green" />}
           title="Zero Incidents Found"
-          description="No security threats match your specified filter criteria."
+          description="No security threats or attack vectors match your specified filter criteria."
         />
       ) : (
         <div className="space-y-3">
           {filteredThreats.map((threat) => (
             <Card
               key={threat.id}
-              className={`border-zinc-800/80 hover:border-zinc-700 transition-all cursor-pointer ${
+              className={`hover:border-graphite-700 transition-all cursor-pointer ${
                 threat.severity === 'CRITICAL'
-                  ? 'border-l-4 border-l-red-500'
+                  ? 'border-l-4 border-l-status-red bg-graphite-900'
                   : threat.severity === 'HIGH'
-                  ? 'border-l-4 border-l-orange-500'
-                  : 'border-l-4 border-l-amber-500'
+                  ? 'border-l-4 border-l-copper-500 bg-graphite-900'
+                  : 'border-l-4 border-l-status-yellow bg-graphite-900'
               }`}
               onClick={() => handleOpenInvestigate(threat)}
             >
@@ -240,25 +244,25 @@ export const ThreatsPage: React.FC = () => {
                     <Badge variant={getStatusBadgeVariant(threat.status)} size="sm" dot>
                       {threat.status}
                     </Badge>
-                    <span className="text-xs font-mono font-semibold text-zinc-200">
+                    <span className="text-xs font-mono font-semibold text-stone-200">
                       {threat.type?.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-zinc-600">·</span>
-                    <span className="text-xs text-zinc-400">
-                      Agent: <strong className="text-zinc-300 font-mono">{threat.agent_name || 'Agent'}</strong>
+                    <span className="text-graphite-600">·</span>
+                    <span className="text-xs text-graphite-400">
+                      Agent: <strong className="text-stone-300 font-mono">{threat.agent_name || 'Agent'}</strong>
                     </span>
                   </div>
 
-                  <p className="text-xs text-zinc-300 leading-relaxed">
+                  <p className="text-xs text-graphite-300 leading-relaxed font-sans">
                     {threat.description || 'Action triggered anomaly detection model.'}
                   </p>
 
-                  <div className="flex items-center gap-4 text-[11px] font-mono text-zinc-500 pt-0.5">
+                  <div className="flex items-center gap-4 text-[11px] font-mono text-graphite-400 pt-0.5">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-zinc-500" />
+                      <Clock className="w-3 h-3 text-graphite-500" />
                       {threat.created_at ? new Date(threat.created_at).toLocaleString() : 'Now'}
                     </span>
-                    <span>Incident ID: {threat.id.slice(0, 8)}...</span>
+                    <span>Incident Ref: {threat.id?.slice(0, 8)}...</span>
                   </div>
                 </div>
 
@@ -272,7 +276,7 @@ export const ThreatsPage: React.FC = () => {
                     }}
                     icon={<ExternalLink className="w-3.5 h-3.5" />}
                   >
-                    Investigate
+                    Forensics
                   </Button>
                 </div>
               </div>
@@ -289,21 +293,21 @@ export const ThreatsPage: React.FC = () => {
           maxWidth="2xl"
           title={
             <div className="flex items-center gap-2.5">
-              <span>Incident Investigation</span>
+              <span>Incident Forensic Dossier</span>
               <Badge variant={getSeverityBadgeVariant(selectedThreat.severity)} size="sm">
                 {selectedThreat.severity}
               </Badge>
             </div>
           }
-          subtitle={`Incident: ${selectedThreat.type} · ID: ${selectedThreat.id}`}
+          subtitle={`Incident Category: ${selectedThreat.type} · ID: ${selectedThreat.id}`}
           footer={
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-zinc-400">Update Status:</span>
+                <span className="text-xs font-mono text-graphite-400">Remediation Status:</span>
                 <select
                   value={updateStatus}
                   onChange={(e) => setUpdateStatus(e.target.value)}
-                  className="bg-zinc-800 border border-zinc-700 rounded text-xs text-zinc-200 py-1 px-2 focus:outline-none"
+                  className="bg-graphite-950 border border-graphite-750 rounded text-xs text-stone-100 py-1 px-2.5 focus:outline-none font-mono"
                 >
                   <option value="OPEN">OPEN</option>
                   <option value="INVESTIGATING">INVESTIGATING</option>
@@ -331,34 +335,34 @@ export const ThreatsPage: React.FC = () => {
         >
           <div className="space-y-4">
             {/* Description & Overview */}
-            <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
-              <div className="text-xs font-semibold text-zinc-300">Incident Narrative:</div>
-              <p className="text-xs font-mono text-zinc-300 leading-relaxed">
+            <div className="p-3.5 rounded-lg bg-graphite-950 border border-graphite-800 space-y-1.5">
+              <div className="text-xs font-medium text-copper-400 font-mono">INCIDENT NARRATIVE:</div>
+              <p className="text-xs font-mono text-stone-200 leading-relaxed">
                 {selectedThreat.description}
               </p>
             </div>
 
             {/* Meta Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono">
-              <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                <span className="text-zinc-500 block text-[10px]">AFFECTED AGENT</span>
-                <span className="font-semibold text-zinc-200">{selectedThreat.agent_name || 'Agent'}</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800">
+                <span className="text-graphite-500 block text-[10px]">AFFECTED AGENT</span>
+                <span className="font-medium text-stone-200">{selectedThreat.agent_name || 'Agent'}</span>
               </div>
-              <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                <span className="text-zinc-500 block text-[10px]">RESOURCE</span>
-                <span className="font-semibold text-amber-400">{selectedThreat.resource || 'N/A'}</span>
+              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800">
+                <span className="text-graphite-500 block text-[10px]">RESOURCE TARGET</span>
+                <span className="font-medium text-copper-400">{selectedThreat.resource || 'N/A'}</span>
               </div>
-              <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                <span className="text-zinc-500 block text-[10px]">CLASSIFICATION</span>
-                <span className="font-semibold text-sky-400">{selectedThreat.data_classification || 'INTERNAL'}</span>
+              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800">
+                <span className="text-graphite-500 block text-[10px]">CLASSIFICATION</span>
+                <span className="font-medium text-sky-400">{selectedThreat.data_classification || 'INTERNAL'}</span>
               </div>
             </div>
 
             {/* Payload if attached */}
             {selectedThreat.payload && (
-              <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1.5">
-                <div className="text-[11px] font-semibold text-zinc-300">Intercepted Payload:</div>
-                <pre className="p-2.5 bg-zinc-900 rounded text-[11px] font-mono text-zinc-300 overflow-x-auto max-h-36 border border-zinc-800 whitespace-pre-wrap">
+              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-1.5">
+                <div className="text-[11px] font-medium text-stone-300 font-mono">INTERCEPTED PAYLOAD:</div>
+                <pre className="p-2.5 bg-graphite-900 rounded text-[11px] font-mono text-stone-300 overflow-x-auto max-h-36 border border-graphite-800 whitespace-pre-wrap">
                   {typeof selectedThreat.payload === 'object'
                     ? JSON.stringify(selectedThreat.payload, null, 2)
                     : selectedThreat.payload}
@@ -368,14 +372,14 @@ export const ThreatsPage: React.FC = () => {
 
             {/* Timeline */}
             {selectedThreat.timeline && selectedThreat.timeline.length > 0 && (
-              <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-2">
-                <div className="text-[11px] font-semibold text-zinc-300">Investigation Timeline:</div>
+              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 space-y-2">
+                <div className="text-[11px] font-medium text-stone-300 font-mono">INVESTIGATION AUDIT TIMELINE:</div>
                 <div className="space-y-1.5">
                   {selectedThreat.timeline.map((entry: any, idx: number) => (
-                    <div key={idx} className="flex items-start gap-2 text-[11px] font-mono text-zinc-400">
-                      <span className="text-amber-400 shrink-0">▸</span>
+                    <div key={idx} className="flex items-start gap-2 text-[11px] font-mono text-graphite-400">
+                      <span className="text-copper-400 shrink-0">▸</span>
                       <span>
-                        <strong className="text-zinc-300">{entry.event}:</strong>{' '}
+                        <strong className="text-stone-300">{entry.event}:</strong>{' '}
                         {entry.details || entry.actor} ({new Date(entry.timestamp).toLocaleTimeString()})
                       </span>
                     </div>
@@ -386,15 +390,15 @@ export const ThreatsPage: React.FC = () => {
 
             {/* Analyst Notes */}
             <div>
-              <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-                Add Analyst Investigation Notes:
+              <label className="block text-xs font-mono text-graphite-300 mb-1.5">
+                SOC Analyst Investigation Notes:
               </label>
               <textarea
                 value={updateNotes}
                 onChange={(e) => setUpdateNotes(e.target.value)}
-                placeholder="Log remediation steps, root cause analysis, or whitelisting reasons..."
+                placeholder="Log remediation steps, root cause analysis, or policy adjustment recommendations..."
                 rows={2}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
               />
             </div>
           </div>

@@ -14,6 +14,8 @@ import {
   Shield,
   Clock,
   ArrowRight,
+  Cpu,
+  Layers,
 } from 'lucide-react';
 import { actionsApi, agentsApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -58,7 +60,7 @@ const ATTACK_PRESETS = [
     desc: 'Agent attempts to dump confidential PII and payment data to an external pastebin.',
   },
   {
-    title: 'Rogue Database Deletion / Privilege Escalation',
+    title: 'Rogue Database Deletion / Escalation',
     badge: 'UNAUTHORIZED MUTATION',
     badgeVariant: 'critical' as const,
     agentName: 'Operations-Assistant',
@@ -70,7 +72,7 @@ const ATTACK_PRESETS = [
     desc: 'Agent attempts destructive execution against restricted audit logs and admin accounts.',
   },
   {
-    title: 'API Key & Credential Leakage in Payload',
+    title: 'API Key & Token Leakage in Payload',
     badge: 'CREDENTIAL LEAK',
     badgeVariant: 'high' as const,
     agentName: 'SlackBot-Agent',
@@ -119,10 +121,11 @@ export const SimulatorPage: React.FC = () => {
     agentsApi
       .list()
       .then((res) => {
-        const list = res.data.data || res.data.agents || [];
-        setAgents(list);
-        if (list.length > 0) {
-          setSelectedAgentId(list[0].id);
+        const list = res.data?.data || res.data?.agents || res.data || [];
+        const safeList = Array.isArray(list) ? list : [];
+        setAgents(safeList);
+        if (safeList.length > 0) {
+          setSelectedAgentId(safeList[0].id);
         }
       })
       .catch((err) => console.error('Failed to load agents:', err))
@@ -186,27 +189,29 @@ export const SimulatorPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Terminal className="w-4 h-4 text-amber-500 animate-pulse" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-semibold">
-              Live Gateway Simulator & Attack Workbench
+            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
+            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+              RED TEAM ATTACK & DEFENSE WORKBENCH
             </span>
+            <span className="text-graphite-600 font-mono">|</span>
+            <span className="text-[11px] font-mono text-graphite-400">INLINE PROXY SIMULATOR</span>
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
             Attack Simulation Console
           </h1>
-          <p className="text-xs text-zinc-400">
-            Submit simulated autonomous agent actions to test real-time risk scoring, jailbreak defense, and policy enforcement.
+          <p className="text-xs text-graphite-300 mt-0.5">
+            Dispatch simulated adversarial agent operations to benchmark inline policy evaluation, prompt injection filters, and DLP controls.
           </p>
         </div>
       </div>
 
       {/* Preset Scenarios Carousel / Badges */}
       <div>
-        <div className="text-xs font-mono text-zinc-400 mb-2 uppercase tracking-wider flex items-center gap-2">
-          <Zap className="w-3.5 h-3.5 text-amber-500" />
+        <div className="text-[11px] font-mono text-graphite-400 mb-2.5 uppercase tracking-wider flex items-center gap-2">
+          <Zap className="w-3.5 h-3.5 text-copper-400" />
           <span>Quick Attack Scenarios (1-Click Load)</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
@@ -215,17 +220,17 @@ export const SimulatorPage: React.FC = () => {
               key={idx}
               type="button"
               onClick={() => handleApplyPreset(p)}
-              className="p-3 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-amber-500/50 text-left transition-all group cursor-pointer shadow-sm"
+              className="p-3 rounded-lg bg-graphite-900 hover:bg-graphite-850 border border-graphite-800 hover:border-copper-500/50 text-left transition-all group cursor-pointer shadow-sm"
             >
               <div className="flex items-center justify-between mb-1.5">
                 <Badge variant={p.badgeVariant} size="sm">
                   {p.badge}
                 </Badge>
               </div>
-              <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-amber-400 transition-colors line-clamp-1 mb-1">
+              <h4 className="text-xs font-semibold text-stone-200 group-hover:text-copper-300 transition-colors line-clamp-1 mb-1 font-sans">
                 {p.title}
               </h4>
-              <p className="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">
+              <p className="text-[11px] text-graphite-400 line-clamp-2 leading-relaxed">
                 {p.desc}
               </p>
             </button>
@@ -234,35 +239,35 @@ export const SimulatorPage: React.FC = () => {
       </div>
 
       {/* Simulation Form & Live Verdict Split Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left: Input Console */}
         <div className="lg:col-span-6 space-y-4">
           <Card
             title={
               <div className="flex items-center gap-2">
-                <Terminal className="w-4 h-4 text-amber-500" />
+                <Terminal className="w-4 h-4 text-copper-400" />
                 <span>Action Request Configuration</span>
               </div>
             }
             subtitle="Payload & destination parameters evaluated by Rakshya inline"
           >
-            <form onSubmit={handleRunSimulation} className="space-y-4">
+            <form onSubmit={handleRunSimulation} className="space-y-3.5">
               {error && (
-                <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
+                <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
                   {error}
                 </div>
               )}
 
               {/* Agent Selector */}
               <div>
-                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                <label className="block text-xs font-mono text-graphite-300 mb-1.5">
                   Originating Autonomous Agent
                 </label>
                 <select
                   required
                   value={selectedAgentId}
                   onChange={(e) => setSelectedAgentId(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none"
+                  className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
                 >
                   {agents.map((ag) => (
                     <option key={ag.id} value={ag.id}>
@@ -275,13 +280,13 @@ export const SimulatorPage: React.FC = () => {
               {/* Action Type & Data Classification */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-                    Action Type
+                  <label className="block text-xs font-mono text-graphite-300 mb-1.5">
+                    Operation Type
                   </label>
                   <select
                     value={actionType}
                     onChange={(e) => setActionType(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2 focus:border-amber-500 focus:outline-none"
+                    className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2 focus:border-copper-500/80 focus:outline-none font-mono"
                   >
                     <option value="READ">READ</option>
                     <option value="WRITE">WRITE</option>
@@ -294,13 +299,13 @@ export const SimulatorPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-mono text-graphite-300 mb-1.5">
                     Data Classification
                   </label>
                   <select
                     value={dataClassification}
                     onChange={(e) => setDataClassification(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 p-2 focus:border-amber-500 focus:outline-none"
+                    className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 p-2 focus:border-copper-500/80 focus:outline-none font-mono"
                   >
                     <option value="PUBLIC">PUBLIC</option>
                     <option value="INTERNAL">INTERNAL</option>
@@ -312,7 +317,7 @@ export const SimulatorPage: React.FC = () => {
 
               {/* Resource Target */}
               <div>
-                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                <label className="block text-xs font-mono text-graphite-300 mb-1.5">
                   Target Resource / Tool
                 </label>
                 <input
@@ -321,13 +326,13 @@ export const SimulatorPage: React.FC = () => {
                   value={resource}
                   onChange={(e) => setResource(e.target.value)}
                   placeholder="e.g. postgresql://prod-db/customers"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none font-mono"
+                  className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
                 />
               </div>
 
               {/* Outbound Destination */}
               <div>
-                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                <label className="block text-xs font-mono text-graphite-300 mb-1.5">
                   Outbound Destination (Optional)
                 </label>
                 <input
@@ -335,13 +340,13 @@ export const SimulatorPage: React.FC = () => {
                   value={destination}
                   onChange={(e) => setDestination(e.target.value)}
                   placeholder="e.g. https://webhook.site/leak or internal-cache"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-2.5 focus:border-amber-500 focus:outline-none font-mono"
+                  className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
                 />
               </div>
 
               {/* Action Payload */}
               <div>
-                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                <label className="block text-xs font-mono text-graphite-300 mb-1.5">
                   Action Payload / Natural Language Prompt / Query
                 </label>
                 <textarea
@@ -350,7 +355,7 @@ export const SimulatorPage: React.FC = () => {
                   onChange={(e) => setPayload(e.target.value)}
                   rows={6}
                   placeholder="Enter SQL, prompt text, JSON payload, or tool input..."
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-100 p-3 focus:border-amber-500 focus:outline-none font-mono leading-relaxed"
+                  className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-3 focus:border-copper-500/80 focus:outline-none font-mono leading-relaxed"
                 />
               </div>
 
@@ -361,7 +366,7 @@ export const SimulatorPage: React.FC = () => {
                 size="md"
                 className="w-full py-3"
                 loading={executing}
-                icon={<Play className="w-4 h-4 fill-zinc-950 text-zinc-950" />}
+                icon={<Play className="w-4 h-4 fill-graphite-950 text-graphite-950" />}
               >
                 Execute Defense Interception
               </Button>
@@ -375,11 +380,11 @@ export const SimulatorPage: React.FC = () => {
             title={
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
+                  <Shield className="w-4 h-4 text-copper-400" />
                   <span>Enforcement Engine Verdict</span>
                 </div>
                 {executionTimeMs !== null && (
-                  <span className="text-[11px] font-mono text-zinc-500">
+                  <span className="text-[11px] font-mono text-graphite-400">
                     Latency: {executionTimeMs}ms
                   </span>
                 )}
@@ -389,60 +394,60 @@ export const SimulatorPage: React.FC = () => {
           >
             {executing ? (
               <LoadingSpinner
-                label="Analyzing risk scores, detecting PII, checking policies, running behavioral models..."
+                label="Analyzing behavioral risk, scanning PII, checking perimeter policies, running ML guardrails..."
                 size="lg"
                 fullHeight
               />
             ) : !result ? (
-              <div className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-zinc-800 rounded-xl min-h-[400px]">
-                <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-amber-500 mb-3">
-                  <Flame className="w-6 h-6" />
+              <div className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-graphite-800 rounded-lg min-h-[400px]">
+                <div className="w-11 h-11 rounded-lg bg-graphite-850 border border-graphite-750 flex items-center justify-center text-copper-400 mb-3 shadow-inner">
+                  <Flame className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-semibold text-zinc-200 mb-1">
-                  Workbench Ready
+                <h4 className="text-sm font-medium text-stone-200 mb-1">
+                  Simulation Workbench Ready
                 </h4>
-                <p className="text-xs text-zinc-400 max-w-sm mb-4">
+                <p className="text-xs text-graphite-400 max-w-sm mb-4 leading-relaxed">
                   Select an attack scenario preset above or enter custom action parameters, then hit "Execute Defense Interception".
                 </p>
-                <span className="text-[11px] font-mono text-zinc-600">
+                <span className="text-[11px] font-mono text-graphite-500">
                   Enforces: Prompt Injection · Data Exfiltration · Policy Violations · PII Leaks
                 </span>
               </div>
             ) : (
-              <div className="space-y-5 animate-in fade-in duration-300">
+              <div className="space-y-4 animate-in fade-in duration-300">
                 {/* Decision Banner */}
                 <div
-                  className={`p-5 rounded-xl border flex items-center justify-between gap-4 ${
+                  className={`p-4 rounded-lg border flex items-center justify-between gap-4 ${
                     result.decision === 'BLOCK'
-                      ? 'bg-rose-950/40 border-rose-800/80 text-rose-200'
+                      ? 'bg-status-red/10 border-status-red/40 text-red-200'
                       : result.decision === 'REQUIRE_APPROVAL'
-                      ? 'bg-amber-950/40 border-amber-800/80 text-amber-200'
-                      : 'bg-emerald-950/40 border-emerald-800/80 text-emerald-200'
+                      ? 'bg-status-yellow/10 border-status-yellow/40 text-amber-200'
+                      : 'bg-status-green/10 border-status-green/40 text-emerald-200'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center ${
                         result.decision === 'BLOCK'
-                          ? 'bg-rose-900 text-rose-200'
+                          ? 'bg-status-red/20 text-red-200'
                           : result.decision === 'REQUIRE_APPROVAL'
-                          ? 'bg-amber-900 text-amber-200'
-                          : 'bg-emerald-900 text-emerald-200'
+                          ? 'bg-status-yellow/20 text-amber-200'
+                          : 'bg-status-green/20 text-emerald-200'
                       }`}
                     >
                       {result.decision === 'BLOCK' ? (
-                        <XCircle className="w-6 h-6" />
+                        <XCircle className="w-5 h-5 text-status-red" />
                       ) : result.decision === 'REQUIRE_APPROVAL' ? (
-                        <AlertTriangle className="w-6 h-6" />
+                        <AlertTriangle className="w-5 h-5 text-status-yellow" />
                       ) : (
-                        <CheckCircle2 className="w-6 h-6" />
+                        <CheckCircle2 className="w-5 h-5 text-status-green" />
                       )}
                     </div>
                     <div>
-                      <div className="text-xs uppercase tracking-wider font-mono opacity-80">
+                      <div className="text-[10px] uppercase tracking-wider font-mono opacity-80">
                         GATEWAY VERDICT
                       </div>
-                      <div className="text-xl font-extrabold font-mono tracking-tight">
+                      <div className="text-lg font-semibold font-mono tracking-tight">
                         {result.decision === 'BLOCK'
                           ? 'ENFORCED BLOCK'
                           : result.decision === 'REQUIRE_APPROVAL'
@@ -458,16 +463,16 @@ export const SimulatorPage: React.FC = () => {
                 </div>
 
                 {/* Risk Score Meter */}
-                <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800">
+                <div className="p-3.5 bg-graphite-950 rounded-md border border-graphite-800">
                   <RiskScoreMeter score={result.riskScore || 0} size="lg" />
                 </div>
 
                 {/* Explanation Rationale */}
-                <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-1.5">
-                  <div className="text-xs font-semibold text-zinc-300">
-                    Security Analysis & Explainability:
+                <div className="p-3.5 bg-graphite-950 rounded-md border border-graphite-800 space-y-1.5">
+                  <div className="text-xs font-medium text-copper-400 font-mono">
+                    SECURITY ANALYSIS & EXPLAINABILITY:
                   </div>
-                  <p className="text-xs font-mono text-zinc-300 leading-relaxed">
+                  <p className="text-xs font-mono text-stone-200 leading-relaxed">
                     {result.explanation ||
                       'Action evaluated against behavioral models and enterprise perimeter policies.'}
                   </p>
@@ -475,16 +480,16 @@ export const SimulatorPage: React.FC = () => {
 
                 {/* Threats Intercepted */}
                 {result.threats && result.threats.length > 0 && (
-                  <div className="p-4 bg-zinc-950 rounded-xl border border-rose-900/40 space-y-2">
-                    <div className="text-xs font-semibold text-rose-400 flex items-center gap-2">
+                  <div className="p-3.5 bg-graphite-950 rounded-md border border-status-red/30 space-y-2">
+                    <div className="text-xs font-medium text-status-red flex items-center gap-2 font-mono">
                       <ShieldAlert className="w-4 h-4" />
-                      <span>Detected Threat Signatures:</span>
+                      <span>DETECTED THREAT SIGNATURES:</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {result.threats.map((threat: string, idx: number) => (
                         <span
                           key={idx}
-                          className="px-2.5 py-1 rounded bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-mono font-semibold"
+                          className="px-2 py-0.5 rounded bg-red-950/60 border border-red-700/50 text-red-300 text-xs font-mono font-medium"
                         >
                           {threat.replace(/_/g, ' ')}
                         </span>
@@ -495,10 +500,10 @@ export const SimulatorPage: React.FC = () => {
 
                 {/* Policy Violations */}
                 {result.policyViolations && result.policyViolations.length > 0 && (
-                  <div className="p-4 bg-zinc-950 rounded-xl border border-amber-900/40 space-y-2">
-                    <div className="text-xs font-semibold text-amber-400 flex items-center gap-2">
+                  <div className="p-3.5 bg-graphite-950 rounded-md border border-status-yellow/30 space-y-2">
+                    <div className="text-xs font-medium text-amber-400 flex items-center gap-2 font-mono">
                       <AlertTriangle className="w-4 h-4" />
-                      <span>Triggered Policy Rules:</span>
+                      <span>TRIGGERED POLICY RULES:</span>
                     </div>
                     <div className="space-y-1">
                       {result.policyViolations.map((v: string, idx: number) => (
@@ -513,10 +518,10 @@ export const SimulatorPage: React.FC = () => {
 
                 {/* Sensitive Data Findings */}
                 {result.sensitiveDataDetected && (
-                  <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2">
-                    <div className="text-xs font-semibold text-zinc-300 flex items-center gap-2">
+                  <div className="p-3.5 bg-graphite-950 rounded-md border border-graphite-800 space-y-2">
+                    <div className="text-xs font-medium text-stone-300 flex items-center gap-2 font-mono">
                       <FileCode className="w-4 h-4 text-sky-400" />
-                      <span>Sensitive Pattern Scanner:</span>
+                      <span>SENSITIVE PATTERN SCANNER:</span>
                     </div>
                     {result.sensitiveDataDetected.findings?.length > 0 ? (
                       <div className="flex flex-wrap gap-1.5">
@@ -524,7 +529,7 @@ export const SimulatorPage: React.FC = () => {
                           (item: any, idx: number) => (
                             <span
                               key={idx}
-                              className="px-2 py-0.5 rounded bg-red-950/80 border border-red-800 text-red-300 text-xs font-mono"
+                              className="px-2 py-0.5 rounded bg-red-950/60 border border-red-700/50 text-red-300 text-xs font-mono"
                             >
                               {item.type || item}: {item.count || 1}
                             </span>
@@ -532,7 +537,7 @@ export const SimulatorPage: React.FC = () => {
                         )}
                       </div>
                     ) : (
-                      <span className="text-xs font-mono text-zinc-500">
+                      <span className="text-xs font-mono text-graphite-500">
                         Zero sensitive data tokens detected in payload.
                       </span>
                     )}

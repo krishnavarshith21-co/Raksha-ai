@@ -13,9 +13,9 @@ interface DecisionsPieChartProps {
 }
 
 const DECISION_COLORS: Record<string, string> = {
-  ALLOW: '#10b981',
-  REQUIRE_APPROVAL: '#f59e0b',
-  BLOCK: '#ef4444',
+  ALLOW: '#34a85a',
+  REQUIRE_APPROVAL: '#d4a93f',
+  BLOCK: '#c73e3e',
 };
 
 const DECISION_LABELS: Record<string, string> = {
@@ -31,7 +31,7 @@ export const DecisionsPieChart: React.FC<DecisionsPieChartProps> = ({
   if (!data || data.length === 0) {
     return (
       <div
-        className="flex items-center justify-center text-xs font-mono text-zinc-500"
+        className="flex items-center justify-center text-xs font-mono text-graphite-400"
         style={{ height }}
       >
         No decision data recorded
@@ -48,11 +48,12 @@ export const DecisionsPieChart: React.FC<DecisionsPieChartProps> = ({
           <PieChart>
             <Tooltip
               contentStyle={{
-                backgroundColor: '#18181b',
-                border: '1px solid #3f3f46',
-                borderRadius: '8px',
+                backgroundColor: '#111113',
+                border: '1px solid #2e2e33',
+                borderRadius: '6px',
                 fontSize: '12px',
-                color: '#f4f4f5',
+                color: '#f5f3ef',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6)',
               }}
               formatter={(value: any, name: any) => [
                 `${value} (${total > 0 ? Math.round((Number(value) / total) * 100) : 0}%)`,
@@ -65,15 +66,15 @@ export const DecisionsPieChart: React.FC<DecisionsPieChartProps> = ({
               nameKey="decision"
               cx="50%"
               cy="50%"
-              innerRadius={45}
-              outerRadius={65}
+              innerRadius={46}
+              outerRadius={68}
               paddingAngle={4}
             >
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={DECISION_COLORS[entry.decision.toUpperCase()] || '#71717a'}
-                  stroke="#18181b"
+                  fill={DECISION_COLORS[entry.decision.toUpperCase()] || '#53535c'}
+                  stroke="#111113"
                   strokeWidth={2}
                 />
               ))}
@@ -83,20 +84,20 @@ export const DecisionsPieChart: React.FC<DecisionsPieChartProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center justify-center gap-4 mt-1 text-xs">
+      <div className="flex flex-wrap items-center justify-center gap-4 mt-2 text-xs">
         {data.map((item) => (
           <div key={item.decision} className="flex items-center gap-1.5 font-mono">
             <span
-              className="w-2.5 h-2.5 rounded-full"
+              className="w-2 h-2 rounded-full"
               style={{
                 backgroundColor:
-                  DECISION_COLORS[item.decision.toUpperCase()] || '#71717a',
+                  DECISION_COLORS[item.decision.toUpperCase()] || '#53535c',
               }}
             />
-            <span className="text-zinc-400">
+            <span className="text-graphite-400 text-[11px]">
               {DECISION_LABELS[item.decision.toUpperCase()] || item.decision}:
             </span>
-            <span className="font-semibold text-zinc-200">{item.count}</span>
+            <span className="font-medium text-stone-200 text-[11px]">{item.count}</span>
           </div>
         ))}
       </div>
