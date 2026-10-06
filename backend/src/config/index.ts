@@ -19,7 +19,8 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/rakshya',
+    url: process.env.DATABASE_URL || (process.env.NODE_ENV === 'production' ? '' : 'postgresql://postgres:postgres@localhost:5432/rakshya'),
+    hasDatabaseUrl: Boolean(process.env.DATABASE_URL && process.env.DATABASE_URL.trim() !== ''),
   },
   
   jwt: {

@@ -17,6 +17,13 @@ export function errorHandler(err: any, _req: Request, res: Response, _next: Next
     });
   }
 
+  if (err.code === 'DATABASE_UNAVAILABLE' || err.code === 'ECONNREFUSED' || err.message?.includes('DATABASE_URL is not configured')) {
+    return res.status(503).json({
+      error: 'Database service is currently unavailable. Please check DATABASE_URL configuration.',
+      code: 'DATABASE_UNAVAILABLE',
+    });
+  }
+
   if (err.code === '23503') {
     return res.status(400).json({
       error: 'Referenced resource not found',

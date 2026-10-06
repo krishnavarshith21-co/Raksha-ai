@@ -34,7 +34,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 # Copy compiled JavaScript output from builder stage
 COPY --from=builder /app/dist ./dist
 
-# Create local data directory for embedded PGlite fallback if external DB is temporarily unreachable
+# Create local data directory for temporary files
 RUN mkdir -p /app/data && chown -R node:node /app
 
 # Run with non-root security context
