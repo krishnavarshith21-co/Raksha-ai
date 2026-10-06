@@ -149,11 +149,25 @@ export const LoginPage: React.FC = () => {
       await login(email, password);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(
-        err.response?.data?.error ||
-          err.response?.data?.message ||
-          'Authentication failed. Please verify security credentials.'
-      );
+      if (err.response?.status === 401) {
+        setError('Invalid security credentials.');
+      } else if (err.response?.status === 403) {
+        setError('Account is disabled or unauthorized.');
+      } else if (
+        !err.response ||
+        err.response?.status === 404 ||
+        err.response?.status === 405 ||
+        err.response?.status >= 500 ||
+        err.code === 'ERR_NETWORK'
+      ) {
+        setError('Authentication service is currently unavailable.');
+      } else {
+        setError(
+          err.response?.data?.error ||
+            err.response?.data?.message ||
+            'Authentication failed. Please verify security credentials.'
+        );
+      }
     } finally {
       setSubmitting(false);
     }
