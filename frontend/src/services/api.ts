@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const resolveApiBase = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL?.trim();
+  if (!envUrl) return '/api';
+  const clean = envUrl.replace(/\/+$/, '');
+  // If user passed a full URL without /api, ensure /api is appended
+  if (clean.startsWith('http') && !clean.endsWith('/api') && !clean.endsWith('/api/v1')) {
+    return `${clean}/api`;
+  }
+  return clean;
+};
+
+const API_BASE = resolveApiBase();
 
 const api = axios.create({
   baseURL: API_BASE,
