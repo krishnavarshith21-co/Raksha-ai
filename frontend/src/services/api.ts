@@ -8,9 +8,15 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('rakshya_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  try {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('rakshya_token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+  } catch (err) {
+    console.warn('[RAKSHYA API]: Storage access suppressed in request interceptor', err);
   }
   return config;
 });
@@ -19,9 +25,16 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('rakshya_token');
-      localStorage.removeItem('rakshya_user');
+      try {
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('rakshya_token');
+          localStorage.removeItem('rakshya_user');
+        }
+      } catch (err) {
+        console.warn('[RAKSHYA API]: Storage cleanup suppressed in response interceptor', err);
+      }
       if (
+        typeof window !== 'undefined' &&
         !window.location.pathname.startsWith('/login') &&
         !window.location.pathname.startsWith('/register') &&
         window.location.pathname !== '/'

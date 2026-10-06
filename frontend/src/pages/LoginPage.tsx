@@ -85,7 +85,7 @@ export const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, authError, retryAuth } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,8 +94,50 @@ export const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  if (authError) {
+    return (
+      <div className="min-h-screen bg-[#070707] text-[#F2EEE7] flex items-center justify-center p-6 font-sans relative overflow-hidden">
+        <div className="w-full max-w-md relative z-10">
+          <div className="surface-card p-8 sm:p-10 rounded-2xl border border-white/10 text-center shadow-2xl">
+            <div className="w-12 h-12 rounded-xl bg-[#141415] border border-amber-500/30 text-[#C9A66B] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-black/50">
+              <ShieldCheck className="w-6 h-6 text-[#E0C28D]" />
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#101011] border border-white/[0.08] text-[10.5px] font-mono text-[#E0C28D] mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span>SEC_SESSION_FAULT</span>
+            </div>
+
+            <h2 className="font-serif text-2xl sm:text-3xl text-[#F2EEE7] tracking-tight font-medium mb-3">
+              AUTHENTICATION SERVICE UNAVAILABLE
+            </h2>
+
+            <p className="text-[14.5px] text-[#96939A] leading-relaxed mb-8">
+              Unable to initialize the security session.
+            </p>
+
+            <button
+              type="button"
+              onClick={retryAuth}
+              className="btn-gold w-full px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#C9A66B]/15"
+            >
+              <span>Retry</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isAuthenticated) {
-    return null;
+    return (
+      <div className="min-h-screen bg-[#070707] flex items-center justify-center font-sans">
+        <div className="text-center space-y-3">
+          <div className="w-8 h-8 rounded-full border-2 border-[#C9A66B] border-t-transparent animate-spin mx-auto" />
+          <div className="text-sm font-mono text-[#D8D4CC]">Redirecting to Security Console...</div>
+        </div>
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
