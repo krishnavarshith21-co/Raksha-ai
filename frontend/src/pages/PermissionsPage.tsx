@@ -164,27 +164,27 @@ export const PermissionsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-copper-400 ring-4 ring-copper-400/10" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               RBAC & CAPABILITY SCOPES
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">ZERO-TRUST MATRIX</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">ZERO-TRUST MATRIX</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             Tool Permissions
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Least-privilege authorization matrix governing agent connectivity to data stores, APIs, and tools.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -192,7 +192,7 @@ export const PermissionsPage: React.FC = () => {
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Matrix
           </Button>
           <Button
             variant="outline"
@@ -206,7 +206,7 @@ export const PermissionsPage: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => setIsGrantOpen(true)}
-            icon={<Plus className="w-3.5 h-3.5 text-graphite-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Grant Scope
           </Button>
@@ -214,31 +214,31 @@ export const PermissionsPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-4 border-b border-graphite-750/70 pb-2">
+      <div className="flex items-center gap-6 border-b border-[#1c1c1f] pb-3">
         <button
           onClick={() => setActiveTab('PERMISSIONS')}
-          className={`pb-1 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 -mb-2.5 ${
+          className={`pb-1 text-[13.5px] font-mono transition-colors cursor-pointer flex items-center gap-2 border-b-2 -mb-3.5 ${
             activeTab === 'PERMISSIONS'
               ? 'border-copper-500 text-stone-100 font-medium'
               : 'border-transparent text-graphite-400 hover:text-stone-300'
           }`}
         >
           <span>Access Matrix</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-graphite-800 text-graphite-400 border border-graphite-750">
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-[#161618] text-graphite-300 border border-[#26262a]">
             {permissions.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('TOOLS')}
-          className={`pb-1 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 -mb-2.5 ${
+          className={`pb-1 text-[13.5px] font-mono transition-colors cursor-pointer flex items-center gap-2 border-b-2 -mb-3.5 ${
             activeTab === 'TOOLS'
               ? 'border-copper-500 text-stone-100 font-medium'
               : 'border-transparent text-graphite-400 hover:text-stone-300'
           }`}
         >
           <span>Tool Catalog</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-graphite-800 text-graphite-400 border border-graphite-750">
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-[#161618] text-graphite-300 border border-[#26262a]">
             {tools.length}
           </span>
         </button>
@@ -257,52 +257,52 @@ export const PermissionsPage: React.FC = () => {
             onAction={() => setIsGrantOpen(true)}
           />
         ) : (
-          <div className="bg-graphite-850 border border-graphite-750 rounded-lg overflow-hidden">
+          <div className="surface-card rounded-xl border border-[#1e1e21] overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-graphite-900/60 border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
+              <table className="w-full text-left">
+                <thead className="bg-[#0b0b0c] border-b border-[#1e1e21] text-graphite-400 font-mono text-[11px] tracking-wider uppercase">
                   <tr>
-                    <th className="py-2.5 px-3.5 font-medium">AGENT IDENTITY</th>
-                    <th className="py-2.5 px-3.5 font-medium">TOOL</th>
-                    <th className="py-2.5 px-3.5 font-medium">CAPABILITY LEVEL</th>
-                    <th className="py-2.5 px-3.5 font-medium">GRANTED AT</th>
-                    <th className="py-2.5 px-3.5 font-medium text-right">REVOKE</th>
+                    <th className="py-3.5 px-4 font-medium">AGENT IDENTITY</th>
+                    <th className="py-3.5 px-4 font-medium">TOOL RESOURCE</th>
+                    <th className="py-3.5 px-4 font-medium">CAPABILITY LEVEL</th>
+                    <th className="py-3.5 px-4 font-medium">PROVISIONED</th>
+                    <th className="py-3.5 px-4 font-medium text-right">REVOKE</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-graphite-750/40 font-mono">
+                <tbody className="divide-y divide-[#18181b] font-mono text-[13.5px]">
                   {filteredPermissions.map((perm) => (
-                    <tr key={perm.id} className="hover:bg-graphite-800/40 transition-colors">
-                      <td className="py-2.5 px-3.5 text-stone-100 font-medium">
+                    <tr key={perm.id} className="hover:bg-graphite-800/30 transition-colors group">
+                      <td className="py-4 px-4 text-stone-100 font-medium font-sans">
                         {perm.agent_name || 'Agent'}
                       </td>
-                      <td className="py-2.5 px-3.5 text-stone-200">
+                      <td className="py-4 px-4 text-stone-200">
                         {perm.tool_name || 'Tool'}
                       </td>
-                      <td className="py-2.5 px-3.5">
+                      <td className="py-4 px-4">
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] border ${
+                          className={`px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold tracking-wide border ${
                             perm.level === 'DENY'
-                              ? 'bg-status-red/10 text-status-red border-status-red/25'
+                              ? 'bg-red-500/10 text-red-400 border-red-500/25'
                               : perm.level === 'EXECUTE'
                               ? 'bg-copper-500/15 text-copper-300 border-copper-500/30'
                               : perm.level === 'WRITE'
-                              ? 'bg-status-yellow/10 text-status-yellow border-status-yellow/25'
-                              : 'bg-status-green/10 text-status-green border-status-green/25'
+                              ? 'bg-amber-500/10 text-amber-400 border-amber-500/25'
+                              : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
                           }`}
                         >
                           {perm.level}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3.5 text-graphite-400 text-[10px]">
+                      <td className="py-4 px-4 text-graphite-400 text-[12px]">
                         {perm.created_at ? new Date(perm.created_at).toLocaleDateString() : 'Active'}
                       </td>
-                      <td className="py-2.5 px-3.5 text-right">
+                      <td className="py-4 px-4 text-right">
                         <button
                           onClick={() => handleRevokePermission(perm.id)}
-                          className="p-1 rounded text-graphite-500 hover:text-status-red transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-graphite-500 opacity-40 group-hover:opacity-100 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
                           title="Revoke Permission"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </td>
                     </tr>
@@ -323,23 +323,23 @@ export const PermissionsPage: React.FC = () => {
             onAction={() => setIsRegisterToolOpen(true)}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredTools.map((tool) => (
               <div
                 key={tool.id}
-                className="p-3.5 rounded-lg bg-graphite-850 border border-graphite-750 flex flex-col justify-between"
+                className="surface-card-hover p-6 rounded-xl border border-[#1e1e21] flex flex-col justify-between group"
               >
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded bg-graphite-900 border border-graphite-750 flex items-center justify-center text-copper-400">
-                        {tool.is_external ? <Globe className="w-3.5 h-3.5" /> : <Database className="w-3.5 h-3.5" />}
+                <div className="space-y-3.5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#141416] border border-[#26262a] flex items-center justify-center text-copper-400 group-hover:border-copper-400/40 transition-colors">
+                        {tool.is_external ? <Globe className="w-5 h-5" /> : <Database className="w-5 h-5" />}
                       </div>
                       <div>
-                        <h4 className="font-medium text-stone-100 text-xs truncate max-w-[150px]">
+                        <h4 className="font-medium text-stone-100 text-[16px] font-sans truncate max-w-[170px]">
                           {tool.name}
                         </h4>
-                        <span className="text-[10px] font-mono text-graphite-400">
+                        <span className="text-[11.5px] font-mono text-graphite-400">
                           {tool.category}
                         </span>
                       </div>
@@ -350,12 +350,12 @@ export const PermissionsPage: React.FC = () => {
                     </Badge>
                   </div>
 
-                  <p className="text-xs text-graphite-400 line-clamp-2 leading-relaxed">
+                  <p className="text-[14px] text-graphite-300 font-sans line-clamp-2 leading-relaxed">
                     {tool.description || 'Enterprise tool endpoint governed by zero-trust gateway.'}
                   </p>
 
                   {tool.endpoint && (
-                    <div className="p-1.5 rounded bg-graphite-900 border border-graphite-750 font-mono text-[10px] text-graphite-400 truncate">
+                    <div className="p-2.5 rounded-lg bg-[#070708] border border-[#1e1e21] font-mono text-[12px] text-stone-300 truncate">
                       {tool.endpoint}
                     </div>
                   )}

@@ -94,22 +94,22 @@ export const ActionStreamPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-copper-400 ring-4 ring-copper-400/10" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               PROXY TELEMETRY STREAM
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">SOC LEVEL 1 / 2 CONSOLE</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">SOC LEVEL 1 / 2 CONSOLE</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             Action Stream
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Real-time inline inspection of autonomous agent tool calls, network requests, and policy decisions.
           </p>
         </div>
@@ -122,23 +122,23 @@ export const ActionStreamPage: React.FC = () => {
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Stream
           </Button>
         </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="p-2.5 rounded-lg bg-graphite-850 border border-graphite-750">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
+      <div className="surface-card p-4 rounded-xl border border-[#1e1e21]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           {/* Search Term */}
           <div className="lg:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-graphite-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-graphite-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Search resource, agent, or pattern..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-8 pr-3 py-1 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full pl-10 pr-3.5 py-2.5 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13.5px] text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             />
           </div>
 
@@ -150,7 +150,7 @@ export const ActionStreamPage: React.FC = () => {
                 setDecisionFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Verdicts</option>
               <option value="ALLOW">ALLOW</option>
@@ -167,7 +167,7 @@ export const ActionStreamPage: React.FC = () => {
                 setSeverityFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Severities</option>
               <option value="CRITICAL">Critical</option>
@@ -185,7 +185,7 @@ export const ActionStreamPage: React.FC = () => {
                 setActionTypeFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Types</option>
               <option value="READ">READ</option>
@@ -206,7 +206,7 @@ export const ActionStreamPage: React.FC = () => {
                 setAgentFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Agents</option>
               {agents.map((ag) => (
@@ -231,132 +231,142 @@ export const ActionStreamPage: React.FC = () => {
           onAction={() => (window.location.href = '/simulator')}
         />
       ) : (
-        <div className="bg-graphite-850 border border-graphite-750 rounded-lg overflow-hidden">
+        <div className="surface-card rounded-xl border border-[#1e1e21] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-graphite-900/60 border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
+            <table className="w-full text-left">
+              <thead className="bg-[#0b0b0c] border-b border-[#1e1e21] text-graphite-400 font-mono text-[11px] tracking-wider uppercase">
                 <tr>
-                  <th className="py-2.5 px-3.5 font-medium">VERDICT</th>
-                  <th className="py-2.5 px-3.5 font-medium">AGENT</th>
-                  <th className="py-2.5 px-3.5 font-medium">OPERATION & RESOURCE</th>
-                  <th className="py-2.5 px-3.5 font-medium">RISK</th>
-                  <th className="py-2.5 px-3.5 font-medium">SEVERITY</th>
-                  <th className="py-2.5 px-3.5 font-medium">VIOLATIONS / THREATS</th>
-                  <th className="py-2.5 px-3.5 font-medium">TIME</th>
-                  <th className="py-2.5 px-3.5 font-medium text-right">INSPECT</th>
+                  <th className="py-3.5 px-4 font-medium">VERDICT</th>
+                  <th className="py-3.5 px-4 font-medium">AGENT</th>
+                  <th className="py-3.5 px-4 font-medium">OPERATION & RESOURCE</th>
+                  <th className="py-3.5 px-4 font-medium">RISK SCORE</th>
+                  <th className="py-3.5 px-4 font-medium">SEVERITY</th>
+                  <th className="py-3.5 px-4 font-medium">VIOLATIONS / THREATS</th>
+                  <th className="py-3.5 px-4 font-medium">TIMESTAMP</th>
+                  <th className="py-3.5 px-4 font-medium text-right">INSPECT</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-graphite-750/40 font-mono">
-                {filteredActions.map((act) => (
-                  <tr
-                    key={act.id}
-                    className="hover:bg-graphite-800/40 transition-colors group cursor-pointer"
-                    onClick={() => setSelectedAction(act)}
-                  >
-                    {/* Verdict */}
-                    <td className="py-2 px-3.5">
-                      <Badge
-                        variant={getDecisionBadgeVariant(act.decision)}
-                        size="sm"
-                      >
-                        {act.decision}
-                      </Badge>
-                    </td>
+              <tbody className="divide-y divide-[#18181b] font-mono text-[13.5px]">
+                {filteredActions.map((act) => {
+                  const isBlock = act.decision === 'BLOCK';
+                  const isApproval = act.decision === 'REQUIRE_APPROVAL';
+                  const borderSeverityClass = isBlock
+                    ? 'border-l-[3.5px] border-l-red-500/90 hover:bg-red-500/[0.03]'
+                    : isApproval
+                    ? 'border-l-[3.5px] border-l-amber-500/90 hover:bg-amber-500/[0.03]'
+                    : 'border-l-[3.5px] border-l-emerald-500/70 hover:bg-emerald-500/[0.02]';
 
-                    {/* Agent Name */}
-                    <td className="py-2 px-3.5 font-sans font-medium text-stone-200">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-status-green shrink-0" />
-                        <span className="truncate max-w-[130px]">
-                          {act.agent_name || 'Agent'}
-                        </span>
-                      </div>
-                    </td>
+                  return (
+                    <tr
+                      key={act.id}
+                      className={`transition-colors group cursor-pointer ${borderSeverityClass}`}
+                      onClick={() => setSelectedAction(act)}
+                    >
+                      {/* Verdict */}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <Badge
+                          variant={getDecisionBadgeVariant(act.decision)}
+                          size="md"
+                        >
+                          {act.decision}
+                        </Badge>
+                      </td>
 
-                    {/* Action & Resource */}
-                    <td className="py-2 px-3.5">
-                      <div className="flex items-center gap-1.5">
-                        <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-[10px] text-graphite-400 border border-graphite-750">
-                          {act.action_type}
-                        </span>
-                        <span className="text-stone-200 font-medium truncate max-w-[200px]" title={act.resource}>
-                          {act.resource}
-                        </span>
-                      </div>
-                      {act.destination && (
-                        <div className="text-[10px] text-graphite-500 mt-0.5 truncate max-w-[200px]">
-                          dest: {act.destination}
-                        </div>
-                      )}
-                    </td>
-
-                    {/* Risk Score */}
-                    <td className="py-2 px-3.5">
-                      <RiskScoreMeter score={act.risk_score} size="sm" />
-                    </td>
-
-                    {/* Severity */}
-                    <td className="py-2 px-3.5">
-                      <Badge variant={getSeverityBadgeVariant(act.severity)} size="sm">
-                        {act.severity}
-                      </Badge>
-                    </td>
-
-                    {/* Violations / Threats */}
-                    <td className="py-2 px-3.5">
-                      <div className="flex flex-wrap gap-1 max-w-[200px]">
-                        {act.threats && act.threats.length > 0 ? (
-                          act.threats.map((t: string, idx: number) => (
-                            <span
-                              key={idx}
-                              className="px-1.5 py-0.2 rounded bg-status-red/10 border border-status-red/25 text-status-red text-[10px]"
-                            >
-                              {t.replace(/_/g, ' ')}
-                            </span>
-                          ))
-                        ) : act.policy_violations && act.policy_violations.length > 0 ? (
-                          <span className="px-1.5 py-0.2 rounded bg-status-yellow/10 border border-status-yellow/25 text-status-yellow text-[10px]">
-                            {act.policy_violations.length} Violation(s)
+                      {/* Agent Name */}
+                      <td className="py-4 px-4 font-sans font-medium text-stone-100 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                          <span className="truncate max-w-[150px] text-[14px]">
+                            {act.agent_name || 'Agent'}
                           </span>
-                        ) : (
-                          <span className="text-graphite-500 text-[10px]">Authorized</span>
+                        </div>
+                      </td>
+
+                      {/* Action & Resource */}
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded bg-[#141416] text-[11px] text-graphite-300 border border-[#26262a] uppercase tracking-wide">
+                            {act.action_type}
+                          </span>
+                          <span className="text-stone-200 font-medium truncate max-w-[240px] text-[13.5px]" title={act.resource}>
+                            {act.resource}
+                          </span>
+                        </div>
+                        {act.destination && (
+                          <div className="text-[11.5px] text-graphite-400 mt-1 truncate max-w-[240px]">
+                            dest: <span className="text-graphite-300">{act.destination}</span>
+                          </div>
                         )}
-                      </div>
-                    </td>
+                      </td>
 
-                    {/* Timestamp */}
-                    <td className="py-2 px-3.5 text-graphite-400 text-[10px] whitespace-nowrap">
-                      {act.created_at
-                        ? new Date(act.created_at).toLocaleTimeString()
-                        : 'Now'}
-                    </td>
+                      {/* Risk Score */}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <RiskScoreMeter score={act.risk_score} size="md" />
+                      </td>
 
-                    {/* Inspect button */}
-                    <td className="py-2 px-3.5 text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedAction(act);
-                        }}
-                        className="p-1 rounded text-graphite-400 hover:text-stone-200 hover:bg-graphite-800 transition-colors"
-                        title="Forensic Inspection"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      {/* Severity */}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <Badge variant={getSeverityBadgeVariant(act.severity)} size="sm">
+                          {act.severity}
+                        </Badge>
+                      </td>
+
+                      {/* Violations / Threats */}
+                      <td className="py-4 px-4">
+                        <div className="flex flex-wrap gap-1.5 max-w-[220px]">
+                          {act.threats && act.threats.length > 0 ? (
+                            act.threats.map((t: string, idx: number) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/25 text-red-400 text-[11px] font-mono tracking-wide"
+                              >
+                                {t.replace(/_/g, ' ')}
+                              </span>
+                            ))
+                          ) : act.policy_violations && act.policy_violations.length > 0 ? (
+                            <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/25 text-amber-400 text-[11px] font-mono">
+                              {act.policy_violations.length} Violation(s)
+                            </span>
+                          ) : (
+                            <span className="text-graphite-500 text-[12px]">Authorized Scope</span>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Timestamp */}
+                      <td className="py-4 px-4 text-graphite-400 text-[12px] whitespace-nowrap">
+                        {act.created_at
+                          ? new Date(act.created_at).toLocaleTimeString()
+                          : 'Now'}
+                      </td>
+
+                      {/* Inspect button */}
+                      <td className="py-4 px-4 text-right whitespace-nowrap">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedAction(act);
+                          }}
+                          className="p-1.5 rounded-lg text-graphite-400 hover:text-stone-100 hover:bg-[#18181b] border border-transparent hover:border-[#2a2a2e] transition-all cursor-pointer"
+                          title="Forensic Inspection"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
           {/* Pagination Footer */}
-          <div className="px-4 py-2.5 border-t border-graphite-750 bg-graphite-900/30 flex items-center justify-between text-xs text-graphite-400 font-mono">
+          <div className="px-5 py-3.5 border-t border-[#1e1e21] bg-[#0c0c0d]/60 flex items-center justify-between text-[13px] text-graphite-400 font-mono">
             <span>
               Showing {(page - 1) * 15 + 1} to{' '}
               {Math.min(page * 15, total)} of {total} events
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <Button
                 variant="outline"
                 size="sm"
@@ -365,7 +375,7 @@ export const ActionStreamPage: React.FC = () => {
               >
                 Previous
               </Button>
-              <span className="text-stone-300 text-xs font-mono">
+              <span className="text-stone-300 text-[13px] font-mono px-1">
                 {page} / {totalPages}
               </span>
               <Button
@@ -388,95 +398,95 @@ export const ActionStreamPage: React.FC = () => {
           onClose={() => setSelectedAction(null)}
           maxWidth="2xl"
           title={
-            <div className="flex items-center gap-2">
-              <span>Action Forensic Inspection</span>
+            <div className="flex items-center gap-3">
+              <span className="font-sans font-medium text-stone-100 text-[18px]">Forensic Action Inspection</span>
               <Badge
                 variant={getDecisionBadgeVariant(selectedAction.decision)}
-                size="sm"
+                size="md"
               >
                 {selectedAction.decision}
               </Badge>
             </div>
           }
-          subtitle={`Telemetry ID: ${selectedAction.id}`}
+          subtitle={`Telemetry Event Record: ${selectedAction.id}`}
         >
-          <div className="space-y-3.5">
+          <div className="space-y-4">
             {/* Verdict Explanation Box */}
             <div
-              className={`p-3 rounded border ${
+              className={`p-4 rounded-xl border ${
                 selectedAction.decision === 'BLOCK'
-                  ? 'bg-status-red/10 border-status-red/25 text-status-red'
+                  ? 'bg-red-500/10 border-red-500/30 text-red-200'
                   : selectedAction.decision === 'REQUIRE_APPROVAL'
-                  ? 'bg-status-yellow/10 border-status-yellow/25 text-status-yellow'
-                  : 'bg-status-green/10 border-status-green/25 text-status-green'
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
+                  : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
               }`}
             >
-              <div className="flex items-center gap-2 font-medium text-xs mb-1">
+              <div className="flex items-center gap-2.5 font-medium text-[13.5px] mb-1.5">
                 {selectedAction.decision === 'BLOCK' ? (
-                  <XCircle className="w-4 h-4 text-status-red" />
+                  <XCircle className="w-5 h-5 text-red-400" />
                 ) : selectedAction.decision === 'REQUIRE_APPROVAL' ? (
-                  <AlertTriangle className="w-4 h-4 text-status-yellow" />
+                  <AlertTriangle className="w-5 h-5 text-amber-400" />
                 ) : (
-                  <CheckCircle2 className="w-4 h-4 text-status-green" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                 )}
-                <span className="font-mono uppercase text-[10px] tracking-wider">Enforcement Rationale</span>
+                <span className="font-mono uppercase text-[11px] tracking-wider font-semibold">Enforcement Rationale</span>
               </div>
-              <p className="text-xs font-mono leading-relaxed opacity-95">
+              <p className="text-[14px] font-sans leading-relaxed text-stone-200">
                 {selectedAction.explanation ||
                   'Action evaluated against behavioral models and enterprise perimeter policies.'}
               </p>
             </div>
 
             {/* Core Meta Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
-              <div className="p-2.5 bg-graphite-900 rounded border border-graphite-750">
-                <span className="text-graphite-500 block text-[9px] uppercase">AGENT</span>
-                <span className="font-medium text-stone-200 truncate block mt-0.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-[13px]">
+              <div className="p-3 bg-[#0a0a0b] rounded-lg border border-[#202023]">
+                <span className="text-graphite-500 block text-[10px] uppercase font-semibold">AGENT</span>
+                <span className="font-medium text-stone-100 truncate block mt-1">
                   {selectedAction.agent_name || 'Agent'}
                 </span>
               </div>
-              <div className="p-2.5 bg-graphite-900 rounded border border-graphite-750">
-                <span className="text-graphite-500 block text-[9px] uppercase">OPERATION</span>
-                <span className="font-medium text-copper-400 mt-0.5 block">
+              <div className="p-3 bg-[#0a0a0b] rounded-lg border border-[#202023]">
+                <span className="text-graphite-500 block text-[10px] uppercase font-semibold">OPERATION</span>
+                <span className="font-medium text-copper-400 mt-1 block">
                   {selectedAction.action_type}
                 </span>
               </div>
-              <div className="p-2.5 bg-graphite-900 rounded border border-graphite-750">
-                <span className="text-graphite-500 block text-[9px] uppercase">SEVERITY</span>
-                <span className="font-medium text-stone-200 mt-0.5 block">
+              <div className="p-3 bg-[#0a0a0b] rounded-lg border border-[#202023]">
+                <span className="text-graphite-500 block text-[10px] uppercase font-semibold">SEVERITY</span>
+                <span className="font-medium text-stone-100 mt-1 block">
                   {selectedAction.severity}
                 </span>
               </div>
-              <div className="p-2.5 bg-graphite-900 rounded border border-graphite-750">
-                <span className="text-graphite-500 block text-[9px] uppercase">DATA CLASS</span>
-                <span className="font-medium text-status-blue mt-0.5 block">
+              <div className="p-3 bg-[#0a0a0b] rounded-lg border border-[#202023]">
+                <span className="text-graphite-500 block text-[10px] uppercase font-semibold">DATA CLASS</span>
+                <span className="font-medium text-sky-400 mt-1 block">
                   {selectedAction.data_classification || 'INTERNAL'}
                 </span>
               </div>
             </div>
 
             {/* Risk Score Meter */}
-            <div className="p-3 bg-graphite-900 rounded border border-graphite-750">
+            <div className="p-4 bg-[#0a0a0b] rounded-lg border border-[#202023]">
               <RiskScoreMeter score={selectedAction.risk_score} size="lg" />
             </div>
 
             {/* Sensitive Data Detected */}
             {selectedAction.sensitive_data_detected && (
-              <div className="p-3 bg-graphite-900 rounded border border-graphite-750">
-                <div className="flex items-center gap-1.5 text-xs font-medium text-stone-200 mb-1.5">
-                  <Shield className="w-3.5 h-3.5 text-copper-400" />
+              <div className="p-4 bg-[#0a0a0b] rounded-lg border border-[#202023]">
+                <div className="flex items-center gap-2 text-[14px] font-medium text-stone-200 mb-2 font-sans">
+                  <Shield className="w-4 h-4 text-copper-400" />
                   <span>Sensitive Data Analysis</span>
                 </div>
-                <div className="text-xs font-mono text-graphite-300">
+                <div className="text-[13px] font-mono text-graphite-300">
                   {typeof selectedAction.sensitive_data_detected === 'object' ? (
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       {selectedAction.sensitive_data_detected.findings?.length > 0 ? (
-                        <div className="flex flex-wrap gap-1 mt-1">
+                        <div className="flex flex-wrap gap-1.5 mt-1">
                           {selectedAction.sensitive_data_detected.findings.map(
                             (f: any, idx: number) => (
                               <span
                                 key={idx}
-                                className="px-1.5 py-0.2 rounded bg-status-red/10 border border-status-red/25 text-status-red text-[10px]"
+                                className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/25 text-red-400 text-[11.5px]"
                               >
                                 {f.type || f}: {f.count || 1} match(es)
                               </span>
@@ -484,7 +494,7 @@ export const ActionStreamPage: React.FC = () => {
                           )}
                         </div>
                       ) : (
-                        <span className="text-graphite-500">No raw sensitive patterns detected</span>
+                        <span className="text-graphite-500 text-[13px]">No raw sensitive patterns detected</span>
                       )}
                     </div>
                   ) : (
@@ -496,17 +506,17 @@ export const ActionStreamPage: React.FC = () => {
 
             {/* Raw Payload Preview */}
             {selectedAction.payload && (
-              <div className="p-3 bg-graphite-900 rounded border border-graphite-750">
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5 text-xs font-medium text-stone-200">
-                    <FileCode className="w-3.5 h-3.5 text-graphite-400" />
-                    <span>Evaluated Payload</span>
+              <div className="p-4 bg-[#0a0a0b] rounded-lg border border-[#202023]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2 text-[14px] font-medium text-stone-200 font-sans">
+                    <FileCode className="w-4 h-4 text-graphite-400" />
+                    <span>Evaluated Payload Data</span>
                   </div>
-                  <span className="text-[10px] font-mono text-graphite-500">
+                  <span className="text-[11.5px] font-mono text-graphite-400">
                     Target: {selectedAction.resource}
                   </span>
                 </div>
-                <pre className="p-2.5 bg-graphite-950 rounded text-[11px] font-mono text-stone-300 overflow-x-auto max-h-44 border border-graphite-800 whitespace-pre-wrap">
+                <pre className="p-3.5 bg-[#050506] rounded-lg text-[12.5px] font-mono text-stone-300 overflow-x-auto max-h-48 border border-[#1b1b1e] whitespace-pre-wrap leading-relaxed">
                   {typeof selectedAction.payload === 'object'
                     ? JSON.stringify(selectedAction.payload, null, 2)
                     : selectedAction.payload}

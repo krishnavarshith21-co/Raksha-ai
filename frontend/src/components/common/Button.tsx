@@ -19,34 +19,34 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'text-xs px-2.5 py-1 rounded-md gap-1.5 h-7 font-sans',
-    md: 'text-xs px-3.5 py-1.5 rounded-md gap-2 h-8.5 font-sans',
-    lg: 'text-[13px] px-4 py-2 rounded-md gap-2 h-10 font-sans',
+    sm: 'text-[13px] px-3 py-1.5 rounded-lg gap-1.5 h-8 font-medium',
+    md: 'text-[14px] px-4 py-2 rounded-lg gap-2 h-10 font-medium',
+    lg: 'text-[15px] px-5 py-2.5 rounded-lg gap-2.5 h-12 font-medium',
   }[size];
 
   const variantClasses = {
     primary:
-      'bg-copper-500 hover:bg-copper-400 text-graphite-950 font-medium shadow-sm active:translate-y-px transition-colors',
+      'bg-gradient-to-b from-[#E0C28D] to-[#C9A66B] hover:from-[#EBD3A9] hover:to-[#D4B691] text-[#070707] font-semibold border border-white/20 shadow-md shadow-[#C9A66B]/15 active:translate-y-px transition-all',
     secondary:
-      'bg-graphite-800/90 hover:bg-graphite-750 text-stone-100 border border-graphite-700 hover:border-graphite-600 shadow-sm active:translate-y-px transition-colors',
+      'bg-[#141415] hover:bg-[#1A1A1C] text-[#F2EEE7] border border-white/10 hover:border-white/15 shadow-sm active:translate-y-px transition-all',
     danger:
-      'bg-status-red/10 hover:bg-status-red/20 text-status-red border border-status-red/25 shadow-sm active:translate-y-px transition-colors',
+      'bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/35 shadow-sm active:translate-y-px transition-all',
     success:
-      'bg-status-green/10 hover:bg-status-green/20 text-status-green border border-status-green/25 shadow-sm active:translate-y-px transition-colors',
+      'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/35 shadow-sm active:translate-y-px transition-all',
     outline:
-      'bg-transparent hover:bg-graphite-850 text-graphite-300 hover:text-stone-100 border border-graphite-750 hover:border-graphite-700 transition-colors',
+      'bg-transparent hover:bg-white/[0.05] text-[#96939A] hover:text-[#F2EEE7] border border-white/10 hover:border-white/20 transition-all',
     ghost:
-      'bg-transparent hover:bg-graphite-850 text-graphite-400 hover:text-stone-100 transition-colors',
+      'bg-transparent hover:bg-white/[0.05] text-[#96939A] hover:text-[#F2EEE7] transition-all',
   }[variant];
 
   return (
     <button
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed select-none ${sizeClasses} ${variantClasses} ${className}`}
+      className={`inline-flex items-center justify-center transition-all duration-150 cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed select-none ${sizeClasses} ${variantClasses} ${className}`}
       {...props}
     >
       {loading ? (
-        <Loader2 className="w-3.5 h-3.5 animate-spin text-current" />
+        <Loader2 className="w-4 h-4 animate-spin text-current" />
       ) : icon ? (
         <span className="shrink-0">{icon}</span>
       ) : null}

@@ -9,7 +9,7 @@ import {
   ExternalLink,
   ChevronDown,
   Layers,
-  Search,
+  Terminal,
 } from 'lucide-react';
 import { Badge } from '../common/Badge';
 
@@ -39,67 +39,69 @@ export const TopBar: React.FC = () => {
     navigate('/login');
   };
 
-  const currentTitle = routeTitleMap[location.pathname] || 'Enterprise Console';
+  const currentTitle = routeTitleMap[location.pathname] || 'Security Console';
 
   return (
-    <header className="h-12 border-b border-graphite-750/70 bg-graphite-950/85 backdrop-blur-md sticky top-0 z-30 px-5 flex items-center justify-between gap-4">
-      {/* Left: Precision Breadcrumb & Telemetry Tag */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="text-graphite-400 font-medium">RAKSHYA</span>
-          <span className="text-graphite-600">/</span>
-          <span className="text-stone-100 font-medium tracking-tight">
+    <header className="h-16 border-b border-white/[0.08] bg-[#0B0B0C]/90 backdrop-blur-md sticky top-0 z-30 px-6 lg:px-10 flex items-center justify-between gap-4">
+      {/* Left: Precision Breadcrumb & Telemetry Status Tag */}
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2.5 text-sm font-mono">
+          <span className="text-[#96939A] font-medium tracking-wider">RAKSHYA</span>
+          <span className="text-white/20">/</span>
+          <span className="text-[#F2EEE7] font-semibold tracking-tight text-base font-sans">
             {currentTitle}
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-graphite-900 border border-graphite-750 text-[10px] font-mono">
-          <span className="w-1.5 h-1.5 rounded-full bg-status-green" />
-          <span className="text-graphite-300">INLINE ACTIVE</span>
+        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-[#101011] border border-white/[0.08] text-[11px] font-mono">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[#D8D4CC] font-medium">INLINE DEFENSE ACTIVE</span>
+          <span className="text-white/20">|</span>
+          <span className="text-[#C9A66B]">DEMO TELEMETRY</span>
         </div>
       </div>
 
       {/* Right controls */}
-      <div className="flex items-center gap-2.5">
-        {/* Simulator fast launcher */}
+      <div className="flex items-center gap-3">
+        {/* Simulator launcher */}
         <Link
           to="/simulator"
-          className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-graphite-900 hover:bg-graphite-850 border border-graphite-750 hover:border-graphite-700 text-xs font-mono text-graphite-200 hover:text-stone-100 transition-colors"
-          title="Launch Attack Simulation"
+          className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#141415] hover:bg-[#1A1A1C] border border-white/10 hover:border-[#C9A66B]/40 text-xs font-mono text-[#F2EEE7] transition-all shadow-sm"
+          title="Launch Red-Team Attack Simulation"
         >
-          <Radio className="w-3 h-3 text-copper-400" />
-          <span>Simulator</span>
+          <Radio className="w-3.5 h-3.5 text-[#C9A66B]" />
+          <span>Attack Simulator</span>
         </Link>
 
         {/* SDK & Keys */}
         <Link
           to="/api-keys"
-          className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-mono text-graphite-400 hover:text-stone-100 transition-colors"
+          className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono text-[#96939A] hover:text-[#F2EEE7] hover:bg-white/[0.04] transition-all"
         >
-          <ExternalLink className="w-3 h-3" />
-          <span>SDK</span>
+          <Terminal className="w-3.5 h-3.5 text-[#C9A66B]" />
+          <span>SDK & APIs</span>
         </Link>
 
         {/* Org identifier */}
-        <div className="hidden lg:flex items-center text-[11px] font-mono text-graphite-400 border-l border-graphite-750/70 pl-3">
-          <span className="text-graphite-300">
+        <div className="hidden lg:flex items-center text-xs font-mono text-[#96939A] border-l border-white/10 pl-4">
+          <span className="text-[#D8D4CC] font-medium">
             {user?.organizationName || 'SecOps Core'}
           </span>
         </div>
 
         {/* Operator Profile Dropdown */}
-        <div className="relative border-l border-graphite-750/70 pl-2.5">
+        <div className="relative border-l border-white/10 pl-3">
           <button
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 p-1 rounded-md hover:bg-graphite-850 transition-colors cursor-pointer"
+            className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-white/[0.05] transition-colors cursor-pointer"
           >
-            <div className="w-6.5 h-6.5 rounded bg-graphite-850 border border-graphite-700 flex items-center justify-center text-stone-200 font-mono text-[11px] uppercase">
-              {user?.name ? user.name.slice(0, 2) : <User className="w-3 h-3 text-graphite-400" />}
+            <div className="w-7 h-7 rounded bg-[#141415] border border-white/10 flex items-center justify-center text-[#F2EEE7] font-mono text-xs uppercase font-semibold">
+              {user?.name ? user.name.slice(0, 2) : <User className="w-3.5 h-3.5 text-[#96939A]" />}
             </div>
-            <span className="hidden sm:inline text-xs font-medium text-stone-200">
-              {user?.name || 'Operator'}
+            <span className="hidden sm:inline text-xs font-medium text-[#F2EEE7]">
+              {user?.name || 'Chief Security Officer'}
             </span>
-            <ChevronDown className="w-3 h-3 text-graphite-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#66636A]" />
           </button>
 
           {profileOpen && (
@@ -108,13 +110,13 @@ export const TopBar: React.FC = () => {
                 className="fixed inset-0 z-40"
                 onClick={() => setProfileOpen(false)}
               />
-              <div className="absolute right-0 mt-1.5 w-60 rounded-lg bg-graphite-850 border border-graphite-700 shadow-2xl p-1.5 z-50 animate-slide-up">
-                <div className="px-3 py-2 border-b border-graphite-750 mb-1">
-                  <div className="text-xs font-medium text-stone-100">{user?.name}</div>
-                  <div className="text-[11px] text-graphite-400 font-mono truncate">{user?.email}</div>
-                  <div className="mt-1.5">
+              <div className="absolute right-0 mt-2 w-64 rounded-xl bg-[#101011] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in">
+                <div className="px-3.5 py-3 border-b border-white/[0.07] mb-1.5">
+                  <div className="text-sm font-medium text-[#F2EEE7]">{user?.name}</div>
+                  <div className="text-xs text-[#96939A] font-mono truncate mt-0.5">{user?.email}</div>
+                  <div className="mt-2">
                     <Badge variant="allow" size="sm">
-                      {user?.role || 'ADMIN'}
+                      {user?.role || 'CHIEF SECURITY OFFICER'}
                     </Badge>
                   </div>
                 </div>
@@ -122,27 +124,27 @@ export const TopBar: React.FC = () => {
                 <Link
                   to="/settings"
                   onClick={() => setProfileOpen(false)}
-                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded text-xs text-graphite-300 hover:text-stone-100 hover:bg-graphite-800 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-[#96939A] hover:text-[#F2EEE7] hover:bg-white/[0.05] transition-colors"
                 >
-                  <Shield className="w-3.5 h-3.5 text-graphite-400" />
-                  Cluster Settings
+                  <Shield className="w-4 h-4 text-[#C9A66B]" />
+                  <span>Cluster Governance</span>
                 </Link>
 
                 <Link
-                  to="/landing"
+                  to="/"
                   onClick={() => setProfileOpen(false)}
-                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded text-xs text-graphite-300 hover:text-stone-100 hover:bg-graphite-800 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-[#96939A] hover:text-[#F2EEE7] hover:bg-white/[0.05] transition-colors"
                 >
-                  <Layers className="w-3.5 h-3.5 text-graphite-400" />
-                  Product Architecture
+                  <Layers className="w-4 h-4 text-[#C9A66B]" />
+                  <span>Public Architectural Overview</span>
                 </Link>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded text-xs text-status-red hover:bg-status-red/10 transition-colors mt-0.5 cursor-pointer"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-red-400 hover:bg-red-500/10 transition-colors mt-1 cursor-pointer"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Terminate Session
+                  <LogOut className="w-4 h-4" />
+                  <span>Terminate Session</span>
                 </button>
               </div>
             </>

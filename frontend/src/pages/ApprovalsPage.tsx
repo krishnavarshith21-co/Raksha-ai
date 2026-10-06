@@ -6,6 +6,8 @@ import {
   Clock,
   ShieldCheck,
   RefreshCw,
+  AlertTriangle,
+  UserCheck,
 } from 'lucide-react';
 import { approvalsApi } from '../services/api';
 import { Button } from '../components/common/Button';
@@ -100,22 +102,22 @@ export const ApprovalsPage: React.FC = () => {
   const displayedApprovals = activeTab === 'PENDING' ? pendingApprovals : approvals;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-status-yellow" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-status-yellow font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-amber-400 ring-4 ring-amber-400/15" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
               HUMAN-IN-THE-LOOP ORCHESTRATION
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">DUAL-CUSTODY AUTHORIZATION</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">DUAL-CUSTODY AUTHORIZATION</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             Approval Queue
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Escalated autonomous agent operations requiring explicit administrator or SOC sign-off.
           </p>
         </div>
@@ -128,37 +130,59 @@ export const ApprovalsPage: React.FC = () => {
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Queue
           </Button>
         </div>
       </div>
 
+      {/* Prominent High-Risk Escalation Banner */}
+      {pendingApprovals.length > 0 && (
+        <div className="surface-card p-5 rounded-xl border border-amber-500/30 bg-amber-500/[0.04] shadow-[0_0_30px_rgba(245,158,11,0.06)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-[15.5px] font-medium text-amber-200 tracking-tight font-sans">
+                HIGH-RISK ACTION REQUIRES HUMAN AUTHORIZATION
+              </h3>
+              <p className="text-[13.5px] text-graphite-300 mt-0.5">
+                {pendingApprovals.length} privileged autonomous action(s) halted at gateway perimeter awaiting cryptographic or dual-custody approval.
+              </p>
+            </div>
+          </div>
+          <span className="px-3.5 py-1.5 rounded-full text-[12px] font-mono bg-amber-500/15 text-amber-400 border border-amber-500/30 font-medium shrink-0 tracking-wide">
+            {pendingApprovals.length} ACTION(S) ESCALATED
+          </span>
+        </div>
+      )}
+
       {/* Tabs */}
-      <div className="flex items-center gap-4 border-b border-graphite-750/70 pb-2">
+      <div className="flex items-center gap-6 border-b border-[#1c1c1f] pb-3">
         <button
           onClick={() => setActiveTab('PENDING')}
-          className={`pb-1 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 -mb-2.5 ${
+          className={`pb-1 text-[13.5px] font-mono transition-colors cursor-pointer flex items-center gap-2 border-b-2 -mb-3.5 ${
             activeTab === 'PENDING'
               ? 'border-copper-500 text-stone-100 font-medium'
               : 'border-transparent text-graphite-400 hover:text-stone-300'
           }`}
         >
           <span>Pending Review</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-status-yellow/15 text-status-yellow border border-status-yellow/30">
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-amber-500/15 text-amber-400 border border-amber-500/30 font-semibold">
             {pendingApprovals.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('ALL')}
-          className={`pb-1 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 -mb-2.5 ${
+          className={`pb-1 text-[13.5px] font-mono transition-colors cursor-pointer flex items-center gap-2 border-b-2 -mb-3.5 ${
             activeTab === 'ALL'
               ? 'border-copper-500 text-stone-100 font-medium'
               : 'border-transparent text-graphite-400 hover:text-stone-300'
           }`}
         >
           <span>Audit History</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-graphite-800 text-graphite-400 border border-graphite-750">
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-[#161618] text-graphite-400 border border-[#26262a]">
             {approvals.length}
           </span>
         </button>
@@ -169,7 +193,7 @@ export const ApprovalsPage: React.FC = () => {
         <LoadingSpinner label="Fetching approval queue state..." size="lg" fullHeight />
       ) : displayedApprovals.length === 0 ? (
         <EmptyState
-          icon={<ShieldCheck className="w-5 h-5 text-status-green" />}
+          icon={<ShieldCheck className="w-5 h-5 text-emerald-400" />}
           title={
             activeTab === 'PENDING'
               ? 'Queue Clear: Zero Pending Approvals'
@@ -182,95 +206,103 @@ export const ApprovalsPage: React.FC = () => {
           }
         />
       ) : (
-        <div className="space-y-2.5">
-          {displayedApprovals.map((approval) => (
-            <div
-              key={approval.id}
-              className={`p-4 rounded-lg bg-graphite-850 border border-graphite-750 transition-all ${
-                approval.status === 'PENDING'
-                  ? 'border-l-2 border-l-status-yellow'
-                  : 'opacity-85'
-              }`}
-            >
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                <div className="space-y-1.5 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={getStatusBadgeVariant(approval.status)} size="sm">
-                      {approval.status}
-                    </Badge>
-                    <span className="text-xs font-mono text-stone-200 font-medium">
-                      {approval.agent_name || 'Agent'}
-                    </span>
-                    <span className="text-graphite-600 text-xs">/</span>
-                    <span className="px-1.5 py-0.2 rounded bg-graphite-900 text-[10px] font-mono text-copper-400 border border-graphite-750">
-                      {approval.action_type || 'ACCESS'}
-                    </span>
-                    <span className="text-xs font-mono text-stone-300 truncate max-w-sm">
-                      {approval.resource}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-graphite-400 font-sans leading-relaxed">
-                    {approval.reason ||
-                      approval.explanation ||
-                      'Action triggered an enterprise human approval policy rule.'}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-graphite-500 pt-0.5">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-graphite-500" />
-                      <span>
-                        Requested:{' '}
-                        {approval.created_at
-                          ? new Date(approval.created_at).toLocaleTimeString()
-                          : 'Recent'}
+        <div className="space-y-4">
+          {displayedApprovals.map((approval) => {
+            const isPending = approval.status === 'PENDING';
+            return (
+              <div
+                key={approval.id}
+                className={`surface-card p-6 rounded-xl border border-[#1e1e21] transition-all ${
+                  isPending
+                    ? 'border-l-[4px] border-l-amber-500 shadow-[0_0_24px_rgba(245,158,11,0.05)]'
+                    : 'opacity-90'
+                }`}
+              >
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                  <div className="space-y-2.5 flex-1">
+                    {/* Header line */}
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <Badge variant={getStatusBadgeVariant(approval.status)} size="md">
+                        {approval.status}
+                      </Badge>
+                      <span className="text-[15px] font-sans text-stone-100 font-medium">
+                        {approval.agent_name || 'Agent'}
+                      </span>
+                      <span className="text-graphite-600 font-mono text-xs">/</span>
+                      <span className="px-2 py-0.5 rounded bg-[#141416] text-[11.5px] font-mono text-copper-400 border border-[#26262a] uppercase tracking-wide">
+                        {approval.action_type || 'ACCESS'}
+                      </span>
+                      <span className="px-3 py-1 rounded bg-[#070708] border border-[#222225] font-mono text-[13px] text-stone-200 truncate max-w-md">
+                        {approval.resource}
                       </span>
                     </div>
 
-                    {approval.decided_at && (
-                      <div className="flex items-center gap-1 text-graphite-400">
-                        <span>
-                          Decided:{' '}
-                          {new Date(approval.decided_at).toLocaleTimeString()}
-                        </span>
-                        {approval.decision_reason && (
-                          <span className="italic text-graphite-500">
-                            ("{approval.decision_reason}")
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                    {/* Reason */}
+                    <p className="text-[14.5px] text-stone-300 font-sans leading-relaxed">
+                      {approval.reason ||
+                        approval.explanation ||
+                        'Action triggered an enterprise human approval policy rule.'}
+                    </p>
 
-                {/* Right Actions */}
-                {approval.status === 'PENDING' ? (
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                      variant="success"
-                      size="sm"
-                      icon={<CheckCircle2 className="w-3.5 h-3.5 text-status-green" />}
-                      onClick={() => handleOpenDecisionModal(approval, 'APPROVED')}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      icon={<XCircle className="w-3.5 h-3.5 text-status-red" />}
-                      onClick={() => handleOpenDecisionModal(approval, 'REJECTED')}
-                    >
-                      Reject
-                    </Button>
+                    {/* Metadata */}
+                    <div className="flex flex-wrap items-center gap-4 text-[12px] font-mono text-graphite-400 pt-1">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-graphite-500" />
+                        <span>
+                          Requested:{' '}
+                          {approval.created_at
+                            ? new Date(approval.created_at).toLocaleString()
+                            : 'Recent'}
+                        </span>
+                      </div>
+
+                      {approval.decided_at && (
+                        <div className="flex items-center gap-1 text-graphite-300">
+                          <span>
+                            Decided:{' '}
+                            {new Date(approval.decided_at).toLocaleTimeString()}
+                          </span>
+                          {approval.decision_reason && (
+                            <span className="italic text-graphite-400">
+                              ("{approval.decision_reason}")
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      <span className="text-graphite-600">Ref: {approval.id?.slice(0, 8)}...</span>
+                    </div>
                   </div>
-                ) : (
-                  <div className="shrink-0 font-mono text-[11px] text-graphite-500 uppercase">
-                    Resolution Complete
-                  </div>
-                )}
+
+                  {/* Right Actions */}
+                  {isPending ? (
+                    <div className="flex items-center gap-3 shrink-0">
+                      <Button
+                        variant="success"
+                        size="md"
+                        icon={<CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                        onClick={() => handleOpenDecisionModal(approval, 'APPROVED')}
+                      >
+                        Approve Action
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="md"
+                        icon={<XCircle className="w-4 h-4 text-red-400" />}
+                        onClick={() => handleOpenDecisionModal(approval, 'REJECTED')}
+                      >
+                        Reject
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="shrink-0 font-mono text-[12px] text-graphite-400 uppercase tracking-wider px-3 py-1 rounded bg-[#101012] border border-[#202024]">
+                      Resolution Complete
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -281,22 +313,24 @@ export const ApprovalsPage: React.FC = () => {
           onClose={() => setSelectedApproval(null)}
           maxWidth="md"
           title={
-            <div className="flex items-center gap-2">
-              <span>{decisionAction === 'APPROVED' ? 'Authorize Operation' : 'Reject Operation'}</span>
+            <div className="flex items-center gap-3">
+              <span className="text-[18px] font-medium text-stone-100 font-sans">
+                {decisionAction === 'APPROVED' ? 'Authorize Privileged Operation' : 'Reject Operation'}
+              </span>
               <span
-                className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full border ${
                   decisionAction === 'APPROVED'
-                    ? 'bg-status-green/10 text-status-green border-status-green/25'
-                    : 'bg-status-red/10 text-status-red border-status-red/25'
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                    : 'bg-red-500/10 text-red-400 border-red-500/25'
                 }`}
               >
                 {decisionAction}
               </span>
             </div>
           }
-          subtitle={`Escalation ID: ${selectedApproval.id}`}
+          subtitle={`Escalation Reference: ${selectedApproval.id}`}
           footer={
-            <div className="flex items-center justify-end gap-2 w-full">
+            <div className="flex items-center justify-end gap-3 w-full">
               <Button
                 variant="outline"
                 size="sm"
@@ -307,46 +341,46 @@ export const ApprovalsPage: React.FC = () => {
               </Button>
               <Button
                 variant={decisionAction === 'APPROVED' ? 'success' : 'danger'}
-                size="sm"
+                size="md"
                 onClick={handleSubmitDecision}
                 loading={submittingDecision}
               >
-                Confirm {decisionAction === 'APPROVED' ? 'Approval' : 'Rejection'}
+                Confirm {decisionAction === 'APPROVED' ? 'Authorization' : 'Rejection'}
               </Button>
             </div>
           }
         >
-          <div className="space-y-3">
+          <div className="space-y-4">
             {decisionError && (
-              <div className="p-2.5 rounded bg-status-red/10 border border-status-red/25 text-xs text-status-red">
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/25 text-[13px] text-red-400">
                 {decisionError}
               </div>
             )}
 
-            <div className="p-3 bg-graphite-900 rounded border border-graphite-750 font-mono text-xs space-y-1">
+            <div className="p-4 bg-[#0a0a0b] rounded-xl border border-[#202023] font-mono text-[13px] space-y-2">
               <div className="flex justify-between">
-                <span className="text-graphite-500">Agent:</span>
-                <span className="text-stone-200">{selectedApproval.agent_name}</span>
+                <span className="text-graphite-500">Autonomous Agent:</span>
+                <span className="text-stone-100 font-medium">{selectedApproval.agent_name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-graphite-500">Action:</span>
-                <span className="text-copper-400">{selectedApproval.action_type}</span>
+                <span className="text-graphite-500">Privileged Operation:</span>
+                <span className="text-copper-400 font-medium">{selectedApproval.action_type}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-graphite-500">Resource:</span>
-                <span className="text-stone-200 truncate max-w-[200px]">{selectedApproval.resource}</span>
+                <span className="text-graphite-500">Target Resource:</span>
+                <span className="text-stone-200 truncate max-w-[240px]">{selectedApproval.resource}</span>
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-mono uppercase tracking-wider text-graphite-400 mb-1">
-                Authorization Rationale
+              <label className="block text-[11.5px] font-mono uppercase tracking-wider text-graphite-400 mb-1.5 font-medium">
+                Cryptographic / Dual-Custody Audit Justification
               </label>
               <textarea
                 value={decisionReason}
                 onChange={(e) => setDecisionReason(e.target.value)}
-                rows={2}
-                className="w-full p-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none"
+                rows={3}
+                className="w-full p-3 bg-[#050506] border border-[#222225] rounded-lg text-[13.5px] text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none transition-colors"
                 placeholder="Audit logging rationale..."
               />
             </div>

@@ -101,26 +101,26 @@ export const NavRail: React.FC<NavRailProps> = ({
 
   return (
     <aside
-      className={`fixed top-0 left-0 bottom-0 z-40 bg-graphite-950 border-r border-graphite-750/70 flex flex-col transition-all duration-300 ease-out select-none ${
+      className={`fixed top-0 left-0 bottom-0 z-40 bg-[#070707] border-r border-white/[0.08] flex flex-col transition-all duration-200 ease-out select-none ${
         collapsed ? 'w-[58px]' : 'w-[230px]'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-14 px-3.5 flex items-center justify-between border-b border-graphite-750/60 shrink-0">
+      <div className="h-16 px-3.5 flex items-center justify-between border-b border-white/[0.07] shrink-0">
         <NavLink
           to="/dashboard"
           className="flex items-center gap-3 overflow-hidden group focus:outline-none"
           title="RAKSHYA Enterprise"
         >
-          <div className="w-8 h-8 rounded-lg bg-graphite-850 border border-graphite-700 group-hover:border-copper-500/50 flex items-center justify-center transition-all shrink-0">
-            <ShieldCheck className="w-4 h-4 text-copper-400" />
+          <div className="w-9 h-9 rounded-lg bg-[#101011] border border-white/10 group-hover:border-[#C9A66B]/50 flex items-center justify-center transition-all shrink-0 shadow-md shadow-black/50">
+            <ShieldCheck className="w-4.5 h-4.5 text-[#C9A66B]" />
           </div>
           {!collapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="font-serif text-[15px] text-stone-100 tracking-tight font-medium">
+              <span className="font-serif text-[17px] text-[#F2EEE7] tracking-tight font-medium leading-none">
                 RAKSHYA
               </span>
-              <span className="text-[8px] uppercase tracking-[0.22em] text-copper-500/80 font-mono">
+              <span className="text-[9px] uppercase tracking-[0.24em] text-[#C9A66B] font-mono mt-1">
                 Security Core
               </span>
             </div>
@@ -130,12 +130,12 @@ export const NavRail: React.FC<NavRailProps> = ({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className={`p-1 rounded-md text-graphite-500 hover:text-stone-100 hover:bg-graphite-850 transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-md text-[#66636A] hover:text-[#F2EEE7] hover:bg-white/[0.06] transition-colors cursor-pointer ${
               collapsed ? 'hidden' : 'flex'
             }`}
-            title="Collapse rail"
+            title="Collapse sidebar"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -145,7 +145,7 @@ export const NavRail: React.FC<NavRailProps> = ({
         {navGroups.map((group, gIdx) => (
           <div key={gIdx} className="space-y-0.5">
             {!collapsed && (
-              <div className="px-2.5 py-1 text-[9px] font-mono tracking-[0.22em] text-graphite-500 uppercase font-semibold">
+              <div className="px-2.5 py-1 text-[10px] font-mono tracking-[0.24em] text-[#66636A] uppercase font-semibold">
                 {group.category}
               </div>
             )}
@@ -158,26 +158,26 @@ export const NavRail: React.FC<NavRailProps> = ({
                   end={item.to === '/dashboard'}
                   title={collapsed ? item.label : undefined}
                   className={({ isActive }) =>
-                    `group relative flex items-center gap-3 px-2.5 py-2 rounded-md text-[13px] font-medium transition-all duration-150 ${
+                    `group relative flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-[13.5px] font-medium transition-all duration-150 ${
                       isActive
-                        ? 'bg-graphite-850/90 text-stone-100 border border-graphite-700 shadow-sm'
-                        : 'text-graphite-400 hover:text-stone-200 hover:bg-graphite-900/60 border border-transparent'
+                        ? 'bg-[#141415] text-[#F2EEE7] border border-white/10 shadow-lg shadow-black/40'
+                        : 'text-[#96939A] hover:text-[#F2EEE7] hover:bg-white/[0.04] border border-transparent'
                     }`
                   }
                 >
                   {({ isActive }) => (
                     <>
-                      <div className="relative shrink-0">
+                      <div className="relative shrink-0 flex items-center justify-center">
                         <Icon
-                          className={`w-4 h-4 transition-colors ${
+                          className={`w-[17px] h-[17px] transition-colors ${
                             isActive
-                              ? 'text-copper-400'
-                              : 'text-graphite-400 group-hover:text-stone-200'
+                              ? 'text-[#C9A66B]'
+                              : 'text-[#96939A] group-hover:text-[#F2EEE7]'
                           }`}
                         />
                         {/* Dot indicator if collapsed has badge */}
                         {collapsed && item.badge && item.badge > 0 && (
-                          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-copper-400 ring-2 ring-graphite-950" />
+                          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#C9A66B] ring-2 ring-[#070707]" />
                         )}
                       </div>
 
@@ -187,16 +187,16 @@ export const NavRail: React.FC<NavRailProps> = ({
                             {item.label}
                           </span>
                           {item.badge && item.badge > 0 && (
-                            <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-copper-500/15 text-copper-400 border border-copper-500/30">
+                            <span className="ml-2 px-1.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#C9A66B]/15 text-[#E0C28D] border border-[#C9A66B]/35">
                               {item.badge}
                             </span>
                           )}
                         </div>
                       )}
 
-                      {/* Subtle active left bar */}
+                      {/* Subtle gold vertical indicator with soft glow */}
                       {isActive && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-copper-400 rounded-r" />
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#C9A66B] rounded-r shadow-[0_0_8px_rgba(201,166,107,0.6)]" />
                       )}
                     </>
                   )}
@@ -208,22 +208,22 @@ export const NavRail: React.FC<NavRailProps> = ({
       </div>
 
       {/* Footer toggle & status */}
-      <div className="p-2 border-t border-graphite-750/60 bg-graphite-950/80 shrink-0">
+      <div className="p-2.5 border-t border-white/[0.07] bg-[#070707] shrink-0">
         {collapsed ? (
           <button
             onClick={onToggleCollapse}
-            className="w-full flex items-center justify-center p-2 rounded-md text-graphite-500 hover:text-stone-100 hover:bg-graphite-850 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center p-2 rounded-md text-[#66636A] hover:text-[#F2EEE7] hover:bg-white/[0.06] transition-colors cursor-pointer"
             title="Expand sidebar"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         ) : (
-          <div className="px-2.5 py-1.5 rounded bg-graphite-900/60 border border-graphite-800 text-[10px] font-mono flex items-center justify-between text-graphite-400">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-status-green" />
-              <span>INLINE ACTIVE</span>
+          <div className="px-3 py-2 rounded-lg bg-[#0B0B0C] border border-white/[0.07] text-[11px] font-mono flex items-center justify-between text-[#96939A]">
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="text-[#F2EEE7] font-medium">GATEWAY ACTIVE</span>
             </span>
-            <span className="text-copper-400/80">v1.4.2</span>
+            <span className="text-[#C9A66B] font-semibold">v2.4</span>
           </div>
         )}
       </div>

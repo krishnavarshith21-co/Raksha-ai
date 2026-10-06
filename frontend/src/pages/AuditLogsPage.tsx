@@ -80,27 +80,27 @@ export const AuditLogsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-copper-400 ring-4 ring-copper-400/10" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               COMPLIANCE & NON-REPUDIATION
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">SOC 2 TYPE II LEDGER</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">SOC 2 TYPE II LEDGER</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             Audit Trail
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Append-only enterprise verification record of all policy mutations, agent registrations, and security actions.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -108,7 +108,7 @@ export const AuditLogsPage: React.FC = () => {
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Ledger
           </Button>
           <Button
             variant="outline"
@@ -122,16 +122,16 @@ export const AuditLogsPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <div className="p-2.5 rounded-lg bg-graphite-850 border border-graphite-750">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className="surface-card p-4 rounded-xl border border-[#1e1e21]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="lg:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-graphite-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-graphite-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search narrative, actor identity, or payload..."
+              placeholder="Search narrative, actor identity, or payload signature..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-8 pr-3 py-1 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full pl-10 pr-3.5 py-2.5 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13.5px] text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             />
           </div>
 
@@ -142,7 +142,7 @@ export const AuditLogsPage: React.FC = () => {
                 setEventFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Event Codes</option>
               <option value="AGENT_CREATED">AGENT_CREATED</option>
@@ -161,7 +161,7 @@ export const AuditLogsPage: React.FC = () => {
                 setResourceFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Resource Types</option>
               <option value="agent">Agent</option>
@@ -184,77 +184,91 @@ export const AuditLogsPage: React.FC = () => {
           description="Administrative actions and gateway enforcement events will appear here."
         />
       ) : (
-        <div className="bg-graphite-850 border border-graphite-750 rounded-lg overflow-hidden">
+        <div className="surface-card rounded-xl border border-[#1e1e21] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-graphite-900/60 border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
+            <table className="w-full text-left">
+              <thead className="bg-[#0b0b0c] border-b border-[#1e1e21] text-graphite-400 font-mono text-[11px] tracking-wider uppercase">
                 <tr>
-                  <th className="py-2.5 px-3.5 font-medium">TIMESTAMP</th>
-                  <th className="py-2.5 px-3.5 font-medium">EVENT CODE</th>
-                  <th className="py-2.5 px-3.5 font-medium">ACTOR</th>
-                  <th className="py-2.5 px-3.5 font-medium">RESOURCE</th>
-                  <th className="py-2.5 px-3.5 font-medium">NARRATIVE</th>
-                  <th className="py-2.5 px-3.5 font-medium text-right">INSPECT</th>
+                  <th className="py-3.5 px-4 font-medium">TIMESTAMP</th>
+                  <th className="py-3.5 px-4 font-medium">EVENT CODE</th>
+                  <th className="py-3.5 px-4 font-medium">ACTOR IDENTITY</th>
+                  <th className="py-3.5 px-4 font-medium">RESOURCE</th>
+                  <th className="py-3.5 px-4 font-medium">AUDIT NARRATIVE</th>
+                  <th className="py-3.5 px-4 font-medium text-right">INSPECT</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-graphite-750/40 font-mono">
-                {filteredLogs.map((log) => (
-                  <tr
-                    key={log.id}
-                    className="hover:bg-graphite-800/40 transition-colors group cursor-pointer"
-                    onClick={() => setSelectedLog(log)}
-                  >
-                    <td className="py-2.5 px-3.5 text-graphite-400 text-[10px] whitespace-nowrap">
-                      {log.created_at
-                        ? new Date(log.created_at).toLocaleString()
-                        : 'Now'}
-                    </td>
+              <tbody className="divide-y divide-[#18181b] font-mono text-[13.5px]">
+                {filteredLogs.map((log) => {
+                  const isCritical =
+                    log.event?.includes('THREAT') ||
+                    log.event?.includes('BLOCK') ||
+                    log.event?.includes('DELETE');
 
-                    <td className="py-2.5 px-3.5">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-copper-500/10 text-copper-300 border border-copper-500/25">
-                        {log.event}
-                      </span>
-                    </td>
+                  return (
+                    <tr
+                      key={log.id}
+                      className="hover:bg-graphite-800/30 transition-colors group cursor-pointer"
+                      onClick={() => setSelectedLog(log)}
+                    >
+                      <td className="py-4 px-4 text-graphite-400 text-[12px] whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              isCritical ? 'bg-red-400' : 'bg-copper-400'
+                            }`}
+                          />
+                          <span>
+                            {log.created_at ? new Date(log.created_at).toLocaleString() : 'Now'}
+                          </span>
+                        </div>
+                      </td>
 
-                    <td className="py-2.5 px-3.5 font-sans text-stone-200">
-                      {log.actor_name || log.actor_email || 'System Gate'}
-                    </td>
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span className="px-2.5 py-1 rounded bg-copper-400/10 text-copper-300 border border-copper-400/25 font-mono text-[11.5px] font-medium tracking-wide">
+                          {log.event}
+                        </span>
+                      </td>
 
-                    <td className="py-2.5 px-3.5">
-                      <span className="px-1.5 py-0.2 rounded bg-graphite-900 text-[10px] text-graphite-400 border border-graphite-750">
-                        {log.resource_type}
-                      </span>
-                    </td>
+                      <td className="py-4 px-4 font-sans text-stone-100 font-medium whitespace-nowrap">
+                        {log.actor_name || log.actor_email || 'System Gate'}
+                      </td>
 
-                    <td className="py-2.5 px-3.5 font-sans text-stone-300 max-w-md truncate">
-                      {log.description}
-                    </td>
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded bg-[#141416] text-[11px] text-graphite-300 border border-[#242428] uppercase">
+                          {log.resource_type}
+                        </span>
+                      </td>
 
-                    <td className="py-2.5 px-3.5 text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedLog(log);
-                        }}
-                        className="p-1 rounded text-graphite-400 hover:text-stone-200 hover:bg-graphite-800 transition-colors"
-                        title="View Record JSON"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="py-4 px-4 font-sans text-stone-200 max-w-md truncate text-[13.5px]">
+                        {log.description}
+                      </td>
+
+                      <td className="py-4 px-4 text-right whitespace-nowrap">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLog(log);
+                          }}
+                          className="p-1.5 rounded-lg text-graphite-400 hover:text-stone-100 hover:bg-[#18181b] transition-all cursor-pointer"
+                          title="View Record JSON"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
           {/* Pagination */}
-          <div className="px-4 py-2.5 border-t border-graphite-750 bg-graphite-900/30 flex items-center justify-between text-xs text-graphite-400 font-mono">
+          <div className="px-5 py-3.5 border-t border-[#1e1e21] bg-[#0c0c0d]/60 flex items-center justify-between text-[13px] text-graphite-400 font-mono">
             <span>
               Showing {(page - 1) * 25 + 1} to{' '}
               {Math.min(page * 25, total)} of {total} records
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <Button
                 variant="outline"
                 size="sm"
@@ -263,7 +277,7 @@ export const AuditLogsPage: React.FC = () => {
               >
                 Previous
               </Button>
-              <span className="text-stone-300 text-xs font-mono">
+              <span className="text-stone-300 text-[13px] font-mono px-1">
                 {page} / {totalPages}
               </span>
               <Button
@@ -285,43 +299,50 @@ export const AuditLogsPage: React.FC = () => {
           isOpen={!!selectedLog}
           onClose={() => setSelectedLog(null)}
           maxWidth="lg"
-          title={`Audit Record: ${selectedLog.event}`}
-          subtitle={`Ledger Reference ID: ${selectedLog.id}`}
+          title={
+            <div className="flex items-center gap-2.5">
+              <span className="text-[17px] font-medium text-stone-100 font-sans">Audit Ledger Record</span>
+              <span className="px-2 py-0.5 rounded bg-copper-400/10 text-copper-300 border border-copper-400/25 font-mono text-[11px]">
+                {selectedLog.event}
+              </span>
+            </div>
+          }
+          subtitle={`Immutable Ledger Reference: ${selectedLog.id}`}
         >
-          <div className="space-y-3 font-mono text-xs">
-            <div className="p-3 bg-graphite-900 rounded border border-graphite-750 space-y-1">
+          <div className="space-y-4 font-mono text-[13px]">
+            <div className="p-4 bg-[#0a0a0b] rounded-xl border border-[#202023] space-y-2">
               <div className="flex justify-between">
                 <span className="text-graphite-500">Actor Identity:</span>
-                <span className="text-stone-200">{selectedLog.actor_name || selectedLog.actor_email || 'System Gate'}</span>
+                <span className="text-stone-100 font-medium">{selectedLog.actor_name || selectedLog.actor_email || 'System Gate'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-graphite-500">Resource Type:</span>
+                <span className="text-graphite-500">Resource Category:</span>
                 <span className="text-copper-400">{selectedLog.resource_type}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-graphite-500">Resource ID:</span>
+                <span className="text-graphite-500">Resource Target ID:</span>
                 <span className="text-stone-300">{selectedLog.resource_id || 'N/A'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-graphite-500">Logged At:</span>
+                <span className="text-graphite-500">Cryptographically Logged:</span>
                 <span className="text-stone-300">{new Date(selectedLog.created_at).toLocaleString()}</span>
               </div>
             </div>
 
             <div>
-              <span className="text-[10px] uppercase text-graphite-500 block mb-1">
-                Event Description
+              <span className="text-[11px] font-mono uppercase tracking-wider text-graphite-400 block mb-1.5 font-medium">
+                Event Narrative
               </span>
-              <div className="p-2.5 bg-graphite-900 rounded border border-graphite-750 font-sans text-stone-200 text-xs">
+              <div className="p-3.5 bg-[#0a0a0b] rounded-xl border border-[#202023] font-sans text-stone-200 text-[14px] leading-relaxed">
                 {selectedLog.description}
               </div>
             </div>
 
             <div>
-              <span className="text-[10px] uppercase text-graphite-500 block mb-1">
-                Cryptographic Evidence Payload (JSON)
+              <span className="text-[11px] font-mono uppercase tracking-wider text-graphite-400 block mb-1.5 font-medium">
+                Cryptographic Evidence Payload (Immutable JSON)
               </span>
-              <pre className="p-3 bg-graphite-950 rounded border border-graphite-800 text-[11px] text-stone-300 overflow-x-auto max-h-56">
+              <pre className="p-4 bg-[#050506] rounded-xl border border-[#1b1b1e] text-[12px] text-stone-300 overflow-x-auto max-h-56 leading-relaxed">
                 {JSON.stringify(selectedLog, null, 2)}
               </pre>
             </div>
@@ -331,3 +352,4 @@ export const AuditLogsPage: React.FC = () => {
     </div>
   );
 };
+

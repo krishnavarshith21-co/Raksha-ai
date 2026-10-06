@@ -123,27 +123,27 @@ export const AgentsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-copper-400 ring-4 ring-copper-400/10" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               AUTONOMOUS INVENTORY & GOVERNANCE
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">ACTIVE REGISTRY</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">ACTIVE REGISTRY</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             Agent Inventory
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Lifecycle tracking, risk tier baselines, and tool execution boundaries.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -151,13 +151,13 @@ export const AgentsPage: React.FC = () => {
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Registry
           </Button>
           <Button
             variant="primary"
             size="sm"
             onClick={() => setIsRegisterOpen(true)}
-            icon={<Plus className="w-3.5 h-3.5 text-graphite-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Register Agent
           </Button>
@@ -165,16 +165,16 @@ export const AgentsPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <div className="p-2.5 rounded-lg bg-graphite-850 border border-graphite-750">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className="surface-card p-4 rounded-xl border border-[#1e1e21]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="lg:col-span-3 relative">
-            <Search className="w-3.5 h-3.5 text-graphite-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-graphite-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search agent by name, framework, or purpose..."
+              placeholder="Search agent by name, framework, or operational purpose..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-8 pr-3 py-1 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full pl-10 pr-3.5 py-2.5 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13.5px] text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             />
           </div>
 
@@ -182,7 +182,7 @@ export const AgentsPage: React.FC = () => {
             <select
               value={envFilter}
               onChange={(e) => setEnvFilter(e.target.value)}
-              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
+              className="w-full py-2.5 px-3 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13px] text-graphite-300 focus:border-copper-500 focus:outline-none font-mono transition-colors"
             >
               <option value="">All Environments</option>
               <option value="PRODUCTION">PRODUCTION</option>
@@ -205,84 +205,119 @@ export const AgentsPage: React.FC = () => {
           onAction={() => setIsRegisterOpen(true)}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredAgents.map((agent) => (
-            <div
-              key={agent.id}
-              className={`p-4 rounded-lg bg-graphite-850 border border-graphite-750 hover:border-graphite-700 transition-all flex flex-col justify-between ${
-                agent.status === 'SUSPENDED' ? 'opacity-65' : ''
-              }`}
-            >
-              <div className="space-y-3">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-md bg-graphite-900 border border-graphite-750 flex items-center justify-center text-copper-400">
-                      <Bot className="w-4 h-4" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredAgents.map((agent) => {
+            const isSuspended = agent.status === 'SUSPENDED';
+            const riskPercent =
+              agent.risk_level === 'CRITICAL'
+                ? 88
+                : agent.risk_level === 'HIGH'
+                ? 68
+                : agent.risk_level === 'MEDIUM'
+                ? 44
+                : 16;
+            const riskColor =
+              agent.risk_level === 'CRITICAL'
+                ? 'bg-red-500'
+                : agent.risk_level === 'HIGH'
+                ? 'bg-amber-500'
+                : agent.risk_level === 'MEDIUM'
+                ? 'bg-yellow-500'
+                : 'bg-emerald-500';
+
+            return (
+              <div
+                key={agent.id}
+                className={`surface-card-hover p-6 rounded-xl border border-[#1e1e21] transition-all flex flex-col justify-between group ${
+                  isSuspended ? 'opacity-60 bg-[#080809]' : ''
+                }`}
+              >
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#141416] border border-[#26262a] flex items-center justify-center text-copper-400 group-hover:border-copper-400/40 group-hover:bg-[#18181b] transition-all shrink-0">
+                        <Bot className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-stone-100 text-[17px] font-sans tracking-tight truncate max-w-[170px]">
+                          {agent.name}
+                        </h3>
+                        <span className="text-[11.5px] font-mono text-graphite-500">
+                          {agent.id?.slice(0, 10)}...
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium text-stone-100 text-xs tracking-tight truncate max-w-[150px]">
-                        {agent.name}
-                      </h3>
-                      <span className="text-[10px] font-mono text-graphite-500">
-                        {agent.id?.slice(0, 8)}...
-                      </span>
-                    </div>
+
+                    <Badge variant={getStatusBadgeVariant(agent.status)} size="md" dot>
+                      {agent.status}
+                    </Badge>
                   </div>
 
-                  <Badge variant={getStatusBadgeVariant(agent.status)} size="sm">
-                    {agent.status}
-                  </Badge>
-                </div>
+                  {/* Purpose Description */}
+                  <p className="text-[14px] text-graphite-300 font-sans line-clamp-2 leading-relaxed">
+                    {agent.description || 'Autonomous agent runtime configured under zero-trust proxy policy.'}
+                  </p>
 
-                <p className="text-xs text-graphite-400 line-clamp-2 leading-relaxed">
-                  {agent.description || 'Autonomous agent runtime configured under zero-trust proxy policy.'}
-                </p>
-
-                {/* Inline Telemetry Metrics */}
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-graphite-750/70 font-mono text-[11px]">
-                  <div>
-                    <span className="text-[10px] text-graphite-500 uppercase block">ENV</span>
-                    <span className="text-stone-300 font-medium">{agent.environment}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-graphite-500 uppercase block">RISK POSTURE</span>
-                    <span className="text-stone-300 font-medium">
-                      <Badge variant={getSeverityBadgeVariant(agent.risk_level)} size="sm">
-                        {agent.risk_level}
-                      </Badge>
+                  {/* Environmental Pill & Policy Status */}
+                  <div className="flex items-center justify-between pt-1 text-[12px] font-mono">
+                    <span className="px-2.5 py-1 rounded bg-[#0a0a0b] text-stone-300 border border-[#202024]">
+                      {agent.environment}
+                    </span>
+                    <span className="text-emerald-400 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Policy Active
                     </span>
                   </div>
+
+                  {/* Horizontal Risk Indicator */}
+                  <div className="pt-2 border-t border-[#1a1a1d] space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <span className="text-graphite-400 uppercase tracking-wider font-medium">Risk Posture</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-stone-300 font-semibold">{riskPercent}/100</span>
+                        <Badge variant={getSeverityBadgeVariant(agent.risk_level)} size="sm">
+                          {agent.risk_level}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-[#161618] overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${riskColor}`}
+                        style={{ width: `${riskPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions Footer */}
+                <div className="pt-4 mt-4 border-t border-[#1c1c1f] flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDetails(agent)}
+                  >
+                    Inspect Profile
+                  </Button>
+
+                  <Button
+                    variant={agent.status === 'ACTIVE' ? 'ghost' : 'success'}
+                    size="sm"
+                    onClick={() => handleToggleStatus(agent)}
+                    icon={
+                      agent.status === 'ACTIVE' ? (
+                        <PauseCircle className="w-4 h-4 text-graphite-400" />
+                      ) : (
+                        <PlayCircle className="w-4 h-4 text-emerald-400" />
+                      )
+                    }
+                  >
+                    {agent.status === 'ACTIVE' ? 'Suspend' : 'Resume'}
+                  </Button>
                 </div>
               </div>
-
-              {/* Actions Footer */}
-              <div className="pt-3 mt-3 border-t border-graphite-750/70 flex items-center justify-between">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleViewDetails(agent)}
-                >
-                  Inspect Policy
-                </Button>
-
-                <Button
-                  variant={agent.status === 'ACTIVE' ? 'ghost' : 'success'}
-                  size="sm"
-                  onClick={() => handleToggleStatus(agent)}
-                  icon={
-                    agent.status === 'ACTIVE' ? (
-                      <PauseCircle className="w-3.5 h-3.5 text-graphite-400" />
-                    ) : (
-                      <PlayCircle className="w-3.5 h-3.5 text-status-green" />
-                    )
-                  }
-                >
-                  {agent.status === 'ACTIVE' ? 'Suspend' : 'Resume'}
-                </Button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

@@ -158,27 +158,27 @@ export const PoliciesPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-copper-400 ring-4 ring-copper-400/10" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               POLICY ENFORCEMENT ENGINE
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">DECLARATIVE GUARDRAILS</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">DECLARATIVE GUARDRAILS</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             Security Policies
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Declarative perimeter rules, data boundaries, and dual-custody approval criteria.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -186,13 +186,13 @@ export const PoliciesPage: React.FC = () => {
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Policies
           </Button>
           <Button
             variant="primary"
             size="sm"
             onClick={() => setIsCreateOpen(true)}
-            icon={<Plus className="w-3.5 h-3.5 text-graphite-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Create Policy
           </Button>
@@ -200,15 +200,15 @@ export const PoliciesPage: React.FC = () => {
       </div>
 
       {/* Search Toolbar */}
-      <div className="p-2.5 rounded-lg bg-graphite-850 border border-graphite-750">
+      <div className="surface-card p-4 rounded-xl border border-[#1e1e21]">
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-graphite-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-graphite-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search policies by name, rule identifier, or resource target..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-3 py-1 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-[#0b0b0c] border border-[#222225] rounded-lg text-[13.5px] text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono transition-colors"
           />
         </div>
       </div>
@@ -225,47 +225,49 @@ export const PoliciesPage: React.FC = () => {
           onAction={() => setIsCreateOpen(true)}
         />
       ) : (
-        <div className="space-y-2.5">
+        <div className="space-y-4">
           {filteredPolicies.map((policy) => {
             const cond = policy.conditions || {};
             return (
               <div
                 key={policy.id}
-                className={`p-3.5 rounded-lg bg-graphite-850 border border-graphite-750 transition-all ${
-                  policy.is_active ? '' : 'opacity-60'
+                className={`surface-card-hover p-6 rounded-xl border border-[#1e1e21] transition-all group ${
+                  policy.is_active ? '' : 'opacity-60 bg-[#080809]'
                 }`}
               >
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant={getSeverityBadgeVariant(policy.severity)} size="sm">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                  <div className="space-y-2.5 flex-1">
+                    {/* Header Badges & Title */}
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <Badge variant={getSeverityBadgeVariant(policy.severity)} size="md">
                         {policy.severity}
                       </Badge>
-                      <h3 className="font-medium text-stone-100 text-xs font-sans">
+                      <h3 className="font-medium text-stone-100 text-[17px] font-sans tracking-tight">
                         {policy.name}
                       </h3>
-                      <span className="text-graphite-600 text-xs">/</span>
-                      <span className="text-[10px] font-mono text-copper-400">
+                      <span className="text-graphite-600 text-xs font-mono">/</span>
+                      <span className="text-[12px] font-mono text-copper-400 px-2.5 py-0.5 rounded bg-copper-400/10 border border-copper-400/20">
                         {policy.rule}
                       </span>
                     </div>
 
-                    <p className="text-xs text-graphite-400 font-sans leading-relaxed">
+                    {/* Description */}
+                    <p className="text-[15px] text-stone-300 font-sans leading-relaxed">
                       {policy.description || 'Enterprise declarative security rule active on agent proxy.'}
                     </p>
 
                     {/* Condition badges */}
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
                       {cond.require_approval && (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-status-yellow/10 text-status-yellow border border-status-yellow/25">
-                          <Lock className="w-3 h-3" />
-                          <span>Requires Approval</span>
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11.5px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/25">
+                          <Lock className="w-3.5 h-3.5" />
+                          <span>Requires Human Approval</span>
                         </span>
                       )}
 
                       {cond.block_external && (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-status-red/10 text-status-red border border-status-red/25">
-                          <Globe className="w-3 h-3" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11.5px] font-mono bg-red-500/10 text-red-400 border border-red-500/25">
+                          <Globe className="w-3.5 h-3.5" />
                           <span>Block External Egress</span>
                         </span>
                       )}
@@ -273,43 +275,49 @@ export const PoliciesPage: React.FC = () => {
                       {cond.action_types?.map((at: string) => (
                         <span
                           key={at}
-                          className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-graphite-900 text-graphite-400 border border-graphite-750"
+                          className="px-2.5 py-1 rounded-md text-[11.5px] font-mono bg-[#141416] text-graphite-300 border border-[#242428] uppercase tracking-wide"
                         >
-                          {at}
+                          Scope: {at}
                         </span>
                       ))}
 
                       {cond.data_classifications?.map((dc: string) => (
                         <span
                           key={dc}
-                          className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-status-blue/10 text-status-blue border border-status-blue/25"
+                          className="px-2.5 py-1 rounded-md text-[11.5px] font-mono bg-sky-500/10 text-sky-400 border border-sky-500/25"
                         >
-                          {dc}
+                          Class: {dc}
                         </span>
                       ))}
+
+                      {cond.resources?.length > 0 && (
+                        <span className="px-2.5 py-1 rounded-md text-[11.5px] font-mono bg-[#141416] text-graphite-400 border border-[#242428]">
+                          Target: {cond.resources.join(', ')}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
                     <button
                       onClick={() => handleTogglePolicy(policy)}
-                      className="p-1 rounded text-graphite-400 hover:text-stone-200 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-graphite-400 hover:text-stone-100 hover:bg-[#18181b] transition-all cursor-pointer"
                       title={policy.is_active ? 'Disable Policy' : 'Enable Policy'}
                     >
                       {policy.is_active ? (
-                        <ToggleRight className="w-6 h-6 text-status-green" />
+                        <ToggleRight className="w-7 h-7 text-emerald-400" />
                       ) : (
-                        <ToggleLeft className="w-6 h-6 text-graphite-600" />
+                        <ToggleLeft className="w-7 h-7 text-graphite-600" />
                       )}
                     </button>
 
                     <button
                       onClick={() => handleDeletePolicy(policy.id)}
-                      className="p-1 rounded text-graphite-500 hover:text-status-red transition-colors cursor-pointer"
+                      className="p-2 rounded-lg text-graphite-500 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
                       title="Delete Policy"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

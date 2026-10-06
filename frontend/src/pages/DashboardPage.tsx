@@ -9,8 +9,8 @@ import {
   Activity,
   ArrowUpRight,
   Flame,
-  Radio,
   ExternalLink,
+  Radio,
 } from 'lucide-react';
 import { dashboardApi, threatsApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -22,7 +22,7 @@ import { ThreatsChart } from '../components/charts/ThreatsChart';
 import { RiskDistributionChart } from '../components/charts/RiskDistributionChart';
 import { DecisionsPieChart } from '../components/charts/DecisionsPieChart';
 
-/* Helper component for animated number count-up */
+/* Animated counter component with smooth easing */
 const AnimatedNumber: React.FC<{ value: number; duration?: number }> = ({ value, duration = 800 }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -36,7 +36,6 @@ const AnimatedNumber: React.FC<{ value: number; duration?: number }> = ({ value,
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      // easeOutExpo
       const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       const current = Math.round(startVal + (endVal - startVal) * ease);
       setDisplayValue(current);
@@ -95,11 +94,11 @@ export const DashboardPage: React.FC = () => {
         setMetrics(metricsRes.data);
       }
 
-      // Format threats over time
+      // Group threats over time
       const rawThreats = Array.isArray(threatsRes.data?.data) ? threatsRes.data.data : [];
       const dateMap: Record<string, { date: string; count: number; blocked: number }> = {};
       rawThreats.forEach((item: any) => {
-        const d = item.date ? item.date.slice(0, 10) : 'Today';
+        const d = item.date ? item.date.slice(0, 10) : 'Active';
         if (!dateMap[d]) {
           dateMap[d] = { date: d, count: 0, blocked: 0 };
         }
@@ -110,7 +109,7 @@ export const DashboardPage: React.FC = () => {
       });
       setThreatsOverTime(Object.values(dateMap));
 
-      // Format risk distribution
+      // Risk distribution
       const rawRisk = Array.isArray(riskRes.data?.data) ? riskRes.data.data : [];
       setRiskDistribution(
         rawRisk.map((r: any) => ({
@@ -119,7 +118,7 @@ export const DashboardPage: React.FC = () => {
         }))
       );
 
-      // Format actions by decision
+      // Decision distribution
       const rawDecisions = Array.isArray(decisionRes.data?.data) ? decisionRes.data.data : [];
       setActionsByDecision(
         rawDecisions.map((d: any) => ({
@@ -131,7 +130,7 @@ export const DashboardPage: React.FC = () => {
       // Agent activity
       setAgentActivity(Array.isArray(activityRes.data?.data) ? activityRes.data.data : []);
 
-      // Recent threats safely normalized
+      // Recent threats
       const threatList =
         recentThreatsRes.data?.threats || recentThreatsRes.data?.data || recentThreatsRes.data;
       setRecentThreats(Array.isArray(threatList) ? threatList : []);
@@ -164,45 +163,48 @@ export const DashboardPage: React.FC = () => {
       : '0.0';
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-10 pb-16">
       {/* ── TOP: COMMAND CENTER HEADER ── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-graphite-750/70">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-6 border-b border-white/[0.08]">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-copper-400 font-semibold">
-              RAKSHYA INFRASTRUCTURE
+          <div className="flex items-center gap-3 mb-2.5">
+            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#C9A66B] font-semibold">
+              RAKSHYA SECURITY CORE
             </span>
-            <span className="text-graphite-600 font-mono text-xs">/</span>
-            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-graphite-900 border border-graphite-750 text-[10px] font-mono">
-              <span className="w-1.5 h-1.5 rounded-full bg-status-green animate-pulse" />
-              <span className="text-graphite-300 font-medium">Inline protection active</span>
+            <span className="text-white/20 font-mono text-xs">/</span>
+            <div className="flex items-center gap-2 px-3 py-0.5 rounded-full bg-[#101011] border border-white/[0.08] text-[11px] font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[#F2EEE7] font-medium">Inline protection active</span>
             </div>
+            <span className="px-2.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold bg-[#C9A66B]/15 text-[#E0C28D] border border-[#C9A66B]/30 hidden sm:inline">
+              SIMULATION TELEMETRY
+            </span>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-4xl text-stone-100 tracking-tight font-medium">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-[40px] text-[#F2EEE7] tracking-tight font-medium leading-tight">
             Command Center
           </h1>
-          <p className="text-xs text-graphite-400 mt-1 max-w-xl">
-            Real-time proxy telemetry, behavioral risk classification, and automated policy enforcement.
+          <p className="text-[14.5px] text-[#96939A] mt-1.5 max-w-2xl leading-relaxed">
+            Real-time proxy telemetry, behavioral risk classification, and zero-trust policy enforcement across governed autonomous systems.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
           <Button
             variant="outline"
-            size="sm"
+            size="md"
             onClick={handleRefresh}
             loading={refreshing}
-            icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
+            icon={<RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Telemetry
           </Button>
 
           <Link to="/simulator">
             <Button
               variant="primary"
-              size="sm"
-              icon={<Flame className="w-3.5 h-3.5 text-graphite-950" />}
+              size="md"
+              icon={<Flame className="w-4 h-4 text-[#070707]" />}
             >
               Simulate Attack
             </Button>
@@ -210,65 +212,65 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── LARGE KPI AREA (4 Primary Metrics) ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* ── LARGE 4-KPI AREA (36–42px Dominant Metrics) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* 1. Actions evaluated */}
-        <div className="p-5 rounded-xl bg-graphite-900/60 border border-graphite-750/80 hover:border-graphite-600 transition-all flex flex-col justify-between">
+        <div className="surface-card surface-card-hover p-6 rounded-2xl flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between text-graphite-400 mb-3">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-graphite-400">
-                Actions evaluated
+            <div className="flex items-center justify-between text-[#96939A] mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#96939A] font-medium">
+                Actions Evaluated
               </span>
-              <Activity className="w-4 h-4 text-copper-400/80" />
+              <Activity className="w-4.5 h-4.5 text-[#C9A66B]" />
             </div>
-            <div className="text-3xl lg:text-4xl font-mono font-medium text-stone-100 tracking-tight">
+            <div className="text-4xl lg:text-[42px] font-mono font-medium text-[#F2EEE7] tracking-tight leading-none">
               <AnimatedNumber value={metrics.totalActions || 0} />
             </div>
           </div>
-          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-graphite-800 text-xs font-mono text-graphite-400">
-            <span className="text-status-green font-medium">
-              {metrics.allowedActions?.toLocaleString() || 0}
+          <div className="flex items-center justify-between mt-5 pt-4 border-t border-white/[0.07] text-xs font-mono">
+            <span className="text-emerald-400 font-medium">
+              {metrics.allowedActions?.toLocaleString() || 0} allowed
             </span>
-            <span>authorized inline</span>
+            <span className="text-[#66636A]">+12.4% / 24h</span>
           </div>
         </div>
 
         {/* 2. Threats intercepted */}
-        <div className="p-5 rounded-xl bg-graphite-900/60 border border-graphite-750/80 hover:border-graphite-600 transition-all flex flex-col justify-between">
+        <div className="surface-card surface-card-hover p-6 rounded-2xl flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between text-graphite-400 mb-3">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-graphite-400">
-                Threats intercepted
+            <div className="flex items-center justify-between text-[#96939A] mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#96939A] font-medium">
+                Threats Intercepted
               </span>
-              <ShieldAlert className="w-4 h-4 text-status-red" />
+              <ShieldAlert className="w-4.5 h-4.5 text-red-400" />
             </div>
-            <div className="text-3xl lg:text-4xl font-mono font-medium text-status-red tracking-tight">
+            <div className="text-4xl lg:text-[42px] font-mono font-medium text-red-400 tracking-tight leading-none">
               <AnimatedNumber value={metrics.blockedActions || 0} />
             </div>
           </div>
-          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-graphite-800 text-xs font-mono text-graphite-400">
-            <span className="text-status-red font-medium">{blockRate}%</span>
-            <span>enforcement block rate</span>
+          <div className="flex items-center justify-between mt-5 pt-4 border-t border-white/[0.07] text-xs font-mono">
+            <span className="text-red-400 font-medium">{blockRate}% block rate</span>
+            <span className="text-[#66636A]">Neutralized</span>
           </div>
         </div>
 
         {/* 3. Pending approvals */}
-        <div className="p-5 rounded-xl bg-graphite-900/60 border border-graphite-750/80 hover:border-graphite-600 transition-all flex flex-col justify-between">
+        <div className="surface-card surface-card-hover p-6 rounded-2xl flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between text-graphite-400 mb-3">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-graphite-400">
-                Pending approvals
+            <div className="flex items-center justify-between text-[#96939A] mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#96939A] font-medium">
+                Pending Approvals
               </span>
-              <CheckSquare className="w-4 h-4 text-copper-400" />
+              <CheckSquare className="w-4.5 h-4.5 text-[#E0C28D]" />
             </div>
-            <div className="text-3xl lg:text-4xl font-mono font-medium text-copper-400 tracking-tight">
+            <div className="text-4xl lg:text-[42px] font-mono font-medium text-[#E0C28D] tracking-tight leading-none">
               <AnimatedNumber value={metrics.pendingApprovals || 0} />
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-graphite-800">
+          <div className="mt-5 pt-4 border-t border-white/[0.07]">
             <Link
               to="/approvals"
-              className="text-xs text-copper-400 hover:text-copper-300 font-mono inline-flex items-center gap-1.5 transition-colors"
+              className="text-xs text-[#E0C28D] hover:text-[#FAF8F5] font-mono inline-flex items-center gap-1.5 transition-colors font-medium"
             >
               <span>Inspect HITL queue</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -277,23 +279,23 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* 4. Critical incidents */}
-        <div className="p-5 rounded-xl bg-graphite-900/60 border border-graphite-750/80 hover:border-graphite-600 transition-all flex flex-col justify-between">
+        <div className="surface-card surface-card-hover p-6 rounded-2xl flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between text-graphite-400 mb-3">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-graphite-400">
-                Critical incidents
+            <div className="flex items-center justify-between text-[#96939A] mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#96939A] font-medium">
+                Critical Incidents
               </span>
-              <AlertTriangle className="w-4 h-4 text-status-yellow" />
+              <AlertTriangle className="w-4.5 h-4.5 text-amber-400" />
             </div>
-            <div className="text-3xl lg:text-4xl font-mono font-medium text-status-yellow tracking-tight">
+            <div className="text-4xl lg:text-[42px] font-mono font-medium text-amber-400 tracking-tight leading-none">
               <AnimatedNumber value={metrics.criticalThreats || 0} />
             </div>
           </div>
-          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-graphite-800 text-xs font-mono text-graphite-400">
-            <span className="text-status-yellow font-medium">
-              {metrics.promptInjectionAttempts || 0}
+          <div className="flex items-center justify-between mt-5 pt-4 border-t border-white/[0.07] text-xs font-mono">
+            <span className="text-amber-400 font-medium">
+              {metrics.promptInjectionAttempts || 0} prompt injections
             </span>
-            <span>injection triggers</span>
+            <span className="text-[#66636A]">Isolated</span>
           </div>
         </div>
       </div>
@@ -308,31 +310,31 @@ export const DashboardPage: React.FC = () => {
           action={
             <Link
               to="/threats"
-              className="text-xs text-graphite-400 hover:text-stone-200 flex items-center gap-1 font-mono transition-colors"
+              className="text-xs text-[#96939A] hover:text-[#F2EEE7] flex items-center gap-1 font-mono transition-colors"
             >
-              <span>Threat Center</span>
-              <ExternalLink className="w-3 h-3" />
+              <span>Incident Center</span>
+              <ExternalLink className="w-3.5 h-3.5 text-[#C9A66B]" />
             </Link>
           }
         >
-          <ThreatsChart data={threatsOverTime} height={260} />
+          <ThreatsChart data={threatsOverTime} height={280} />
         </Card>
 
         {/* Decision Distribution */}
         <Card
           title="Decision Distribution"
-          subtitle="Enforcement breakdown across ALLOW, APPROVAL, and BLOCK"
+          subtitle="Real-time enforcement outcomes across evaluated actions"
           action={
             <Link
               to="/actions"
-              className="text-xs text-graphite-400 hover:text-stone-200 flex items-center gap-1 font-mono transition-colors"
+              className="text-xs text-[#96939A] hover:text-[#F2EEE7] flex items-center gap-1 font-mono transition-colors"
             >
               <span>Action Stream</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#C9A66B]" />
             </Link>
           }
         >
-          <DecisionsPieChart data={actionsByDecision} height={260} />
+          <DecisionsPieChart data={actionsByDecision} height={280} />
         </Card>
       </div>
 
@@ -343,57 +345,57 @@ export const DashboardPage: React.FC = () => {
           title="Risk Classification"
           subtitle="Autonomous actions segmented by automated threat severity"
         >
-          <RiskDistributionChart data={riskDistribution} height={240} />
+          <RiskDistributionChart data={riskDistribution} height={260} />
         </Card>
 
         {/* Active Agent Posture */}
         <Card
           title="Active Agent Posture"
-          subtitle="Monitored autonomous systems and their real-time risk profile"
+          subtitle="Autonomous systems governed by the Rakshya defense layer"
           className="lg:col-span-2"
           action={
             <Link
               to="/agents"
-              className="text-xs text-graphite-400 hover:text-stone-200 flex items-center gap-1 font-mono transition-colors"
+              className="text-xs text-[#96939A] hover:text-[#F2EEE7] flex items-center gap-1 font-mono transition-colors"
             >
-              <span>Agent Inventory</span>
-              <ExternalLink className="w-3 h-3" />
+              <span>Agent Registry</span>
+              <ExternalLink className="w-3.5 h-3.5 text-[#C9A66B]" />
             </Link>
           }
         >
           {agentActivity.length === 0 ? (
-            <div className="py-12 text-center text-xs font-mono text-graphite-500">
+            <div className="py-14 text-center text-xs font-mono text-[#66636A]">
               No active agent telemetry recorded yet
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-[13.5px]">
                 <thead>
-                  <tr className="border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
-                    <th className="pb-3 font-medium">AGENT SYSTEM</th>
-                    <th className="pb-3 font-medium text-right">TOTAL</th>
-                    <th className="pb-3 font-medium text-right">ALLOWED</th>
-                    <th className="pb-3 font-medium text-right">BLOCKED</th>
-                    <th className="pb-3 font-medium pl-6">RISK PROFILE</th>
+                  <tr className="border-b border-white/[0.07] text-[#66636A] font-mono text-[11px]">
+                    <th className="pb-3.5 font-medium uppercase tracking-wider">AGENT SYSTEM</th>
+                    <th className="pb-3.5 font-medium text-right uppercase tracking-wider">TOTAL</th>
+                    <th className="pb-3.5 font-medium text-right uppercase tracking-wider">ALLOWED</th>
+                    <th className="pb-3.5 font-medium text-right uppercase tracking-wider">BLOCKED</th>
+                    <th className="pb-3.5 font-medium pl-6 uppercase tracking-wider">RISK PROFILE</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-graphite-750/50 font-mono">
+                <tbody className="divide-y divide-white/[0.05] font-mono">
                   {agentActivity.slice(0, 5).map((agent: any, idx: number) => (
-                    <tr key={idx} className="hover:bg-graphite-850/40 transition-colors">
-                      <td className="py-3 text-stone-200 font-sans font-medium flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-status-green" />
-                        <span className="truncate max-w-[200px]">{agent.agent_name}</span>
+                    <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="py-4 text-[#F2EEE7] font-sans font-medium flex items-center gap-3">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                        <span className="truncate max-w-[220px]">{agent.agent_name}</span>
                       </td>
-                      <td className="py-3 text-right text-graphite-300 font-medium tabular-nums">
+                      <td className="py-4 text-right text-[#D8D4CC] font-medium tabular-nums">
                         {agent.total_actions}
                       </td>
-                      <td className="py-3 text-right text-status-green tabular-nums">
+                      <td className="py-4 text-right text-emerald-400 tabular-nums">
                         {agent.allowed}
                       </td>
-                      <td className="py-3 text-right text-status-red tabular-nums">
+                      <td className="py-4 text-right text-red-400 tabular-nums">
                         {agent.blocked}
                       </td>
-                      <td className="py-3 pl-6">
+                      <td className="py-4 pl-6">
                         <RiskScoreMeter score={parseFloat(agent.avg_risk) || 0} size="sm" />
                       </td>
                     </tr>
@@ -407,12 +409,12 @@ export const DashboardPage: React.FC = () => {
 
       {/* ── LIVE INTERCEPTION FEED ── */}
       <Card
-        title="Live Interception Feed"
-        subtitle="Chronological stream of policy blocks and neutralized vulnerabilities"
+        title="Live Threat Interception Feed"
+        subtitle="Chronological stream of malicious pattern matches and policy blocks"
         action={
           <Link
             to="/threats"
-            className="text-xs text-copper-400 hover:text-copper-300 font-mono inline-flex items-center gap-1 transition-colors"
+            className="text-xs text-[#E0C28D] hover:text-[#FAF8F5] font-mono inline-flex items-center gap-1.5 transition-colors font-medium"
           >
             <span>All Incidents ({Array.isArray(recentThreats) ? recentThreats.length : 0})</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -420,36 +422,36 @@ export const DashboardPage: React.FC = () => {
         }
       >
         {!Array.isArray(recentThreats) || recentThreats.length === 0 ? (
-          <div className="py-12 text-center text-xs font-mono text-graphite-500">
+          <div className="py-14 text-center text-xs font-mono text-[#66636A]">
             No active threat incidents currently reported
           </div>
         ) : (
-          <div className="divide-y divide-graphite-750/60">
+          <div className="divide-y divide-white/[0.06]">
             {recentThreats.map((threat: any) => (
               <div
                 key={threat.id}
-                className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-graphite-850/30 px-3 rounded-lg transition-colors"
+                className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white/[0.02] px-3 rounded-xl transition-colors"
               >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2.5">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-3">
                     <Badge variant={getSeverityBadgeVariant(threat.severity)} size="sm">
                       {threat.severity}
                     </Badge>
-                    <span className="text-xs font-mono text-stone-200 font-medium">
+                    <span className="text-sm font-mono text-[#F2EEE7] font-medium">
                       {threat.type?.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-graphite-600 text-xs">·</span>
-                    <span className="text-xs text-graphite-400">
-                      Agent: <span className="text-stone-300 font-mono">{threat.agent_name || 'Autonomous System'}</span>
+                    <span className="text-white/20 text-xs">·</span>
+                    <span className="text-xs text-[#96939A]">
+                      Agent: <span className="text-[#D8D4CC] font-mono font-medium">{threat.agent_name || 'Autonomous Agent'}</span>
                     </span>
                   </div>
-                  <p className="text-xs text-graphite-400 line-clamp-1 max-w-3xl">
+                  <p className="text-[13.5px] text-[#96939A] line-clamp-1 max-w-3xl">
                     {threat.description || 'Payload matched zero-trust violation policy.'}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-[10px] font-mono text-graphite-500">
+                <div className="flex items-center gap-4 shrink-0">
+                  <span className="text-xs font-mono text-[#66636A]">
                     {threat.created_at ? new Date(threat.created_at).toLocaleTimeString() : 'Just now'}
                   </span>
                   <Link to="/threats">

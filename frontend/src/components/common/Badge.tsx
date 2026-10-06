@@ -15,76 +15,76 @@ interface BadgeProps {
 
 const variantStyles: Record<BadgeVariant, { bg: string; text: string; border: string; dot: string }> = {
   allow: {
-    bg: 'bg-status-green/10',
-    text: 'text-status-green',
-    border: 'border-status-green/25',
-    dot: 'bg-status-green',
+    bg: 'bg-emerald-500/10',
+    text: 'text-emerald-400',
+    border: 'border-emerald-500/30',
+    dot: 'bg-emerald-400',
   },
   block: {
-    bg: 'bg-status-red/10',
-    text: 'text-status-red',
-    border: 'border-status-red/25',
-    dot: 'bg-status-red',
+    bg: 'bg-red-500/12',
+    text: 'text-red-400',
+    border: 'border-red-500/30',
+    dot: 'bg-red-400',
   },
   pending: {
-    bg: 'bg-status-yellow/10',
-    text: 'text-status-yellow',
-    border: 'border-status-yellow/25',
-    dot: 'bg-status-yellow',
+    bg: 'bg-[#C9A66B]/12',
+    text: 'text-[#E0C28D]',
+    border: 'border-[#C9A66B]/35',
+    dot: 'bg-[#C9A66B]',
   },
   warning: {
-    bg: 'bg-status-yellow/10',
-    text: 'text-status-yellow',
-    border: 'border-status-yellow/25',
-    dot: 'bg-status-yellow',
+    bg: 'bg-amber-500/12',
+    text: 'text-amber-400',
+    border: 'border-amber-500/30',
+    dot: 'bg-amber-400',
   },
   critical: {
-    bg: 'bg-status-red/15',
-    text: 'text-status-red',
-    border: 'border-status-red/35',
-    dot: 'bg-status-red',
+    bg: 'bg-red-500/15',
+    text: 'text-red-400',
+    border: 'border-red-500/40',
+    dot: 'bg-red-400',
   },
   high: {
-    bg: 'bg-status-orange/10',
-    text: 'text-status-orange',
-    border: 'border-status-orange/25',
-    dot: 'bg-status-orange',
+    bg: 'bg-orange-500/12',
+    text: 'text-orange-400',
+    border: 'border-orange-500/30',
+    dot: 'bg-orange-400',
   },
   medium: {
-    bg: 'bg-status-yellow/10',
-    text: 'text-status-yellow',
-    border: 'border-status-yellow/25',
-    dot: 'bg-status-yellow',
+    bg: 'bg-amber-500/12',
+    text: 'text-amber-400',
+    border: 'border-amber-500/30',
+    dot: 'bg-amber-400',
   },
   low: {
-    bg: 'bg-graphite-800',
-    text: 'text-graphite-400',
-    border: 'border-graphite-750',
-    dot: 'bg-graphite-500',
+    bg: 'bg-white/[0.04]',
+    text: 'text-[#96939A]',
+    border: 'border-white/[0.08]',
+    dot: 'bg-[#66636A]',
   },
   info: {
-    bg: 'bg-status-blue/10',
-    text: 'text-status-blue',
-    border: 'border-status-blue/25',
-    dot: 'bg-status-blue',
+    bg: 'bg-blue-500/10',
+    text: 'text-blue-400',
+    border: 'border-blue-500/25',
+    dot: 'bg-blue-400',
   },
   neutral: {
-    bg: 'bg-graphite-800/80',
-    text: 'text-graphite-300',
-    border: 'border-graphite-750',
-    dot: 'bg-graphite-400',
+    bg: 'bg-white/[0.04]',
+    text: 'text-[#D8D4CC]',
+    border: 'border-white/[0.09]',
+    dot: 'bg-[#96939A]',
   },
   active: {
-    bg: 'bg-status-green/10',
-    text: 'text-status-green',
-    border: 'border-status-green/25',
-    dot: 'bg-status-green',
+    bg: 'bg-emerald-500/10',
+    text: 'text-emerald-400',
+    border: 'border-emerald-500/30',
+    dot: 'bg-emerald-400',
   },
   suspended: {
-    bg: 'bg-status-red/10',
-    text: 'text-status-red',
-    border: 'border-status-red/25',
-    dot: 'bg-status-red',
+    bg: 'bg-red-500/10',
+    text: 'text-red-400',
+    border: 'border-red-500/25',
+    dot: 'bg-red-400',
   },
 };
 
@@ -96,11 +96,16 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
 }) => {
   const style = variantStyles[variant] || variantStyles.neutral;
-  const sizeClass = size === 'sm' ? 'text-[10px] px-1.5 py-0.5' : size === 'lg' ? 'text-xs px-2.5 py-1' : 'text-[11px] px-2 py-0.5';
+  const sizeClass =
+    size === 'sm'
+      ? 'text-[11px] px-2 py-0.5 tracking-wider'
+      : size === 'lg'
+      ? 'text-[13px] px-3.5 py-1 tracking-wider'
+      : 'text-[12px] px-2.5 py-0.5 tracking-wider';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-medium rounded-full border font-mono tracking-wider uppercase ${style.bg} ${style.text} ${style.border} ${sizeClass} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-mono font-medium rounded-md border uppercase ${style.bg} ${style.text} ${style.border} ${sizeClass} ${className}`}
     >
       {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />}
       {children}
@@ -141,14 +146,14 @@ export function getStatusBadgeVariant(status: string): BadgeVariant {
     case 'ACTIVE':
     case 'APPROVED':
     case 'RESOLVED':
-    case 'EXECUTED':
-      return 'allow';
+      return 'active';
     case 'BLOCKED':
-    case 'REJECTED':
     case 'SUSPENDED':
-      return 'block';
+    case 'REJECTED':
+      return 'suspended';
     case 'PENDING':
     case 'INVESTIGATING':
+    case 'OPEN':
       return 'pending';
     default:
       return 'neutral';

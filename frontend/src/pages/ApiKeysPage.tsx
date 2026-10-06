@@ -178,27 +178,27 @@ export async function interceptAgentAction({
   }'`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1c1c1f]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
-            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-copper-400 ring-4 ring-copper-400/10" />
+            <span className="text-[11.5px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               GATEWAY INTEGRATION & CREDENTIALS
             </span>
-            <span className="text-graphite-600 font-mono text-[10px]">/</span>
-            <span className="text-[10px] font-mono text-graphite-400">SCOPED BEARER TOKENS</span>
+            <span className="text-graphite-600 font-mono text-[11px]">/</span>
+            <span className="text-[11.5px] font-mono text-graphite-400">SCOPED BEARER TOKENS</span>
           </div>
-          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display text-stone-100 tracking-tight">
             API Keys & Developer SDK
           </h1>
-          <p className="text-xs text-graphite-400 mt-0.5">
+          <p className="text-[14.5px] text-graphite-400 mt-1">
             Provision cryptographically authenticated API keys to hook LangChain, CrewAI, AutoGen, or custom agent frameworks.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -206,13 +206,13 @@ export async function interceptAgentAction({
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh
+            Refresh Keys
           </Button>
           <Button
             variant="primary"
             size="sm"
             onClick={() => setIsGenerateOpen(true)}
-            icon={<Plus className="w-3.5 h-3.5 text-graphite-950" />}
+            icon={<Plus className="w-4 h-4 text-graphite-950" />}
           >
             Create API Key
           </Button>
@@ -231,46 +231,49 @@ export async function interceptAgentAction({
           onAction={() => setIsGenerateOpen(true)}
         />
       ) : (
-        <div className="bg-graphite-850 border border-graphite-750 rounded-lg overflow-hidden">
+        <div className="surface-card rounded-xl border border-[#1e1e21] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-graphite-900/60 border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
+            <table className="w-full text-left">
+              <thead className="bg-[#0b0b0c] border-b border-[#1e1e21] text-graphite-400 font-mono text-[11px] tracking-wider uppercase">
                 <tr>
-                  <th className="py-2.5 px-3.5 font-medium">KEY IDENTIFIER</th>
-                  <th className="py-2.5 px-3.5 font-medium">PREFIX TOKEN</th>
-                  <th className="py-2.5 px-3.5 font-medium">STATUS</th>
-                  <th className="py-2.5 px-3.5 font-medium">CREATED</th>
-                  <th className="py-2.5 px-3.5 font-medium">LAST USED</th>
-                  <th className="py-2.5 px-3.5 font-medium text-right">REVOKE</th>
+                  <th className="py-3.5 px-4 font-medium">KEY IDENTIFIER</th>
+                  <th className="py-3.5 px-4 font-medium">PREFIX TOKEN</th>
+                  <th className="py-3.5 px-4 font-medium">STATUS</th>
+                  <th className="py-3.5 px-4 font-medium">CREATED</th>
+                  <th className="py-3.5 px-4 font-medium">LAST USED</th>
+                  <th className="py-3.5 px-4 font-medium text-right">REVOKE</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-graphite-750/40 font-mono">
+              <tbody className="divide-y divide-[#18181b] font-mono text-[13.5px]">
                 {apiKeys.map((k) => (
-                  <tr key={k.id} className="hover:bg-graphite-800/40 transition-colors">
-                    <td className="py-2.5 px-3.5 text-stone-100 font-medium">
+                  <tr key={k.id} className="hover:bg-graphite-800/30 transition-colors group">
+                    <td className="py-4 px-4 text-stone-100 font-medium font-sans">
                       {k.name || 'Unnamed Key'}
                     </td>
-                    <td className="py-2.5 px-3.5 text-copper-400">
-                      <code>{k.key_prefix || 'rk_live_...'}</code>
+                    <td className="py-4 px-4">
+                      <code className="px-2.5 py-1 rounded bg-[#070708] border border-[#202024] font-mono text-[12.5px] text-copper-300 font-medium">
+                        {k.key_prefix || 'rk_live_...'}
+                      </code>
                     </td>
-                    <td className="py-2.5 px-3.5">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] bg-status-green/10 text-status-green border border-status-green/25">
+                    <td className="py-4 px-4">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                         ACTIVE
                       </span>
                     </td>
-                    <td className="py-2.5 px-3.5 text-graphite-400 text-[10px]">
+                    <td className="py-4 px-4 text-graphite-400 text-[12px]">
                       {k.created_at ? new Date(k.created_at).toLocaleDateString() : 'Active'}
                     </td>
-                    <td className="py-2.5 px-3.5 text-graphite-400 text-[10px]">
+                    <td className="py-4 px-4 text-graphite-400 text-[12px]">
                       {k.last_used_at ? new Date(k.last_used_at).toLocaleDateString() : 'Never'}
                     </td>
-                    <td className="py-2.5 px-3.5 text-right">
+                    <td className="py-4 px-4 text-right">
                       <button
                         onClick={() => handleRevokeKey(k.id)}
-                        className="p-1 rounded text-graphite-500 hover:text-status-red transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg text-graphite-500 opacity-40 group-hover:opacity-100 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
                         title="Revoke Key"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>
@@ -284,19 +287,19 @@ export async function interceptAgentAction({
       {/* SDK Documentation Code Block */}
       <Card
         title={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <Code2 className="w-4 h-4 text-copper-400" />
-            <span>Client SDK Integration Snippets</span>
+            <span className="text-[17px] font-medium text-stone-100 font-sans">Client SDK Integration Snippets</span>
           </div>
         }
         subtitle="Hook the inline proxy into your autonomous agent pipeline"
         action={
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 bg-[#070708] p-1 rounded-lg border border-[#202024]">
             <button
               onClick={() => setActiveCodeTab('python')}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+              className={`px-3 py-1 rounded text-[12px] font-mono transition-all cursor-pointer ${
                 activeCodeTab === 'python'
-                  ? 'bg-copper-500 text-graphite-950 font-medium'
+                  ? 'btn-gold shadow-sm font-semibold'
                   : 'text-graphite-400 hover:text-stone-200'
               }`}
             >
@@ -304,9 +307,9 @@ export async function interceptAgentAction({
             </button>
             <button
               onClick={() => setActiveCodeTab('typescript')}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+              className={`px-3 py-1 rounded text-[12px] font-mono transition-all cursor-pointer ${
                 activeCodeTab === 'typescript'
-                  ? 'bg-copper-500 text-graphite-950 font-medium'
+                  ? 'btn-gold shadow-sm font-semibold'
                   : 'text-graphite-400 hover:text-stone-200'
               }`}
             >
@@ -314,9 +317,9 @@ export async function interceptAgentAction({
             </button>
             <button
               onClick={() => setActiveCodeTab('curl')}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+              className={`px-3 py-1 rounded text-[12px] font-mono transition-all cursor-pointer ${
                 activeCodeTab === 'curl'
-                  ? 'bg-copper-500 text-graphite-950 font-medium'
+                  ? 'btn-gold shadow-sm font-semibold'
                   : 'text-graphite-400 hover:text-stone-200'
               }`}
             >
@@ -325,7 +328,7 @@ export async function interceptAgentAction({
           </div>
         }
       >
-        <div className="relative mt-1">
+        <div className="relative mt-2">
           <button
             onClick={() =>
               handleCopy(
@@ -336,22 +339,22 @@ export async function interceptAgentAction({
                   : curlCode
               )
             }
-            className="absolute top-2.5 right-2.5 p-1.5 rounded bg-graphite-800 hover:bg-graphite-750 text-graphite-300 hover:text-stone-100 transition-colors cursor-pointer flex items-center gap-1.5 text-[10px] font-mono"
+            className="absolute top-3.5 right-3.5 px-3 py-1.5 rounded-lg bg-[#141416] hover:bg-[#1a1a1e] border border-[#26262a] text-stone-200 transition-colors cursor-pointer flex items-center gap-2 text-[11.5px] font-mono shadow-sm"
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-status-green" />
-                <span>Copied</span>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400">Copied</span>
               </>
             ) : (
               <>
-                <Copy className="w-3 h-3" />
-                <span>Copy</span>
+                <Copy className="w-3.5 h-3.5 text-copper-400" />
+                <span>Copy Snippet</span>
               </>
             )}
           </button>
 
-          <pre className="p-3.5 bg-graphite-950 rounded-lg text-xs font-mono text-stone-300 overflow-x-auto border border-graphite-750 leading-relaxed">
+          <pre className="p-5 bg-[#060607] rounded-xl text-[13.5px] font-mono text-stone-200 overflow-x-auto border border-[#1e1e21] leading-relaxed">
             {activeCodeTab === 'python'
               ? pythonCode
               : activeCodeTab === 'typescript'
@@ -369,7 +372,7 @@ export async function interceptAgentAction({
         title="Generate Gateway API Key"
         subtitle="Provision a bearer token for autonomous agent integration"
         footer={
-          <div className="flex items-center justify-end gap-2 w-full">
+          <div className="flex items-center justify-end gap-3 w-full">
             <Button
               variant="outline"
               size="sm"
@@ -380,7 +383,7 @@ export async function interceptAgentAction({
             </Button>
             <Button
               variant="primary"
-              size="sm"
+              size="md"
               onClick={handleGenerateKey}
               loading={submitting}
             >
@@ -389,15 +392,15 @@ export async function interceptAgentAction({
           </div>
         }
       >
-        <form onSubmit={handleGenerateKey} className="space-y-3">
+        <form onSubmit={handleGenerateKey} className="space-y-4">
           {generateError && (
-            <div className="p-2 rounded bg-status-red/10 border border-status-red/25 text-xs text-status-red">
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/25 text-[13px] text-red-400">
               {generateError}
             </div>
           )}
 
           <div>
-            <label className="block text-[11px] font-mono uppercase tracking-wider text-graphite-400 mb-1">
+            <label className="block text-[11.5px] font-mono uppercase tracking-wider text-graphite-400 mb-1.5 font-medium">
               Key Name / Description
             </label>
             <input
@@ -406,7 +409,7 @@ export async function interceptAgentAction({
               value={keyName}
               onChange={(e) => setKeyName(e.target.value)}
               placeholder="e.g. LangChain Prod Agent Proxy Key"
-              className="w-full px-2.5 py-1.5 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#050506] border border-[#222225] rounded-lg text-[13.5px] text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none transition-colors"
             />
           </div>
         </form>
@@ -423,31 +426,31 @@ export async function interceptAgentAction({
           footer={
             <Button
               variant="primary"
-              size="sm"
+              size="md"
               onClick={() => setNewlyCreatedKey(null)}
             >
               Done & Secured
             </Button>
           }
         >
-          <div className="space-y-3">
-            <div className="p-3 rounded bg-status-yellow/10 border border-status-yellow/25 text-xs text-status-yellow flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+          <div className="space-y-4">
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[13.5px] text-amber-200 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5 text-amber-400" />
               <span>
                 This key grants programmatic proxy evaluation permissions. Store it in a secure environment variable manager.
               </span>
             </div>
 
-            <div className="p-3 bg-graphite-950 rounded border border-graphite-750 flex items-center justify-between gap-2">
-              <code className="text-xs font-mono text-copper-400 break-all select-all">
+            <div className="p-4 bg-[#050506] rounded-xl border border-[#222225] flex items-center justify-between gap-3">
+              <code className="text-[13px] font-mono text-copper-400 break-all select-all font-semibold">
                 {newlyCreatedKey}
               </code>
               <button
                 onClick={() => handleCopy(newlyCreatedKey)}
-                className="p-1.5 rounded bg-graphite-850 hover:bg-graphite-800 text-stone-200 transition-colors shrink-0 cursor-pointer"
+                className="p-2 rounded-lg bg-[#141416] hover:bg-[#1a1a1d] text-stone-200 transition-colors shrink-0 cursor-pointer"
                 title="Copy Key"
               >
-                {copied ? <Check className="w-4 h-4 text-status-green" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -456,3 +459,4 @@ export async function interceptAgentAction({
     </div>
   );
 };
+

@@ -11,7 +11,7 @@ export const AppLayout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-graphite-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#070707] flex items-center justify-center">
         <LoadingSpinner label="Authenticating security session..." size="lg" />
       </div>
     );
@@ -22,7 +22,7 @@ export const AppLayout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-graphite-950 text-stone-100 flex selection:bg-copper-500/20 selection:text-stone-50">
+    <div className="min-h-screen bg-[#070707] text-[#F2EEE7] flex selection:bg-[#C9A66B]/20 selection:text-[#F2EEE7]">
       {/* Navigation Rail */}
       <NavRail
         collapsed={collapsed}
@@ -32,11 +32,11 @@ export const AppLayout: React.FC = () => {
       {/* Main Content Area */}
       <div
         className={`flex-1 flex flex-col min-w-0 transition-all duration-200 ${
-          collapsed ? 'ml-14' : 'ml-56'
+          collapsed ? 'ml-[58px]' : 'ml-[230px]'
         }`}
       >
         <TopBar />
-        <main className="flex-1 p-5 lg:p-7 max-w-[1520px] w-full mx-auto animate-fade-in">
+        <main className="flex-1 p-6 lg:p-10 max-w-[1650px] w-full mx-auto animate-fade-in">
           <Outlet />
         </main>
       </div>
