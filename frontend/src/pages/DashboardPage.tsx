@@ -383,12 +383,12 @@ export const DashboardPage: React.FC = () => {
             to="/threats"
             className="text-xs text-copper-400 hover:text-copper-300 font-mono inline-flex items-center gap-1 transition-colors"
           >
-            <span>All Threats ({recentThreats.length})</span>
+            <span>All Threats ({Array.isArray(recentThreats) ? recentThreats.length : 0})</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         }
       >
-        {recentThreats.length === 0 ? (
+        {!Array.isArray(recentThreats) || recentThreats.length === 0 ? (
           <div className="py-8 text-center text-xs font-mono text-graphite-400">
             No active threat incidents currently reported
           </div>
