@@ -4,20 +4,12 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-  ShieldAlert,
-  AlertTriangle,
-  RefreshCw,
-  Search,
-  MessageSquare,
-  FileText,
-  User,
   ShieldCheck,
+  RefreshCw,
 } from 'lucide-react';
 import { approvalsApi } from '../services/api';
-import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge, getStatusBadgeVariant } from '../components/common/Badge';
-import { RiskScoreMeter } from '../components/common/RiskScoreMeter';
 import { Modal } from '../components/common/Modal';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { EmptyState } from '../components/common/EmptyState';
@@ -80,7 +72,6 @@ export const ApprovalsPage: React.FC = () => {
         reason: decisionReason,
       });
 
-      // Update state locally
       setApprovals((prev) =>
         prev.map((app) =>
           app.id === selectedApproval.id
@@ -109,70 +100,68 @@ export const ApprovalsPage: React.FC = () => {
   const displayedApprovals = activeTab === 'PENDING' ? pendingApprovals : approvals;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
-            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-status-yellow" />
+            <span className="text-[10px] font-mono uppercase tracking-widest text-status-yellow font-medium">
               HUMAN-IN-THE-LOOP ORCHESTRATION
             </span>
-            <span className="text-graphite-600 font-mono">|</span>
-            <span className="text-[11px] font-mono text-graphite-400">DUAL-CUSTODY AUTHORIZATION</span>
+            <span className="text-graphite-600 font-mono text-[10px]">/</span>
+            <span className="text-[10px] font-mono text-graphite-400">DUAL-CUSTODY AUTHORIZATION</span>
           </div>
-          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
-            Security Approval Queue
+          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+            Approval Queue
           </h1>
-          <p className="text-xs text-graphite-300 mt-0.5">
-            Escalated autonomous agent actions requiring explicit administrator or SOC sign-off before proxy dispatch.
+          <p className="text-xs text-graphite-400 mt-0.5">
+            Escalated autonomous agent operations requiring explicit administrator or SOC sign-off.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={handleRefresh}
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh Queue
+            Refresh
           </Button>
         </div>
       </div>
 
-      {/* Tabs & Count */}
-      <div className="flex items-center justify-between border-b border-graphite-800 pb-3">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTab('PENDING')}
-            className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
-              activeTab === 'PENDING'
-                ? 'bg-copper-500/15 text-copper-300 border border-copper-500/40 shadow-sm'
-                : 'text-graphite-400 hover:text-stone-200 border border-transparent'
-            }`}
-          >
-            <span>Awaiting Authorization</span>
-            <span className="px-1.5 py-0.2 rounded bg-copper-500/20 text-copper-300 text-[10px] font-bold">
-              {pendingApprovals.length}
-            </span>
-          </button>
+      {/* Tabs */}
+      <div className="flex items-center gap-4 border-b border-graphite-750/70 pb-2">
+        <button
+          onClick={() => setActiveTab('PENDING')}
+          className={`pb-1 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 -mb-2.5 ${
+            activeTab === 'PENDING'
+              ? 'border-copper-500 text-stone-100 font-medium'
+              : 'border-transparent text-graphite-400 hover:text-stone-300'
+          }`}
+        >
+          <span>Pending Review</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-status-yellow/15 text-status-yellow border border-status-yellow/30">
+            {pendingApprovals.length}
+          </span>
+        </button>
 
-          <button
-            onClick={() => setActiveTab('ALL')}
-            className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer flex items-center gap-2 ${
-              activeTab === 'ALL'
-                ? 'bg-graphite-800 text-stone-100 border border-graphite-700'
-                : 'text-graphite-400 hover:text-stone-200 border border-transparent'
-            }`}
-          >
-            <span>Audit Trail History</span>
-            <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-graphite-400 text-[10px]">
-              {approvals.length}
-            </span>
-          </button>
-        </div>
+        <button
+          onClick={() => setActiveTab('ALL')}
+          className={`pb-1 text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 border-b-2 -mb-2.5 ${
+            activeTab === 'ALL'
+              ? 'border-copper-500 text-stone-100 font-medium'
+              : 'border-transparent text-graphite-400 hover:text-stone-300'
+          }`}
+        >
+          <span>Audit History</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-graphite-800 text-graphite-400 border border-graphite-750">
+            {approvals.length}
+          </span>
+        </button>
       </div>
 
       {/* Content */}
@@ -180,10 +169,10 @@ export const ApprovalsPage: React.FC = () => {
         <LoadingSpinner label="Fetching approval queue state..." size="lg" fullHeight />
       ) : displayedApprovals.length === 0 ? (
         <EmptyState
-          icon={<ShieldCheck className="w-7 h-7 text-status-green" />}
+          icon={<ShieldCheck className="w-5 h-5 text-status-green" />}
           title={
             activeTab === 'PENDING'
-              ? 'Zero Pending Approvals'
+              ? 'Queue Clear: Zero Pending Approvals'
               : 'No Approval Records'
           }
           description={
@@ -193,28 +182,27 @@ export const ApprovalsPage: React.FC = () => {
           }
         />
       ) : (
-        <div className="space-y-3.5">
+        <div className="space-y-2.5">
           {displayedApprovals.map((approval) => (
-            <Card
+            <div
               key={approval.id}
-              className={`transition-all ${
+              className={`p-4 rounded-lg bg-graphite-850 border border-graphite-750 transition-all ${
                 approval.status === 'PENDING'
-                  ? 'border-l-4 border-l-copper-500 bg-graphite-900'
-                  : 'bg-graphite-950/60 opacity-80'
+                  ? 'border-l-2 border-l-status-yellow'
+                  : 'opacity-85'
               }`}
             >
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                {/* Left detail */}
-                <div className="space-y-2 flex-1">
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    <Badge variant={getStatusBadgeVariant(approval.status)} size="sm" dot>
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                <div className="space-y-1.5 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant={getStatusBadgeVariant(approval.status)} size="sm">
                       {approval.status}
                     </Badge>
-                    <span className="text-xs font-mono text-stone-200 font-semibold">
-                      {approval.agent_name || 'Autonomous Agent'}
+                    <span className="text-xs font-mono text-stone-200 font-medium">
+                      {approval.agent_name || 'Agent'}
                     </span>
-                    <span className="text-graphite-600">·</span>
-                    <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-[10px] font-mono text-copper-300 border border-graphite-700">
+                    <span className="text-graphite-600 text-xs">/</span>
+                    <span className="px-1.5 py-0.2 rounded bg-graphite-900 text-[10px] font-mono text-copper-400 border border-graphite-750">
                       {approval.action_type || 'ACCESS'}
                     </span>
                     <span className="text-xs font-mono text-stone-300 truncate max-w-sm">
@@ -222,31 +210,31 @@ export const ApprovalsPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <p className="text-xs text-graphite-300 font-sans leading-relaxed">
+                  <p className="text-xs text-graphite-400 font-sans leading-relaxed">
                     {approval.reason ||
                       approval.explanation ||
                       'Action triggered an enterprise human approval policy rule.'}
                   </p>
 
-                  <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono text-graphite-400 pt-1">
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-graphite-500" />
+                  <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-graphite-500 pt-0.5">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-graphite-500" />
                       <span>
                         Requested:{' '}
                         {approval.created_at
-                          ? new Date(approval.created_at).toLocaleString()
+                          ? new Date(approval.created_at).toLocaleTimeString()
                           : 'Recent'}
                       </span>
                     </div>
 
                     {approval.decided_at && (
-                      <div className="flex items-center gap-1.5 text-graphite-300">
+                      <div className="flex items-center gap-1 text-graphite-400">
                         <span>
                           Decided:{' '}
-                          {new Date(approval.decided_at).toLocaleString()}
+                          {new Date(approval.decided_at).toLocaleTimeString()}
                         </span>
                         {approval.decision_reason && (
-                          <span className="italic text-graphite-400">
+                          <span className="italic text-graphite-500">
                             ("{approval.decision_reason}")
                           </span>
                         )}
@@ -255,58 +243,62 @@ export const ApprovalsPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right risk meter & action buttons */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-graphite-800">
-                  <div className="pr-4 border-r-0 sm:border-r border-graphite-800">
-                    <RiskScoreMeter score={approval.risk_score || 70} size="md" />
+                {/* Right Actions */}
+                {approval.status === 'PENDING' ? (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      variant="success"
+                      size="sm"
+                      icon={<CheckCircle2 className="w-3.5 h-3.5 text-status-green" />}
+                      onClick={() => handleOpenDecisionModal(approval, 'APPROVED')}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      icon={<XCircle className="w-3.5 h-3.5 text-status-red" />}
+                      onClick={() => handleOpenDecisionModal(approval, 'REJECTED')}
+                    >
+                      Reject
+                    </Button>
                   </div>
-
-                  {approval.status === 'PENDING' ? (
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => handleOpenDecisionModal(approval, 'REJECTED')}
-                        icon={<XCircle className="w-3.5 h-3.5" />}
-                      >
-                        Reject
-                      </Button>
-                      <Button
-                        variant="success"
-                        size="sm"
-                        onClick={() => handleOpenDecisionModal(approval, 'APPROVED')}
-                        icon={<CheckCircle2 className="w-3.5 h-3.5" />}
-                      >
-                        Authorize
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="text-xs font-mono text-graphite-400 px-3 py-1 rounded bg-graphite-850 border border-graphite-750">
-                      Closed Record
-                    </div>
-                  )}
-                </div>
+                ) : (
+                  <div className="shrink-0 font-mono text-[11px] text-graphite-500 uppercase">
+                    Resolution Complete
+                  </div>
+                )}
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       )}
 
-      {/* Decision Authorization Modal */}
+      {/* Decision Modal */}
       {selectedApproval && decisionAction && (
         <Modal
           isOpen={!!selectedApproval}
           onClose={() => setSelectedApproval(null)}
+          maxWidth="md"
           title={
-            decisionAction === 'APPROVED'
-              ? 'Authorize Agent Action'
-              : 'Reject & Block Action'
-          }
-          subtitle={`Agent: ${selectedApproval.agent_name} · Resource: ${selectedApproval.resource}`}
-          footer={
             <div className="flex items-center gap-2">
+              <span>{decisionAction === 'APPROVED' ? 'Authorize Operation' : 'Reject Operation'}</span>
+              <span
+                className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                  decisionAction === 'APPROVED'
+                    ? 'bg-status-green/10 text-status-green border-status-green/25'
+                    : 'bg-status-red/10 text-status-red border-status-red/25'
+                }`}
+              >
+                {decisionAction}
+              </span>
+            </div>
+          }
+          subtitle={`Escalation ID: ${selectedApproval.id}`}
+          footer={
+            <div className="flex items-center justify-end gap-2 w-full">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => setSelectedApproval(null)}
                 disabled={submittingDecision}
@@ -318,53 +310,44 @@ export const ApprovalsPage: React.FC = () => {
                 size="sm"
                 onClick={handleSubmitDecision}
                 loading={submittingDecision}
-                icon={
-                  decisionAction === 'APPROVED' ? (
-                    <CheckCircle2 className="w-4 h-4" />
-                  ) : (
-                    <XCircle className="w-4 h-4" />
-                  )
-                }
               >
                 Confirm {decisionAction === 'APPROVED' ? 'Approval' : 'Rejection'}
               </Button>
             </div>
           }
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             {decisionError && (
-              <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
+              <div className="p-2.5 rounded bg-status-red/10 border border-status-red/25 text-xs text-status-red">
                 {decisionError}
               </div>
             )}
 
-            <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 text-xs font-mono space-y-1.5">
-              <div>
-                <span className="text-graphite-500">Operation:</span>{' '}
+            <div className="p-3 bg-graphite-900 rounded border border-graphite-750 font-mono text-xs space-y-1">
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Agent:</span>
+                <span className="text-stone-200">{selectedApproval.agent_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Action:</span>
                 <span className="text-copper-400">{selectedApproval.action_type}</span>
               </div>
-              <div>
-                <span className="text-graphite-500">Target Resource:</span>{' '}
-                <span className="text-stone-200">{selectedApproval.resource}</span>
-              </div>
-              <div>
-                <span className="text-graphite-500">Evaluated Risk Score:</span>{' '}
-                <span className="text-status-red font-bold">
-                  {selectedApproval.risk_score || 70}/100
-                </span>
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Resource:</span>
+                <span className="text-stone-200 truncate max-w-[200px]">{selectedApproval.resource}</span>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-graphite-300 mb-1.5">
-                Audit Reason / Justification Note
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-graphite-400 mb-1">
+                Authorization Rationale
               </label>
               <textarea
                 value={decisionReason}
                 onChange={(e) => setDecisionReason(e.target.value)}
-                rows={3}
-                className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
-                placeholder="Enter justification note for SOC 2 / ISO 27001 compliance audit trail..."
+                rows={2}
+                className="w-full p-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none"
+                placeholder="Audit logging rationale..."
               />
             </div>
           </div>

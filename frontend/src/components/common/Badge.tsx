@@ -15,76 +15,76 @@ interface BadgeProps {
 
 const variantStyles: Record<BadgeVariant, { bg: string; text: string; border: string; dot: string }> = {
   allow: {
-    bg: 'bg-emerald-950/40',
-    text: 'text-emerald-300',
-    border: 'border-emerald-700/40',
-    dot: 'bg-emerald-400',
+    bg: 'bg-status-green/10',
+    text: 'text-status-green',
+    border: 'border-status-green/25',
+    dot: 'bg-status-green',
   },
   block: {
-    bg: 'bg-rose-950/40',
-    text: 'text-rose-300',
-    border: 'border-rose-700/40',
-    dot: 'bg-rose-400',
+    bg: 'bg-status-red/10',
+    text: 'text-status-red',
+    border: 'border-status-red/25',
+    dot: 'bg-status-red',
   },
   pending: {
-    bg: 'bg-amber-950/40',
-    text: 'text-amber-300',
-    border: 'border-amber-700/40',
-    dot: 'bg-amber-400 animate-pulse',
+    bg: 'bg-status-yellow/10',
+    text: 'text-status-yellow',
+    border: 'border-status-yellow/25',
+    dot: 'bg-status-yellow',
   },
   warning: {
-    bg: 'bg-amber-950/40',
-    text: 'text-amber-300',
-    border: 'border-amber-700/40',
-    dot: 'bg-amber-400',
+    bg: 'bg-status-yellow/10',
+    text: 'text-status-yellow',
+    border: 'border-status-yellow/25',
+    dot: 'bg-status-yellow',
   },
   critical: {
-    bg: 'bg-red-950/50',
-    text: 'text-red-300',
-    border: 'border-red-600/50',
-    dot: 'bg-red-400 animate-ping',
+    bg: 'bg-status-red/15',
+    text: 'text-status-red',
+    border: 'border-status-red/35',
+    dot: 'bg-status-red',
   },
   high: {
-    bg: 'bg-orange-950/40',
-    text: 'text-orange-300',
-    border: 'border-orange-700/40',
-    dot: 'bg-orange-400',
+    bg: 'bg-status-orange/10',
+    text: 'text-status-orange',
+    border: 'border-status-orange/25',
+    dot: 'bg-status-orange',
   },
   medium: {
-    bg: 'bg-yellow-950/40',
-    text: 'text-yellow-300',
-    border: 'border-yellow-700/30',
-    dot: 'bg-yellow-400',
+    bg: 'bg-status-yellow/10',
+    text: 'text-status-yellow',
+    border: 'border-status-yellow/25',
+    dot: 'bg-status-yellow',
   },
   low: {
-    bg: 'bg-graphite-850',
-    text: 'text-graphite-300',
-    border: 'border-graphite-700',
-    dot: 'bg-graphite-400',
+    bg: 'bg-graphite-800',
+    text: 'text-graphite-400',
+    border: 'border-graphite-750',
+    dot: 'bg-graphite-500',
   },
   info: {
-    bg: 'bg-sky-950/40',
-    text: 'text-sky-300',
-    border: 'border-sky-700/40',
-    dot: 'bg-sky-400',
+    bg: 'bg-status-blue/10',
+    text: 'text-status-blue',
+    border: 'border-status-blue/25',
+    dot: 'bg-status-blue',
   },
   neutral: {
-    bg: 'bg-graphite-850',
+    bg: 'bg-graphite-800/80',
     text: 'text-graphite-300',
-    border: 'border-graphite-700',
+    border: 'border-graphite-750',
     dot: 'bg-graphite-400',
   },
   active: {
-    bg: 'bg-emerald-950/40',
-    text: 'text-emerald-300',
-    border: 'border-emerald-700/40',
-    dot: 'bg-emerald-400',
+    bg: 'bg-status-green/10',
+    text: 'text-status-green',
+    border: 'border-status-green/25',
+    dot: 'bg-status-green',
   },
   suspended: {
-    bg: 'bg-red-950/40',
-    text: 'text-red-300',
-    border: 'border-red-700/40',
-    dot: 'bg-red-400',
+    bg: 'bg-status-red/10',
+    text: 'text-status-red',
+    border: 'border-status-red/25',
+    dot: 'bg-status-red',
   },
 };
 
@@ -96,13 +96,13 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
 }) => {
   const style = variantStyles[variant] || variantStyles.neutral;
-  const sizeClass = size === 'sm' ? 'text-[10px] px-2 py-0.5' : size === 'lg' ? 'text-xs px-3 py-1' : 'text-[11px] px-2 py-0.5';
+  const sizeClass = size === 'sm' ? 'text-[10px] px-1.5 py-0.5' : size === 'lg' ? 'text-xs px-2.5 py-1' : 'text-[11px] px-2 py-0.5';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-medium rounded border font-mono tracking-wide uppercase ${style.bg} ${style.text} ${style.border} ${sizeClass} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-medium rounded-full border font-mono tracking-wider uppercase ${style.bg} ${style.text} ${style.border} ${sizeClass} ${className}`}
     >
-      {dot && <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />}
+      {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />}
       {children}
     </span>
   );

@@ -11,10 +11,6 @@ import {
   ArrowUpRight,
   ExternalLink,
   Flame,
-  Terminal,
-  Cpu,
-  Lock,
-  Zap,
 } from 'lucide-react';
 import { dashboardApi, threatsApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -136,35 +132,35 @@ export const DashboardPage: React.FC = () => {
       : 0;
 
   return (
-    <div className="space-y-6">
-      {/* Header with status telemetry & actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
+    <div className="space-y-5">
+      {/* Precision Header with telemetry status */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-status-green indicator-breathing" />
-            <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-semibold">
-              REAL-TIME INTERCEPTION RUNNING
+            <span className="w-1.5 h-1.5 rounded-full bg-status-green" />
+            <span className="text-[10px] font-mono uppercase tracking-widest text-status-green font-medium">
+              TELEMETRY ENGINE RUNNING
             </span>
-            <span className="text-graphite-600 font-mono">|</span>
-            <span className="text-[11px] font-mono text-graphite-400">LATENCY &lt; 1.2ms</span>
+            <span className="text-graphite-600 font-mono text-[10px]">/</span>
+            <span className="text-[10px] font-mono text-graphite-400">LATENCY 0.9ms</span>
           </div>
-          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
-            Security Enforcement Center
+          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+            Command Center
           </h1>
-          <p className="text-xs text-graphite-300 mt-0.5">
+          <p className="text-xs text-graphite-400 mt-0.5">
             Real-time proxy telemetry, behavioral risk scoring, and zero-trust policy orchestration.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={handleRefresh}
             loading={refreshing}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />}
           >
-            Refresh Feed
+            Refresh
           </Button>
           <Link to="/simulator">
             <Button
@@ -178,18 +174,18 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+      {/* 5-Column High-Density KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {/* Total Actions */}
-        <div className="stat-card">
-          <div className="flex items-center justify-between text-graphite-400 mb-2">
-            <span className="stat-card-label">Evaluated Operations</span>
-            <Activity className="w-3.5 h-3.5 text-graphite-400" />
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-graphite-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-graphite-400">Evaluated Ops</span>
+            <Activity className="w-3.5 h-3.5 text-graphite-500" />
           </div>
-          <div className="stat-card-value text-stone-50">
+          <div className="text-2xl font-mono font-medium text-stone-100 tabular-nums">
             {metrics.totalActions?.toLocaleString() || 0}
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-graphite-400 font-mono">
+          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-graphite-400 font-mono">
             <span className="text-status-green font-medium">
               {metrics.allowedActions?.toLocaleString() || 0}
             </span>
@@ -198,33 +194,33 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Blocked Actions */}
-        <div className="stat-card">
-          <div className="flex items-center justify-between text-graphite-400 mb-2">
-            <span className="stat-card-label">Attacks Enforced</span>
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-graphite-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-graphite-400">Attacks Enforced</span>
             <ShieldAlert className="w-3.5 h-3.5 text-status-red" />
           </div>
-          <div className="stat-card-value text-status-red">
+          <div className="text-2xl font-mono font-medium text-status-red tabular-nums">
             {metrics.blockedActions?.toLocaleString() || 0}
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-graphite-400 font-mono">
+          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-graphite-400 font-mono">
             <span className="text-status-red font-medium">{blockRate}%</span>
-            <span>block enforcement rate</span>
+            <span>block rate</span>
           </div>
         </div>
 
         {/* Pending Approvals */}
-        <div className="stat-card">
-          <div className="flex items-center justify-between text-graphite-400 mb-2">
-            <span className="stat-card-label">Pending HITL Review</span>
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-graphite-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-graphite-400">Pending HITL</span>
             <CheckSquare className="w-3.5 h-3.5 text-copper-400" />
           </div>
-          <div className="stat-card-value text-copper-300">
+          <div className="text-2xl font-mono font-medium text-copper-400 tabular-nums">
             {metrics.pendingApprovals?.toLocaleString() || 0}
           </div>
           <div className="mt-2">
             <Link
               to="/approvals"
-              className="text-[11px] text-copper-400 hover:text-copper-300 font-mono inline-flex items-center gap-1"
+              className="text-[10px] text-copper-400 hover:text-copper-300 font-mono inline-flex items-center gap-1"
             >
               <span>Inspect queue</span>
               <ArrowUpRight className="w-3 h-3" />
@@ -233,43 +229,43 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Critical Threats */}
-        <div className="stat-card">
-          <div className="flex items-center justify-between text-graphite-400 mb-2">
-            <span className="stat-card-label">Critical Incursions</span>
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-graphite-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-graphite-400">Critical Threats</span>
             <AlertTriangle className="w-3.5 h-3.5 text-status-red" />
           </div>
-          <div className="stat-card-value text-red-300">
+          <div className="text-2xl font-mono font-medium text-status-red tabular-nums">
             {metrics.criticalThreats?.toLocaleString() || 0}
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-graphite-400 font-mono truncate">
+          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-graphite-400 font-mono truncate">
             <span className="text-status-yellow font-medium">
               {metrics.promptInjectionAttempts || 0}
             </span>
-            <span>prompt injection exploits</span>
+            <span>injections detected</span>
           </div>
         </div>
 
         {/* Sensitive Data Exposures */}
-        <div className="stat-card">
-          <div className="flex items-center justify-between text-graphite-400 mb-2">
-            <span className="stat-card-label">Exfiltrations Prevented</span>
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-graphite-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-graphite-400">DLP Masked</span>
             <FileLock2 className="w-3.5 h-3.5 text-status-blue" />
           </div>
-          <div className="stat-card-value text-sky-300">
+          <div className="text-2xl font-mono font-medium text-status-blue tabular-nums">
             {metrics.sensitiveDataEvents?.toLocaleString() || 0}
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-[11px] text-graphite-400 font-mono">
-            <span className="text-sky-400 font-medium">
+          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-graphite-400 font-mono">
+            <span className="text-status-blue font-medium">
               {metrics.dataExfiltrationAttempts || 0}
             </span>
-            <span>DLP tokens masked</span>
+            <span>exfiltrations stopped</span>
           </div>
         </div>
       </div>
 
       {/* Main Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Threats Over Time Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Threats Over Time */}
         <Card
           title="Incident Trends & Intercepted Threats"
           subtitle="Autonomous agent threat events evaluated over timeline"
@@ -277,14 +273,14 @@ export const DashboardPage: React.FC = () => {
           action={
             <Link
               to="/threats"
-              className="text-xs text-graphite-300 hover:text-copper-300 flex items-center gap-1 font-mono transition-colors"
+              className="text-xs text-graphite-400 hover:text-stone-200 flex items-center gap-1 font-mono transition-colors"
             >
               <span>Incident Center</span>
               <ExternalLink className="w-3 h-3" />
             </Link>
           }
         >
-          <ThreatsChart data={threatsOverTime} height={250} />
+          <ThreatsChart data={threatsOverTime} height={240} />
         </Card>
 
         {/* Action Decisions Donut */}
@@ -294,36 +290,36 @@ export const DashboardPage: React.FC = () => {
           action={
             <Link
               to="/actions"
-              className="text-xs text-graphite-300 hover:text-copper-300 flex items-center gap-1 font-mono transition-colors"
+              className="text-xs text-graphite-400 hover:text-stone-200 flex items-center gap-1 font-mono transition-colors"
             >
-              <span>Telemetry Stream</span>
+              <span>Stream</span>
               <ExternalLink className="w-3 h-3" />
             </Link>
           }
         >
-          <DecisionsPieChart data={actionsByDecision} height={250} />
+          <DecisionsPieChart data={actionsByDecision} height={240} />
         </Card>
       </div>
 
       {/* Second Row: Risk Distribution & Agent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Risk Level Distribution */}
         <Card
-          title="Action Risk Classification"
+          title="Risk Classification"
           subtitle="Distribution of actions segmented by automated threat score"
         >
-          <RiskDistributionChart data={riskDistribution} height={240} />
+          <RiskDistributionChart data={riskDistribution} height={220} />
         </Card>
 
         {/* Top Active Agents */}
         <Card
-          title="Agent Inventory & Risk Posture"
-          subtitle="Top autonomous agents governed by the Rakshya proxy layer"
+          title="Active Agent Posture"
+          subtitle="Autonomous agents governed by the Rakshya proxy layer"
           className="lg:col-span-2"
           action={
             <Link
               to="/agents"
-              className="text-xs text-graphite-300 hover:text-copper-300 flex items-center gap-1 font-mono transition-colors"
+              className="text-xs text-graphite-400 hover:text-stone-200 flex items-center gap-1 font-mono transition-colors"
             >
               <span>Registry</span>
               <ExternalLink className="w-3 h-3" />
@@ -331,38 +327,38 @@ export const DashboardPage: React.FC = () => {
           }
         >
           {agentActivity.length === 0 ? (
-            <div className="py-12 text-center text-xs font-mono text-graphite-400">
+            <div className="py-10 text-center text-xs font-mono text-graphite-500">
               No autonomous agent telemetry recorded yet
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-graphite-800 text-graphite-400 font-mono text-[11px]">
-                    <th className="pb-2.5 font-medium">AGENT IDENTIFIER</th>
-                    <th className="pb-2.5 font-medium text-right">TOTAL</th>
-                    <th className="pb-2.5 font-medium text-right">ALLOWED</th>
-                    <th className="pb-2.5 font-medium text-right">BLOCKED</th>
-                    <th className="pb-2.5 font-medium pl-6">RISK PROFILE</th>
+                  <tr className="border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
+                    <th className="pb-2 font-medium">AGENT</th>
+                    <th className="pb-2 font-medium text-right">TOTAL</th>
+                    <th className="pb-2 font-medium text-right">ALLOWED</th>
+                    <th className="pb-2 font-medium text-right">BLOCKED</th>
+                    <th className="pb-2 font-medium pl-5">RISK PROFILE</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-graphite-800/60 font-mono">
+                <tbody className="divide-y divide-graphite-750/50 font-mono">
                   {agentActivity.slice(0, 5).map((agent: any, idx: number) => (
-                    <tr key={idx} className="hover:bg-graphite-850/50 transition-colors">
-                      <td className="py-3 text-stone-200 font-sans font-medium flex items-center gap-2">
+                    <tr key={idx} className="hover:bg-graphite-800/40 transition-colors">
+                      <td className="py-2.5 text-stone-200 font-sans font-medium flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-status-green" />
-                        <span className="truncate max-w-[160px]">{agent.agent_name}</span>
+                        <span className="truncate max-w-[150px]">{agent.agent_name}</span>
                       </td>
-                      <td className="py-3 text-right text-graphite-200 font-medium">
+                      <td className="py-2.5 text-right text-graphite-300 font-medium tabular-nums">
                         {agent.total_actions}
                       </td>
-                      <td className="py-3 text-right text-status-green">
+                      <td className="py-2.5 text-right text-status-green tabular-nums">
                         {agent.allowed}
                       </td>
-                      <td className="py-3 text-right text-status-red">
+                      <td className="py-2.5 text-right text-status-red tabular-nums">
                         {agent.blocked}
                       </td>
-                      <td className="py-3 pl-6">
+                      <td className="py-2.5 pl-5">
                         <RiskScoreMeter score={parseFloat(agent.avg_risk) || 0} size="sm" />
                       </td>
                     </tr>
@@ -374,7 +370,7 @@ export const DashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Recent High-Priority Incidents Feed */}
+      {/* Live Threat Interception Feed */}
       <Card
         title="Live Threat Interception Feed"
         subtitle="Chronological stream of malicious pattern matches and policy blocks"
@@ -389,36 +385,36 @@ export const DashboardPage: React.FC = () => {
         }
       >
         {!Array.isArray(recentThreats) || recentThreats.length === 0 ? (
-          <div className="py-8 text-center text-xs font-mono text-graphite-400">
+          <div className="py-8 text-center text-xs font-mono text-graphite-500">
             No active threat incidents currently reported
           </div>
         ) : (
-          <div className="divide-y divide-graphite-800">
+          <div className="divide-y divide-graphite-750/70">
             {recentThreats.map((threat: any) => (
               <div
                 key={threat.id}
-                className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-graphite-850/40 px-2 rounded-md transition-colors"
+                className="py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 hover:bg-graphite-800/30 px-2 rounded transition-colors"
               >
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
                     <Badge variant={getSeverityBadgeVariant(threat.severity)} size="sm">
                       {threat.severity}
                     </Badge>
-                    <span className="text-xs font-mono text-stone-200 font-semibold">
+                    <span className="text-xs font-mono text-stone-200 font-medium">
                       {threat.type?.replace(/_/g, ' ')}
                     </span>
                     <span className="text-graphite-600 text-xs">·</span>
                     <span className="text-xs text-graphite-400">
-                      Agent: <strong className="text-stone-300 font-mono">{threat.agent_name || 'Autonomous Agent'}</strong>
+                      Agent: <span className="text-stone-300 font-mono">{threat.agent_name || 'Autonomous Agent'}</span>
                     </span>
                   </div>
-                  <p className="text-xs text-graphite-300 line-clamp-1">
+                  <p className="text-xs text-graphite-400 line-clamp-1">
                     {threat.description || 'Payload matched zero-trust violation policy.'}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-[11px] font-mono text-graphite-400">
+                  <span className="text-[10px] font-mono text-graphite-500">
                     {threat.created_at ? new Date(threat.created_at).toLocaleTimeString() : 'Just now'}
                   </span>
                   <Link to="/threats">

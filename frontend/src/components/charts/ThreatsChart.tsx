@@ -14,11 +14,11 @@ interface ThreatsChartProps {
   height?: number;
 }
 
-export const ThreatsChart: React.FC<ThreatsChartProps> = ({ data, height = 260 }) => {
+export const ThreatsChart: React.FC<ThreatsChartProps> = ({ data, height = 240 }) => {
   if (!data || data.length === 0) {
     return (
       <div
-        className="flex items-center justify-center text-xs font-mono text-graphite-400"
+        className="flex items-center justify-center text-xs font-mono text-graphite-500"
         style={{ height }}
       >
         No incident trend telemetry recorded
@@ -36,51 +36,54 @@ export const ThreatsChart: React.FC<ThreatsChartProps> = ({ data, height = 260 }
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={formattedData}
-          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+          margin={{ top: 10, right: 10, left: -25, bottom: 0 }}
         >
           <defs>
             <linearGradient id="threatGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#c77b3f" stopOpacity={0.35} />
-              <stop offset="95%" stopColor="#c77b3f" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#b08d6e" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="#b08d6e" stopOpacity={0.0} />
             </linearGradient>
             <linearGradient id="blockedGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#c73e3e" stopOpacity={0.4} />
-              <stop offset="95%" stopColor="#c73e3e" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#e5484d" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#e5484d" stopOpacity={0.0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#1f1f23" vertical={false} />
+          <CartesianGrid strokeDasharray="2 2" stroke="#1a1b1f" vertical={false} />
           <XAxis
             dataKey="formattedDate"
-            stroke="#53535c"
-            fontSize={11}
+            stroke="#4a4d59"
+            fontSize={10}
+            fontFamily="var(--font-mono)"
             tickLine={false}
-            axisLine={{ stroke: '#242428' }}
-            tick={{ fill: '#72727e' }}
+            axisLine={{ stroke: '#1a1b1f' }}
+            tick={{ fill: '#6b6d75' }}
           />
           <YAxis
-            stroke="#53535c"
-            fontSize={11}
+            stroke="#4a4d59"
+            fontSize={10}
+            fontFamily="var(--font-mono)"
             tickLine={false}
-            axisLine={{ stroke: '#242428' }}
+            axisLine={{ stroke: '#1a1b1f' }}
             allowDecimals={false}
-            tick={{ fill: '#72727e' }}
+            tick={{ fill: '#6b6d75' }}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#111113',
-              border: '1px solid #2e2e33',
+              backgroundColor: '#0e0f11',
+              border: '1px solid #252730',
               borderRadius: '6px',
-              fontSize: '12px',
-              color: '#f5f3ef',
+              fontSize: '11px',
+              color: '#e8e6e1',
+              fontFamily: 'var(--font-mono)',
               boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6)',
             }}
-            labelStyle={{ color: '#9e9eab', fontWeight: 600, marginBottom: '4px' }}
+            labelStyle={{ color: '#8c8f9a', marginBottom: '3px' }}
           />
           <Area
             type="monotone"
             dataKey="count"
-            name="Threats Detected"
-            stroke="#c77b3f"
+            name="Threats Evaluated"
+            stroke="#b08d6e"
             strokeWidth={1.5}
             fillOpacity={1}
             fill="url(#threatGradient)"
@@ -88,8 +91,8 @@ export const ThreatsChart: React.FC<ThreatsChartProps> = ({ data, height = 260 }
           <Area
             type="monotone"
             dataKey="blocked"
-            name="Blocked Incursions"
-            stroke="#c73e3e"
+            name="Blocked Attacks"
+            stroke="#e5484d"
             strokeWidth={1.5}
             fillOpacity={1}
             fill="url(#blockedGradient)"

@@ -8,9 +8,6 @@ import {
   Trash2,
   AlertTriangle,
   Code2,
-  Terminal,
-  ShieldCheck,
-  Clock,
 } from 'lucide-react';
 import { apiKeysApi } from '../services/api';
 import { Card } from '../components/common/Card';
@@ -84,7 +81,7 @@ export const ApiKeysPage: React.FC = () => {
   };
 
   const handleRevokeKey = async (id: string) => {
-    if (!window.confirm('Are you sure you want to revoke this API key immediately? Any agent using this key will be blocked.')) return;
+    if (!window.confirm('Revoke this API key immediately? Agents using this key will be blocked.')) return;
 
     try {
       await apiKeysApi.revoke(id);
@@ -181,29 +178,29 @@ export async function interceptAgentAction({
   }'`;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
-            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
+            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               GATEWAY INTEGRATION & CREDENTIALS
             </span>
-            <span className="text-graphite-600 font-mono">|</span>
-            <span className="text-[11px] font-mono text-graphite-400">SCOPED BEARER TOKENS</span>
+            <span className="text-graphite-600 font-mono text-[10px]">/</span>
+            <span className="text-[10px] font-mono text-graphite-400">SCOPED BEARER TOKENS</span>
           </div>
-          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
+          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
             API Keys & Developer SDK
           </h1>
-          <p className="text-xs text-graphite-300 mt-0.5">
-            Provision cryptographically authenticated API keys to hook LangChain, CrewAI, AutoGen, or custom agent frameworks to Rakshya.
+          <p className="text-xs text-graphite-400 mt-0.5">
+            Provision cryptographically authenticated API keys to hook LangChain, CrewAI, AutoGen, or custom agent frameworks.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={handleRefresh}
             loading={refreshing}
@@ -215,7 +212,7 @@ export async function interceptAgentAction({
             variant="primary"
             size="sm"
             onClick={() => setIsGenerateOpen(true)}
-            icon={<Plus className="w-4 h-4 text-graphite-950" />}
+            icon={<Plus className="w-3.5 h-3.5 text-graphite-950" />}
           >
             Create API Key
           </Button>
@@ -227,57 +224,50 @@ export async function interceptAgentAction({
         <LoadingSpinner label="Fetching organization API credentials..." size="lg" fullHeight />
       ) : apiKeys.length === 0 ? (
         <EmptyState
-          icon={<Key className="w-7 h-7 text-copper-400" />}
+          icon={<Key className="w-5 h-5 text-copper-400" />}
           title="No API Keys Generated"
           description="Create your first gateway key to integrate your autonomous agent workflows."
           actionLabel="Create API Key"
           onAction={() => setIsGenerateOpen(true)}
         />
       ) : (
-        <Card className="p-0 overflow-hidden border-graphite-800">
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-graphite-950 border-b border-graphite-800 text-graphite-400 font-mono text-[11px]">
+              <thead className="bg-graphite-900/60 border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
                 <tr>
-                  <th className="py-3 px-4 font-medium">KEY IDENTIFIER</th>
-                  <th className="py-3 px-4 font-medium">PREFIX TOKEN</th>
-                  <th className="py-3 px-4 font-medium">STATUS</th>
-                  <th className="py-3 px-4 font-medium">CREATED BY</th>
-                  <th className="py-3 px-4 font-medium">LAST USED</th>
-                  <th className="py-3 px-4 font-medium text-right">REVOKE</th>
+                  <th className="py-2.5 px-3.5 font-medium">KEY IDENTIFIER</th>
+                  <th className="py-2.5 px-3.5 font-medium">PREFIX TOKEN</th>
+                  <th className="py-2.5 px-3.5 font-medium">STATUS</th>
+                  <th className="py-2.5 px-3.5 font-medium">CREATED</th>
+                  <th className="py-2.5 px-3.5 font-medium">LAST USED</th>
+                  <th className="py-2.5 px-3.5 font-medium text-right">REVOKE</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-graphite-800/60 font-mono">
-                {apiKeys.map((key) => (
-                  <tr key={key.id} className="hover:bg-graphite-850/50 transition-colors">
-                    <td className="py-3 px-4 font-sans font-medium text-stone-200">
-                      {key.name}
+              <tbody className="divide-y divide-graphite-750/40 font-mono">
+                {apiKeys.map((k) => (
+                  <tr key={k.id} className="hover:bg-graphite-800/40 transition-colors">
+                    <td className="py-2.5 px-3.5 text-stone-100 font-medium">
+                      {k.name || 'Unnamed Key'}
                     </td>
-
-                    <td className="py-3 px-4 text-copper-400 font-semibold font-mono">
-                      {key.key_prefix}...
+                    <td className="py-2.5 px-3.5 text-copper-400">
+                      <code>{k.key_prefix || 'rk_live_...'}</code>
                     </td>
-
-                    <td className="py-3 px-4">
-                      <Badge variant={key.is_active ? 'allow' : 'block'} size="sm" dot>
-                        {key.is_active ? 'ACTIVE' : 'REVOKED'}
-                      </Badge>
+                    <td className="py-2.5 px-3.5">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] bg-status-green/10 text-status-green border border-status-green/25">
+                        ACTIVE
+                      </span>
                     </td>
-
-                    <td className="py-3 px-4 text-graphite-300">
-                      {key.created_by_name || 'Administrator'}
+                    <td className="py-2.5 px-3.5 text-graphite-400 text-[10px]">
+                      {k.created_at ? new Date(k.created_at).toLocaleDateString() : 'Active'}
                     </td>
-
-                    <td className="py-3 px-4 text-graphite-400 text-[11px]">
-                      {key.last_used_at
-                        ? new Date(key.last_used_at).toLocaleDateString()
-                        : 'Never'}
+                    <td className="py-2.5 px-3.5 text-graphite-400 text-[10px]">
+                      {k.last_used_at ? new Date(k.last_used_at).toLocaleDateString() : 'Never'}
                     </td>
-
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-2.5 px-3.5 text-right">
                       <button
-                        onClick={() => handleRevokeKey(key.id)}
-                        className="p-1 rounded text-graphite-500 hover:text-status-red hover:bg-graphite-800 transition-colors"
+                        onClick={() => handleRevokeKey(k.id)}
+                        className="p-1 rounded text-graphite-500 hover:text-status-red transition-colors cursor-pointer"
                         title="Revoke Key"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -288,159 +278,177 @@ export async function interceptAgentAction({
               </tbody>
             </table>
           </div>
-        </Card>
+        </div>
       )}
 
-      {/* SDK Quick-Start Integration Guide */}
+      {/* SDK Documentation Code Block */}
       <Card
         title={
           <div className="flex items-center gap-2">
             <Code2 className="w-4 h-4 text-copper-400" />
-            <span>Autonomous Agent SDK Quick-Start</span>
+            <span>Client SDK Integration Snippets</span>
           </div>
         }
-        subtitle="Wrap your autonomous agent tool execution calls with Rakshya inline defense"
-      >
-        <div className="space-y-3.5">
-          <div className="flex items-center gap-2 border-b border-graphite-800 pb-2">
+        subtitle="Hook the inline proxy into your autonomous agent pipeline"
+        action={
+          <div className="flex items-center gap-1">
             <button
               onClick={() => setActiveCodeTab('python')}
-              className={`px-3 py-1 rounded text-xs font-mono transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
                 activeCodeTab === 'python'
-                  ? 'bg-copper-500/15 text-copper-300 border border-copper-500/40 font-semibold'
+                  ? 'bg-copper-500 text-graphite-950 font-medium'
                   : 'text-graphite-400 hover:text-stone-200'
               }`}
             >
-              Python (LangChain / CrewAI)
+              Python
             </button>
             <button
               onClick={() => setActiveCodeTab('typescript')}
-              className={`px-3 py-1 rounded text-xs font-mono transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
                 activeCodeTab === 'typescript'
-                  ? 'bg-copper-500/15 text-copper-300 border border-copper-500/40 font-semibold'
+                  ? 'bg-copper-500 text-graphite-950 font-medium'
                   : 'text-graphite-400 hover:text-stone-200'
               }`}
             >
-              TypeScript / Node.js
+              TypeScript
             </button>
             <button
               onClick={() => setActiveCodeTab('curl')}
-              className={`px-3 py-1 rounded text-xs font-mono transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
                 activeCodeTab === 'curl'
-                  ? 'bg-copper-500/15 text-copper-300 border border-copper-500/40 font-semibold'
+                  ? 'bg-copper-500 text-graphite-950 font-medium'
                   : 'text-graphite-400 hover:text-stone-200'
               }`}
             >
-              cURL (Raw REST)
+              cURL
             </button>
           </div>
+        }
+      >
+        <div className="relative mt-1">
+          <button
+            onClick={() =>
+              handleCopy(
+                activeCodeTab === 'python'
+                  ? pythonCode
+                  : activeCodeTab === 'typescript'
+                  ? typescriptCode
+                  : curlCode
+              )
+            }
+            className="absolute top-2.5 right-2.5 p-1.5 rounded bg-graphite-800 hover:bg-graphite-750 text-graphite-300 hover:text-stone-100 transition-colors cursor-pointer flex items-center gap-1.5 text-[10px] font-mono"
+          >
+            {copied ? (
+              <>
+                <Check className="w-3 h-3 text-status-green" />
+                <span>Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3 h-3" />
+                <span>Copy</span>
+              </>
+            )}
+          </button>
 
-          <div className="relative">
-            <pre className="p-4 bg-graphite-950 rounded-lg text-xs font-mono text-stone-200 overflow-x-auto border border-graphite-800 leading-relaxed">
-              {activeCodeTab === 'python'
-                ? pythonCode
-                : activeCodeTab === 'typescript'
-                ? typescriptCode
-                : curlCode}
-            </pre>
-            <button
-              onClick={() =>
-                handleCopy(
-                  activeCodeTab === 'python'
-                    ? pythonCode
-                    : activeCodeTab === 'typescript'
-                    ? typescriptCode
-                    : curlCode
-                )
-              }
-              className="absolute top-3 right-3 p-1.5 rounded-md bg-graphite-850 hover:bg-graphite-800 border border-graphite-700 text-stone-300 hover:text-white transition-colors cursor-pointer"
-              title="Copy snippet"
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-status-green" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
-          </div>
+          <pre className="p-3.5 bg-graphite-950 rounded-lg text-xs font-mono text-stone-300 overflow-x-auto border border-graphite-750 leading-relaxed">
+            {activeCodeTab === 'python'
+              ? pythonCode
+              : activeCodeTab === 'typescript'
+              ? typescriptCode
+              : curlCode}
+          </pre>
         </div>
       </Card>
 
-      {/* Generate Key Modal */}
+      {/* Create Key Modal */}
       <Modal
         isOpen={isGenerateOpen}
         onClose={() => setIsGenerateOpen(false)}
+        maxWidth="md"
         title="Generate Gateway API Key"
-        subtitle="Keys are hashed with bcrypt and verified via prefix matching."
+        subtitle="Provision a bearer token for autonomous agent integration"
+        footer={
+          <div className="flex items-center justify-end gap-2 w-full">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsGenerateOpen(false)}
+              disabled={submitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleGenerateKey}
+              loading={submitting}
+            >
+              Generate Key
+            </Button>
+          </div>
+        }
       >
-        <form onSubmit={handleGenerateKey} className="space-y-3.5">
+        <form onSubmit={handleGenerateKey} className="space-y-3">
           {generateError && (
-            <div className="p-3 rounded-md bg-status-red/10 border border-status-red/30 text-xs text-red-300">
+            <div className="p-2 rounded bg-status-red/10 border border-status-red/25 text-xs text-status-red">
               {generateError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-mono text-graphite-300 mb-1.5">
-              API Key Identifier Name
+            <label className="block text-[11px] font-mono uppercase tracking-wider text-graphite-400 mb-1">
+              Key Name / Description
             </label>
             <input
               type="text"
               required
               value={keyName}
               onChange={(e) => setKeyName(e.target.value)}
-              placeholder="e.g. LangChain-Production-Worker-Key"
-              className="w-full bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 p-2.5 focus:border-copper-500/80 focus:outline-none font-mono"
+              placeholder="e.g. LangChain Prod Agent Proxy Key"
+              className="w-full px-2.5 py-1.5 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none"
             />
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-3">
-            <Button variant="ghost" size="sm" onClick={() => setIsGenerateOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              loading={submitting}
-              icon={<Plus className="w-4 h-4 text-graphite-950" />}
-            >
-              Generate Key
-            </Button>
           </div>
         </form>
       </Modal>
 
-      {/* Secret Key Display Modal */}
+      {/* Secret Key Revealed Modal */}
       {newlyCreatedKey && (
         <Modal
           isOpen={!!newlyCreatedKey}
           onClose={() => setNewlyCreatedKey(null)}
+          maxWidth="md"
           title="Secret Key Generated"
-          subtitle="Save this key now. It will NEVER be shown again in full."
+          subtitle="Copy and store this secret securely. It will not be displayed again."
+          footer={
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setNewlyCreatedKey(null)}
+            >
+              Done & Secured
+            </Button>
+          }
         >
-          <div className="space-y-3.5">
-            <div className="p-3 bg-status-yellow/10 border border-status-yellow/30 rounded-lg text-xs text-amber-200 flex items-start gap-2.5">
-              <AlertTriangle className="w-4 h-4 text-status-yellow shrink-0 mt-0.5" />
+          <div className="space-y-3">
+            <div className="p-3 rounded bg-status-yellow/10 border border-status-yellow/25 text-xs text-status-yellow flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>
-                Make sure to copy your API key now. If you lose this key, you will have to generate a new one.
+                This key grants programmatic proxy evaluation permissions. Store it in a secure environment variable manager.
               </span>
             </div>
 
-            <div className="flex items-center gap-2 p-3 bg-graphite-950 border border-graphite-800 rounded-md font-mono text-xs text-copper-300 break-all select-all">
-              <span className="flex-1">{newlyCreatedKey}</span>
+            <div className="p-3 bg-graphite-950 rounded border border-graphite-750 flex items-center justify-between gap-2">
+              <code className="text-xs font-mono text-copper-400 break-all select-all">
+                {newlyCreatedKey}
+              </code>
               <button
                 onClick={() => handleCopy(newlyCreatedKey)}
-                className="p-1.5 rounded bg-graphite-850 hover:bg-graphite-800 text-stone-200 transition-colors shrink-0"
+                className="p-1.5 rounded bg-graphite-850 hover:bg-graphite-800 text-stone-200 transition-colors shrink-0 cursor-pointer"
+                title="Copy Key"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-status-green" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-4 h-4 text-status-green" /> : <Copy className="w-4 h-4" />}
               </button>
-            </div>
-
-            <div className="flex justify-end pt-2">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setNewlyCreatedKey(null)}
-              >
-                Done / I Have Saved Key
-              </Button>
             </div>
           </div>
         </Modal>

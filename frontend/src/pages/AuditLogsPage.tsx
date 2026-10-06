@@ -3,18 +3,11 @@ import {
   FileSpreadsheet,
   RefreshCw,
   Search,
-  Filter,
-  User,
-  Clock,
-  Shield,
   Download,
   Eye,
-  CheckCircle,
 } from 'lucide-react';
 import { auditApi } from '../services/api';
-import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
-import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { EmptyState } from '../components/common/EmptyState';
@@ -87,29 +80,29 @@ export const AuditLogsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-graphite-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-graphite-750/70">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-copper-400 indicator-breathing" />
-            <span className="text-[11px] font-mono uppercase tracking-widest text-copper-300 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-copper-400" />
+            <span className="text-[10px] font-mono uppercase tracking-widest text-copper-400 font-medium">
               COMPLIANCE & NON-REPUDIATION
             </span>
-            <span className="text-graphite-600 font-mono">|</span>
-            <span className="text-[11px] font-mono text-graphite-400">SOC 2 TYPE II LEDGER</span>
+            <span className="text-graphite-600 font-mono text-[10px]">/</span>
+            <span className="text-[10px] font-mono text-graphite-400">SOC 2 TYPE II LEDGER</span>
           </div>
-          <h1 className="text-2xl font-semibold text-stone-50 tracking-tight">
-            Immutable Audit Trail
+          <h1 className="text-xl font-medium text-stone-100 tracking-tight">
+            Audit Trail
           </h1>
-          <p className="text-xs text-graphite-300 mt-0.5">
-            Append-only enterprise verification record of all policy mutations, agent registrations, elevation decisions, and security actions.
+          <p className="text-xs text-graphite-400 mt-0.5">
+            Append-only enterprise verification record of all policy mutations, agent registrations, and security actions.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={handleRefresh}
             loading={refreshing}
@@ -129,16 +122,16 @@ export const AuditLogsPage: React.FC = () => {
       </div>
 
       {/* Filter toolbar */}
-      <div className="p-3.5 rounded-lg bg-graphite-900 border border-graphite-800 shadow-sm">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <div className="p-2.5 rounded-lg bg-graphite-850 border border-graphite-750">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
           <div className="lg:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-graphite-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-graphite-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search event description, actor, or payload..."
+              placeholder="Search narrative, actor identity, or payload..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500/80 focus:outline-none font-mono"
+              className="w-full pl-8 pr-3 py-1 bg-graphite-900 border border-graphite-750 rounded text-xs text-stone-100 placeholder:text-graphite-500 focus:border-copper-500 focus:outline-none font-mono"
             />
           </div>
 
@@ -149,9 +142,9 @@ export const AuditLogsPage: React.FC = () => {
                 setEventFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1.5 px-2.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 focus:border-copper-500/80 focus:outline-none font-mono"
+              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
             >
-              <option value="">All Events</option>
+              <option value="">All Event Codes</option>
               <option value="AGENT_CREATED">AGENT_CREATED</option>
               <option value="POLICY_CREATED">POLICY_CREATED</option>
               <option value="POLICY_UPDATED">POLICY_UPDATED</option>
@@ -168,7 +161,7 @@ export const AuditLogsPage: React.FC = () => {
                 setResourceFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full py-1.5 px-2.5 bg-graphite-950 border border-graphite-750 rounded-md text-xs text-graphite-200 focus:border-copper-500/80 focus:outline-none font-mono"
+              className="w-full py-1 px-2 bg-graphite-900 border border-graphite-750 rounded text-xs text-graphite-300 focus:border-copper-500 focus:outline-none font-mono"
             >
               <option value="">All Resource Types</option>
               <option value="agent">Agent</option>
@@ -186,64 +179,64 @@ export const AuditLogsPage: React.FC = () => {
         <LoadingSpinner label="Querying compliance ledger records..." size="lg" fullHeight />
       ) : filteredLogs.length === 0 ? (
         <EmptyState
-          icon={<FileSpreadsheet className="w-7 h-7 text-copper-400" />}
+          icon={<FileSpreadsheet className="w-5 h-5 text-copper-400" />}
           title="No Audit Records Found"
           description="Administrative actions and gateway enforcement events will appear here."
         />
       ) : (
-        <Card className="p-0 overflow-hidden border-graphite-800">
+        <div className="bg-graphite-850 border border-graphite-750 rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-graphite-950 border-b border-graphite-800 text-graphite-400 font-mono text-[11px]">
+              <thead className="bg-graphite-900/60 border-b border-graphite-750 text-graphite-400 font-mono text-[10px]">
                 <tr>
-                  <th className="py-3 px-4 font-medium">TIMESTAMP</th>
-                  <th className="py-3 px-4 font-medium">EVENT CODE</th>
-                  <th className="py-3 px-4 font-medium">ACTOR</th>
-                  <th className="py-3 px-4 font-medium">RESOURCE</th>
-                  <th className="py-3 px-4 font-medium">AUDIT NARRATIVE</th>
-                  <th className="py-3 px-4 font-medium text-right">INSPECT</th>
+                  <th className="py-2.5 px-3.5 font-medium">TIMESTAMP</th>
+                  <th className="py-2.5 px-3.5 font-medium">EVENT CODE</th>
+                  <th className="py-2.5 px-3.5 font-medium">ACTOR</th>
+                  <th className="py-2.5 px-3.5 font-medium">RESOURCE</th>
+                  <th className="py-2.5 px-3.5 font-medium">NARRATIVE</th>
+                  <th className="py-2.5 px-3.5 font-medium text-right">INSPECT</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-graphite-800/60 font-mono">
+              <tbody className="divide-y divide-graphite-750/40 font-mono">
                 {filteredLogs.map((log) => (
                   <tr
                     key={log.id}
-                    className="hover:bg-graphite-850/50 transition-colors group cursor-pointer"
+                    className="hover:bg-graphite-800/40 transition-colors group cursor-pointer"
                     onClick={() => setSelectedLog(log)}
                   >
-                    <td className="py-3 px-4 text-graphite-400 text-[11px] whitespace-nowrap">
+                    <td className="py-2.5 px-3.5 text-graphite-400 text-[10px] whitespace-nowrap">
                       {log.created_at
                         ? new Date(log.created_at).toLocaleString()
                         : 'Now'}
                     </td>
 
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded bg-copper-500/15 border border-copper-500/35 text-copper-300 text-[10px] font-semibold">
+                    <td className="py-2.5 px-3.5">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-copper-500/10 text-copper-300 border border-copper-500/25">
                         {log.event}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-sans text-stone-200">
+                    <td className="py-2.5 px-3.5 font-sans text-stone-200">
                       {log.actor_name || log.actor_email || 'System Gate'}
                     </td>
 
-                    <td className="py-3 px-4">
-                      <span className="px-1.5 py-0.2 rounded bg-graphite-800 text-[10px] text-graphite-300 border border-graphite-700">
+                    <td className="py-2.5 px-3.5">
+                      <span className="px-1.5 py-0.2 rounded bg-graphite-900 text-[10px] text-graphite-400 border border-graphite-750">
                         {log.resource_type}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-sans text-stone-300 max-w-md truncate">
+                    <td className="py-2.5 px-3.5 font-sans text-stone-300 max-w-md truncate">
                       {log.description}
                     </td>
 
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-2.5 px-3.5 text-right">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedLog(log);
                         }}
-                        className="p-1 rounded text-graphite-400 hover:text-copper-400 hover:bg-graphite-800 transition-colors"
+                        className="p-1 rounded text-graphite-400 hover:text-stone-200 hover:bg-graphite-800 transition-colors"
                         title="View Record JSON"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -256,10 +249,10 @@ export const AuditLogsPage: React.FC = () => {
           </div>
 
           {/* Pagination */}
-          <div className="px-4 py-3 border-t border-graphite-800 bg-graphite-950/60 flex items-center justify-between text-xs text-graphite-400 font-mono">
+          <div className="px-4 py-2.5 border-t border-graphite-750 bg-graphite-900/30 flex items-center justify-between text-xs text-graphite-400 font-mono">
             <span>
               Showing {(page - 1) * 25 + 1} to{' '}
-              {Math.min(page * 25, total)} of {total} audit records
+              {Math.min(page * 25, total)} of {total} records
             </span>
             <div className="flex items-center gap-2">
               <Button
@@ -270,7 +263,7 @@ export const AuditLogsPage: React.FC = () => {
               >
                 Previous
               </Button>
-              <span className="text-stone-300">
+              <span className="text-stone-300 text-xs font-mono">
                 {page} / {totalPages}
               </span>
               <Button
@@ -283,52 +276,55 @@ export const AuditLogsPage: React.FC = () => {
               </Button>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
-      {/* Log Detail Modal */}
+      {/* Record Inspection Modal */}
       {selectedLog && (
         <Modal
           isOpen={!!selectedLog}
           onClose={() => setSelectedLog(null)}
+          maxWidth="lg"
           title={`Audit Record: ${selectedLog.event}`}
-          subtitle={`Ledger UUID: ${selectedLog.id}`}
+          subtitle={`Ledger Reference ID: ${selectedLog.id}`}
         >
-          <div className="space-y-3.5">
-            <div className="grid grid-cols-2 gap-2.5 text-xs font-mono">
-              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800">
-                <span className="text-graphite-500 block text-[10px]">ACTOR IDENTITY</span>
-                <span className="font-semibold text-stone-200">
-                  {selectedLog.actor_name || selectedLog.actor_email || 'System'}
-                </span>
+          <div className="space-y-3 font-mono text-xs">
+            <div className="p-3 bg-graphite-900 rounded border border-graphite-750 space-y-1">
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Actor Identity:</span>
+                <span className="text-stone-200">{selectedLog.actor_name || selectedLog.actor_email || 'System Gate'}</span>
               </div>
-              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800">
-                <span className="text-graphite-500 block text-[10px]">VERIFIED TIMESTAMP</span>
-                <span className="font-semibold text-stone-200">
-                  {new Date(selectedLog.created_at).toLocaleString()}
-                </span>
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Resource Type:</span>
+                <span className="text-copper-400">{selectedLog.resource_type}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Resource ID:</span>
+                <span className="text-stone-300">{selectedLog.resource_id || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-graphite-500">Logged At:</span>
+                <span className="text-stone-300">{new Date(selectedLog.created_at).toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800 text-xs">
-              <div className="text-[10px] font-mono text-copper-400 uppercase mb-1">
-                EVENT NARRATIVE
+            <div>
+              <span className="text-[10px] uppercase text-graphite-500 block mb-1">
+                Event Description
+              </span>
+              <div className="p-2.5 bg-graphite-900 rounded border border-graphite-750 font-sans text-stone-200 text-xs">
+                {selectedLog.description}
               </div>
-              <p className="text-stone-200 font-sans leading-relaxed">{selectedLog.description}</p>
             </div>
 
-            {selectedLog.metadata && (
-              <div className="p-3 bg-graphite-950 rounded-md border border-graphite-800">
-                <div className="text-[10px] font-mono text-graphite-400 uppercase mb-1">
-                  METADATA PAYLOAD
-                </div>
-                <pre className="p-2.5 bg-graphite-900 rounded text-[11px] font-mono text-stone-200 overflow-x-auto max-h-48 border border-graphite-800 whitespace-pre-wrap">
-                  {typeof selectedLog.metadata === 'object'
-                    ? JSON.stringify(selectedLog.metadata, null, 2)
-                    : selectedLog.metadata}
-                </pre>
-              </div>
-            )}
+            <div>
+              <span className="text-[10px] uppercase text-graphite-500 block mb-1">
+                Cryptographic Evidence Payload (JSON)
+              </span>
+              <pre className="p-3 bg-graphite-950 rounded border border-graphite-800 text-[11px] text-stone-300 overflow-x-auto max-h-56">
+                {JSON.stringify(selectedLog, null, 2)}
+              </pre>
+            </div>
           </div>
         </Modal>
       )}

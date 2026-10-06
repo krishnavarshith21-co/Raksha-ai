@@ -45,34 +45,34 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-graphite-950/80 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#050506]/80 backdrop-blur-xs transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidthClass} bg-graphite-900 border border-graphite-750 rounded-xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]`}
+        className={`relative w-full ${maxWidthClass} bg-graphite-850 border border-graphite-700 rounded-lg shadow-2xl overflow-hidden z-10 flex flex-col max-h-[88vh] animate-slide-up`}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-graphite-800 flex items-center justify-between gap-4 shrink-0 bg-graphite-900">
+        <div className="px-5 py-3.5 border-b border-graphite-750 flex items-center justify-between gap-4 shrink-0 bg-graphite-900/60">
           <div>
-            <h3 className="text-sm font-semibold text-stone-100">{title}</h3>
-            {subtitle && <p className="text-xs text-graphite-400 mt-0.5">{subtitle}</p>}
+            <h3 className="text-[13px] font-medium text-stone-100">{title}</h3>
+            {subtitle && <p className="text-[11px] text-graphite-400 mt-0.5">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-md text-graphite-400 hover:text-stone-100 hover:bg-graphite-800 border border-transparent hover:border-graphite-700 transition-colors"
+            className="p-1 rounded-md text-graphite-400 hover:text-stone-100 hover:bg-graphite-800 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto space-y-4">{children}</div>
+        <div className="p-5 overflow-y-auto space-y-4">{children}</div>
 
         {/* Footer */}
         {footer && (
-          <div className="px-6 py-3.5 border-t border-graphite-800 bg-graphite-950/40 flex items-center justify-end gap-3 shrink-0">
+          <div className="px-5 py-3 border-t border-graphite-750 bg-graphite-900/40 flex items-center justify-end gap-2.5 shrink-0">
             {footer}
           </div>
         )}
