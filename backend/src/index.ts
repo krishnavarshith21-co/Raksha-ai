@@ -16,7 +16,7 @@ app.use(helmet());
 
 // CORS
 app.use(cors({
-  origin: config.frontend.url,
+  origin: config.frontend.allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
@@ -48,6 +48,11 @@ app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 app.use('/api/actions/analyze', analysisLimiter);
 app.use('/api/v1/actions/analyze', analysisLimiter);
+
+// Root health check (for Cloud Run and load balancers, no auth required)
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok' });
+});
 
 // Parsing
 app.use(express.json({ limit: '1mb' }));
@@ -87,14 +92,17 @@ async function start() {
       console.warn('⚠ Database not connected. Some features will be unavailable.');
     }
 
-    app.listen(config.port, () => {
+    const host = config.host || '0.0.0.0';
+    app.listen(config.port, host, () => {
       console.log(`\n  RAKSHYA Backend Server`);
       console.log(`  ─────────────────────`);
       console.log(`  Environment: ${config.nodeEnv}`);
+      console.log(`  Host: ${host}`);
       console.log(`  Port: ${config.port}`);
-      console.log(`  Frontend: ${config.frontend.url}`);
+      console.log(`  Allowed Origins: ${config.frontend.allowedOrigins.join(', ')}`);
       console.log(`  Gemini AI: ${config.gemini.apiKey ? 'Configured' : 'Not configured (using heuristic fallback)'}`);
-      console.log(`\n  API: http://localhost:${config.port}/api/health\n`);
+      console.log(`\n  Health: http://${host}:${config.port}/health`);
+      console.log(`  API: http://${host}:${config.port}/api/health\n`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

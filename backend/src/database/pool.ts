@@ -30,8 +30,32 @@ async function getPgLite(): Promise<PGlite> {
     const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data', 'rakshya_pgdata');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
+    } else {
+      // Clean up orphaned postmaster.pid left over from abrupt process termination
+      const pidFile = path.join(dataDir, 'postmaster.pid');
+      if (fs.existsSync(pidFile)) {
+        try {
+          fs.unlinkSync(pidFile);
+        } catch {
+          // ignore if locked
+        }
+      }
     }
-    pgliteInstance = new PGlite(dataDir);
+    try {
+      pgliteInstance = new PGlite(dataDir);
+      await pgliteInstance.waitReady;
+    } catch (initErr) {
+      console.warn('PGlite data directory recovery needed, re-initializing database...', initErr);
+      try {
+        fs.rmSync(dataDir, { recursive: true, force: true });
+        fs.mkdirSync(dataDir, { recursive: true });
+        pgliteInstance = new PGlite(dataDir);
+        await pgliteInstance.waitReady;
+      } catch {
+        pgliteInstance = new PGlite();
+        await pgliteInstance.waitReady;
+      }
+    }
   }
   return pgliteInstance;
 }

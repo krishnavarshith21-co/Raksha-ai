@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Compilation output
+dist/
+
+# Local databases & storage
+data/
+*.pgdata
+*.db
+*.sqlite
+
+# Secrets & environment
+.env
+.env.*
+!.env.example
+
+# Logs & scratch
+logs/
+*.log
+coverage/

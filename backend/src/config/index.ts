@@ -1,8 +1,21 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Supported frontend origins for CORS
+const defaultAllowedOrigins = [
+  'https://rakshya-ai.vercel.app',
+  'http://localhost:5173',
+];
+
+const envFrontendOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map((url) => url.trim()).filter(Boolean)
+  : [];
+
+const allowedOrigins = Array.from(new Set([...defaultAllowedOrigins, ...envFrontendOrigins]));
+
 export const config = {
   port: parseInt(process.env.PORT || '3001', 10),
+  host: '0.0.0.0',
   nodeEnv: process.env.NODE_ENV || 'development',
   
   database: {
@@ -20,6 +33,7 @@ export const config = {
   
   frontend: {
     url: process.env.FRONTEND_URL || 'http://localhost:5173',
+    allowedOrigins,
   },
   
   rateLimit: {
@@ -30,3 +44,4 @@ export const config = {
   isDevelopment: (process.env.NODE_ENV || 'development') === 'development',
   isProduction: process.env.NODE_ENV === 'production',
 };
+
