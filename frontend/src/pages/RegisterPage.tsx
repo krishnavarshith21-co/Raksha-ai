@@ -54,11 +54,39 @@ export const RegisterPage: React.FC = () => {
       await register({ email, password, name, organizationName });
       navigate('/dashboard');
     } catch (err: any) {
-      setError(
-        err.response?.data?.error ||
-          err.response?.data?.message ||
-          'Registration failed. Please try again.'
-      );
+      if (err.response?.status === 409) {
+        setError(
+          err.response?.data?.error ||
+            'An organization or account with these details already exists.'
+        );
+      } else if (err.response?.status === 400 || err.response?.status === 422) {
+        setError(
+          err.response?.data?.error ||
+            'Please check the registration details and try again.'
+        );
+      } else if (err.response?.status === 503) {
+        setError(
+          'Registration service is temporarily unavailable. The database may not be configured yet.'
+        );
+      } else if (
+        !err.response ||
+        err.code === 'ERR_NETWORK' ||
+        err.response?.status === 404
+      ) {
+        setError(
+          'Cannot reach the registration service. The backend may be starting up — please try again in a minute.'
+        );
+      } else if (err.response?.status >= 500) {
+        setError(
+          'Registration service encountered an internal error. Please try again later.'
+        );
+      } else {
+        setError(
+          err.response?.data?.error ||
+            err.response?.data?.message ||
+            'Registration failed. Please try again.'
+        );
+      }
     } finally {
       setSubmitting(false);
     }
